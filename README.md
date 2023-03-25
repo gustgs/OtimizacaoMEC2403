@@ -2,7 +2,9 @@
 
 Repositório para armazemanento de código referente aos trabalhos e listas da disciplina MEC2403 da pós-graduação da PUC-Rio
 
-Aluno: Pedro Henrique Cardoso Paulo
+Guia gerado pelo Aluno: Pedro Henrique Cardoso Paulo
+
+Trabalhos aqui presentes são do Aluno : Gustavo Gomes
 
 Professor: Ivan Menezes
 
@@ -30,7 +32,7 @@ Recomendo também a instalação do <a href="https://code.visualstudio.com/Downl
 Tendo o git instalado, o conteúdo do repositório pode ser baixado para a sua máquina via o seguinte comando
 
 ```(bash)
-git clone https://github.com/prj-phcp/MEC2403_Activities.git
+git clone https://github.com/gustgs/OtimizacaoMEC2403.git
 ```
 
 Atualizações podem ser puxadas do repositório clonado a qualquer momento por meio do comando pull
@@ -68,9 +70,3 @@ Para atualizar o arquivo com o ambiente após a instalação de algum pacote nov
 ```(bash)
 conda env export | grep -v "^prefix: " > environment.yml
 ```
-
-## Atividades
-
-As atividades presentes neste repositório são:
-
-- <a href="./Lista0">Lista 00</a>: Exercícios iniciais de programação matemática e quebra de gelo com o Python

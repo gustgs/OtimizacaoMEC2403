@@ -1,16 +1,16 @@
 # Fdb version 3
-["bibtex Lista1"] 1679682570 "Lista1.aux" "Lista1.bbl" "Lista1" 1679682571
+["bibtex Lista1"] 1679779503 "Lista1.aux" "Lista1.bbl" "Lista1" 1679779503
   "/usr/share/texlive/texmf-dist/bibtex/bst/base/apalike.bst" 1292289607 24635 604dafcc79f521a11ea73e506e1fbd98 ""
-  "Lista1.aux" 1679682570 2726 2fd18a80478570bc47b290f03dc9970b "pdflatex"
+  "Lista1.aux" 1679779502 2726 2fd18a80478570bc47b290f03dc9970b "pdflatex"
   "export.bib" 0 -1 0 ""
   (generated)
   "Lista1.blg"
   "Lista1.bbl"
-["pdflatex"] 1679682570 "/home/bfu3/github/OtimizacaoMEC2403/Lista1/Lista1.tex" "/home/bfu3/github/OtimizacaoMEC2403/Lista1/Lista1.pdf" "Lista1" 1679682571
-  "../general/puc.jpg" 1679681406 10654 ad994660e733f1bbd2c69349c94b9852 ""
+["pdflatex"] 1679682570 "/home/bfu3/github/OtimizacaoMEC2403/Lista1/Lista1.tex" "/home/bfu3/github/OtimizacaoMEC2403/Lista1/Lista1.pdf" "Lista1" 1679779503
+  "../general/puc.jpg" 1679779502 10654 ad994660e733f1bbd2c69349c94b9852 ""
   "/etc/texmf/web2c/texmf.cnf" 1679667963 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/bfu3/github/OtimizacaoMEC2403/Lista1/Lista1.aux" 1679682570 2726 2fd18a80478570bc47b290f03dc9970b ""
-  "/home/bfu3/github/OtimizacaoMEC2403/Lista1/Lista1.tex" 1679682569 3955 f09e4b8ff597b3114e4d49eb6bdc2742 ""
+  "/home/bfu3/github/OtimizacaoMEC2403/Lista1/Lista1.aux" 1679779502 2726 2fd18a80478570bc47b290f03dc9970b ""
+  "/home/bfu3/github/OtimizacaoMEC2403/Lista1/Lista1.tex" 1679779502 3955 f09e4b8ff597b3114e4d49eb6bdc2742 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -115,14 +115,14 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1581979058 38841 ce3692aa899bb693b90b87eaa5d4d84e ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1679668003 4770781 1ed1abab22da9c3e2cc82e4db562318b ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1679668031 8256265 4ce08e13e2914c0def7a489c79650ac4 ""
-  "Lista1.aux" 1679682570 2726 2fd18a80478570bc47b290f03dc9970b "pdflatex"
+  "Lista1.aux" 1679779502 2726 2fd18a80478570bc47b290f03dc9970b "pdflatex"
   "Lista1.bbl" 0 -1 0 "bibtex Lista1"
-  "Lista1.out" 1679682570 850 878c42c4454821b14f682d4b078f9c12 "pdflatex"
-  "Lista1.tex" 1679682569 3955 f09e4b8ff597b3114e4d49eb6bdc2742 ""
+  "Lista1.out" 1679779502 850 878c42c4454821b14f682d4b078f9c12 "pdflatex"
+  "Lista1.tex" 1679779502 3955 f09e4b8ff597b3114e4d49eb6bdc2742 ""
   (generated)
-  "Lista1.pdf"
-  "Lista1.out"
-  "Lista1.log"
-  "/home/bfu3/github/OtimizacaoMEC2403/Lista1/Lista1.pdf"
   "Lista1.aux"
+  "Lista1.out"
+  "Lista1.pdf"
   "/home/bfu3/github/OtimizacaoMEC2403/Lista1/Lista1.log"
+  "/home/bfu3/github/OtimizacaoMEC2403/Lista1/Lista1.pdf"
+  "Lista1.log"
