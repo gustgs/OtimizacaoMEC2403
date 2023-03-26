@@ -102,7 +102,7 @@ def secao_aurea(intervalo, dir_unit, P1, f, tol=0.00001):
             #alpha_d = alpha_lower + Ra*beta 
             f1 = f(P1 + alpha_e*dir_unit)
             
-    # calcula Pmin e alpha min
+    # calcula Pmin e alpha min após convergência
     alpha_med = (alpha_lower + alpha_upper)/2
     alpha_min = alpha_med
     Pmin = P1 + alpha_min*dir_unit
