@@ -19,11 +19,11 @@ def passo_cte(direcao, P1, f, step = 0.01, modulo_direcao = 1000):
                 
         #verifica se a funcao fica ascendente no proximo step
         #caso positivo, a busca unidimensional termina e os valores de Pmin e alpha min já estão guardados
-        if (f(P1 + alpha*direcao_unitaria) < f(P1 + (alpha+step)*direcao_unitaria)):
+        if (f(Pmin) < f(P1 + (alpha+step)*direcao_unitaria)):
             break
         
         #retorna o Pmin = [x1,x2]  e o intervalo de busca = [alpha min, alpha min + step]                 
-        return Pmin, np.array([alpha_min, alpha_min+step])
+    return Pmin, np.array([alpha_min, alpha_min+step])
     
 def bissecao(intervalo, direcao, P1, f, tol=0.00001):
     #linear search pelo método da bisseção
