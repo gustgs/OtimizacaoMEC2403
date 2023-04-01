@@ -193,7 +193,7 @@ de busca, um ponto inicial, a função f e um parâmetro opcional para a tolerâ
 
 O intervalo de busca e o vetor unitário no sentido da busca podem ser livremente fornecidos ou então estimados
 pelo método do passo constante. Resumidamente, o método compara os valores de 
-$f(P_1 + (\alpha_{med}- \epsilon)\,\hat{sentido})$ e $f(P_1 + (\alpha_{med}+ \epsilon)\,\hat{sentido})$,
+$f(\overrightarrow{P_1} + (\alpha_{med}- \epsilon)\,\hat{sentido})$ e $f(\overrightarrow{P_1} + (\alpha_{med}+ \epsilon)\,\hat{sentido})$,
 onde $\alpha_{med} = \frac{\alpha^L + \alpha^U}{2}$ e $\epsilon = 10^{-8}$, para determinar em qual metade do intervalo
 o ponto mínimo se encontra, descartando a outra metade. Após identifcar a metade correta, o algoritmo
 chama recursivamente o método da Bisseção com um novo intervalo de busca.
@@ -202,8 +202,9 @@ Isso ocorre até que a convergência seja alcançada e assim o ponto mínimo det
 retorna os seguintes valores :
 
 \begin{enumerate}
-  \item $\overrightarrow{P_{min}}$, tal que $\overrightarrow{P_{min}} = \overrightarrow{P_1} + \alpha\,\hat{sentido}$
-  \item $\alpha_{min}$
+  \item $\overrightarrow{P_{min}}$, tal que $\overrightarrow{P_{min}} = \overrightarrow{P_1} + \alpha_{min}\,\hat{sentido}$
+  \item $\alpha_{min}$, tal que $\alpha_{min} = \frac{\alpha^L + \alpha^U}{2}$ e $\alpha^L$, $\alpha^U$ são os extremos do
+  intervalo do último passo do algortimo, quando a convergência foi obtida
 \end{enumerate} 
 
 \begin{python}
@@ -265,7 +266,7 @@ de busca, um ponto inicial, a função f e um parâmetro opcional para a tolerâ
 
 O intervalo de busca e o vetor unitário no sentido da busca podem ser livremente fornecidos ou então estimados
 pelo método do passo constante. Resumidamente, o método utiliza a razão áurea ($R_a = \frac{\sqrt{5} - 1}{2}$) para comparar os 
-valores de $f(P_1 + \alpha_{E}\,\hat{sentido}$) e $f(P_1 + \alpha_{D}\,\hat{sentido})$,
+valores de $f(\overrightarrow{P_1} + \alpha_{E}\,\hat{sentido}$) e $f(\overrightarrow{P_1} + \alpha_{D}\,\hat{sentido})$,
 onde $\alpha_{E} = \alpha^L + (1 - R_a )\beta$, $\alpha_{D} = \alpha^L + R_a\beta$ e $\beta = \alpha^U - \alpha^L$, 
 para determinar em qual trecho, $[\alpha^L, \alpha_{D}]$ ou $[\alpha_{E}, \alpha^U]$, o ponto mínimo se encontra. Enquanto a
 convergência não é alcançada, os valores de $\alpha^L, \alpha^U, \alpha_E$ e $\alpha_D$ vão sendo recalculados e atualizados.
