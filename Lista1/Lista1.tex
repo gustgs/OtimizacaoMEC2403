@@ -53,6 +53,7 @@
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{cleveref}
 \newcommand{\crefrangeconjunction}{--}
+\DeclareMathOperator{\sen}{sen}
 
 
 \begin{document}
@@ -346,36 +347,36 @@ das seguintes funções:
   \begin{equation*}
     f(x_1, x_2) = x_1^2 - 3x_1x_2 + 4x_2^2 + x_1 - x_2 \;\; com \;\; \\
     \overrightarrow{P_1} = 
-    \begin{Bmatrix}
+    \begin{bmatrix}
      1 \\ 2
-    \end{Bmatrix} \;\; e \;\; \overrightarrow{d} =
-    \begin{Bmatrix}
+    \end{bmatrix} \;\; e \;\; \overrightarrow{d} =
+    \begin{bmatrix}
     -1 \\ -2
-    \end{Bmatrix}
+    \end{bmatrix}
  \end{equation*}
 
  \item Função 2 - McCormick:
  \begin{equation*}
-  f(x_1, x_2) = \sin{(x_1 + x_2)} + (x_1 - x_2)^2 - 1.5x_1 + 2.5x_2 \;\; com \;\; \\
+  f(x_1, x_2) = \sen{(x_1 + x_2)} + (x_1 - x_2)^2 - 1,5x_1 + 2,5x_2 \;\; com \;\; \\
   \overrightarrow{P_1} = 
-  \begin{Bmatrix}
+  \begin{bmatrix}
    -2 \\ \phantom{-}3
-  \end{Bmatrix} \;\; e \;\; \overrightarrow{d} =
-  \begin{Bmatrix}
+  \end{bmatrix} \;\; e \;\; \overrightarrow{d} =
+  \begin{bmatrix}
   \phantom{-}1.453 \\ -4.547
-  \end{Bmatrix}
+  \end{bmatrix}
 \end{equation*}
 
 \item Função 3 - Himmelblau:
  \begin{equation*}
   f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2 \;\; com \;\; \\
   \overrightarrow{P_1} = 
-  \begin{Bmatrix}
+  \begin{bmatrix}
    0 \\ 5
-  \end{Bmatrix} \;\; e \;\; \overrightarrow{d} =
-  \begin{Bmatrix}
+  \end{bmatrix} \;\; e \;\; \overrightarrow{d} =
+  \begin{bmatrix}
   3 \\ 1.5
-  \end{Bmatrix}
+  \end{bmatrix}
 \end{equation*}
 
 \end{enumerate}
@@ -451,17 +452,17 @@ A solução para a função $f(x_1, x_2) = x_1^2 - 3x_1x_2 + 4x_2^2 + x_1 - x_2$
 
 \begin{itemize}
   \item Passo constante: $|\alpha_{min}| = 2.1300000000$ e $\overrightarrow{P_{min}} =  
-  \begin{Bmatrix}
+  \begin{bmatrix}
     0.0474350416 \\ 0.0948700832
-  \end{Bmatrix}$
+  \end{bmatrix}$
   \item Bisseção: $|\alpha_{min}| = 2.1344287109$ e $\overrightarrow{P_{min}} =  
-  \begin{Bmatrix}
+  \begin{bmatrix}
     0.0454544618 \\ 0.0909089237
-  \end{Bmatrix}$
+  \end{bmatrix}$
   \item Seção Áurea: $|\alpha_{min}| = 2.1344280564$ e $\overrightarrow{P_{min}} =  
-  \begin{Bmatrix}
+  \begin{bmatrix}
     0.0454547546 \\ 0.0909095092
-  \end{Bmatrix}$
+  \end{bmatrix}$
 \end{itemize}
 
 Como todos os métodos entregam respostas de $P_{min}$ muito parecidas, com diferenças relativamente pequenas,
@@ -556,24 +557,24 @@ Passo constante : $|\alpha \,\, min|$ = 4.7700000000 e P min = (-0.5480690486, -
 
 Bisseção        : $|\alpha \,\, min|$ = 4.7735791016 e P min = (-0.5469796129, -1.5470637991)
 
-Seção Áurea     : $|\alpha \,\,  min|$ = 4.7735766069 e P min = (-0.5469803722, -1.5470614229)
+Seção Áurea     : $|\alpha \,\,  min|$ = 4.7735766069 e P min = (-0.5469803722, -1.5470614229)\newline
 
-A solução para a função $f(x_1, x_2) = \sin{(x_1 + x_2)} + (x_1 - x_2)^2 - 1.5x_1 + 2.5x_2$ então fica :
+A solução para a função $f(x_1, x_2) = \sen{(x_1 + x_2)} + (x_1 - x_2)^2 - 1,5x_1 + 2,5x_2$ então fica :
 \newline
 
 \begin{itemize}
   \item Passo constante: $|\alpha_{min}| = 4.7700000000$ e $\overrightarrow{P_{min}} =  
-  \begin{Bmatrix}
+  \begin{bmatrix}
     -0.5480690486 \\ -1.5436545327
-  \end{Bmatrix}$
+  \end{bmatrix}$
   \item Bisseção: $|\alpha_{min}| = 4.77357910169$ e $\overrightarrow{P_{min}} =  
-  \begin{Bmatrix}
+  \begin{bmatrix}
     -0.5469796129 \\ -1.5470637991
-  \end{Bmatrix}$
+  \end{bmatrix}$
   \item Seção Áurea: $|\alpha_{min}| = 4.7735766069$ e $\overrightarrow{P_{min}} =  
-  \begin{Bmatrix}
+  \begin{bmatrix}
     -0.5469803722 \\ -1.5470614229
-  \end{Bmatrix}$
+  \end{bmatrix}$
 \end{itemize}
 
 Como todos os métodos entregam respostas de $P_{min}$ muito parecidas, com diferenças relativamente pequenas,
@@ -674,24 +675,24 @@ Passo constante : $|\alpha \,\, min|$ = 3.3900000000 e P min = (-3.0321081775, 3
 
 Bisseção        : $|\alpha \,\, min|$ = 3.3921630859 e P min = (-3.0340429004, 3.4829785498)
 
-Seção Áurea     : $|\alpha \,\,  min|$ = 3.3921633455 e P min = (-3.0340431325, 3.4829784337)
+Seção Áurea     : $|\alpha \,\,  min|$ = 3.3921633455 e P min = (-3.0340431325, 3.4829784337)\newline
 
 A solução para a função $f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2$ então fica :
 \newline
 
 \begin{itemize}
   \item Passo constante: $|\alpha_{min}| = 3.3900000000$ e $\overrightarrow{P_{min}} =  
-  \begin{Bmatrix}
+  \begin{bmatrix}
     -3.0321081775 \\ \phantom{-}3.4839459113
-  \end{Bmatrix}$
+  \end{bmatrix}$
   \item Bisseção: $|\alpha_{min}| = 3.3921630859$ e $\overrightarrow{P_{min}} =  
-  \begin{Bmatrix}
+  \begin{bmatrix}
     -3.0340429004 \\ \phantom{-}3.4829785498
-  \end{Bmatrix}$
+  \end{bmatrix}$
   \item Seção Áurea: $|\alpha_{min}| = 3.3921633455$ e $\overrightarrow{P_{min}} =  
-  \begin{Bmatrix}
+  \begin{bmatrix}
     -3.0340431325 \\ \phantom{-}3.4829784337
-  \end{Bmatrix}$
+  \end{bmatrix}$
 \end{itemize}
 
 Como todos os métodos entregam respostas de $P_{min}$ muito parecidas, com diferenças relativamente pequenas,
