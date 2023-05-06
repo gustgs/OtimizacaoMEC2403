@@ -1,13 +1,13 @@
 import numpy as np
 
-def passo_cte(direcao, P0, f, step = 0.01):
+def passo_cte(direcao, P0, f, params, step = 0.01):
     #line search pelo metodo do passo constante
     
     #epsilon
     eps=0.00000001
    
     #define o sentido unitario correto de busca
-    if (f(P0 - eps*direcao) >= f(P0 + eps*direcao)):
+    if (f(P0 - eps*direcao, params) >= f(P0 + eps*direcao, params)):
         sentido_busca = direcao.copy()
         flag = 0
     else:
@@ -19,7 +19,7 @@ def passo_cte(direcao, P0, f, step = 0.01):
     P_next = P + step*sentido_busca
     alpha = 0
    
-    while (f(P) > f(P_next)):           
+    while (f(P, params) > f(P_next, params)):           
         alpha = alpha + step
         P = P0 + alpha*sentido_busca
         P_next = P0 + (alpha+step)*sentido_busca
@@ -32,7 +32,7 @@ def passo_cte(direcao, P0, f, step = 0.01):
     #retorna o intervalo de busca = [alpha min, alpha min + step]                 
     return intervalo
     
-def secao_aurea(intervalo, direcao, P0, f, tol=0.00000001):
+def secao_aurea(intervalo, direcao, P0, f, params, tol=0.00000001):
     #line search pelo metodo da secao aurea
     
     #verifica o sentido da busca
@@ -57,8 +57,8 @@ def secao_aurea(intervalo, direcao, P0, f, tol=0.00000001):
     alpha_d = alpha_lower + Ra*beta 
     
     #primeira iteracao avalia f nos 2 pontos selecionados pela razao aurea
-    f1 = f(P0 + alpha_e*sentido_busca)
-    f2 = f(P0 + alpha_d*sentido_busca)
+    f1 = f(P0 + alpha_e*sentido_busca, params)
+    f2 = f(P0 + alpha_d*sentido_busca, params)
     
     #loop enquanto a convergência nao for obtida
     while (beta > tol):
@@ -73,7 +73,7 @@ def secao_aurea(intervalo, direcao, P0, f, tol=0.00000001):
             beta = alpha_upper - alpha_lower
             #alpha_e = alpha_lower + (1-Ra)*beta
             alpha_d = alpha_lower + Ra*beta 
-            f2 = f(P0 + alpha_d*sentido_busca)
+            f2 = f(P0 + alpha_d*sentido_busca, params)
         else:
             #caso negativo, define novo intervalo variando de alpha_lower ate alpha_d
             # e aproveita os valores anteriores de alpha_e e f1 como novos alpha_d e f2
@@ -85,7 +85,7 @@ def secao_aurea(intervalo, direcao, P0, f, tol=0.00000001):
             beta = alpha_upper - alpha_lower
             alpha_e = alpha_lower + (1-Ra)*beta
             #alpha_d = alpha_lower + Ra*beta 
-            f1 = f(P0 + alpha_e*sentido_busca)
+            f1 = f(P0 + alpha_e*sentido_busca, params)
             
     # calcula Pmin e alpha min apos convergência
     alpha_med = (alpha_lower + alpha_upper)/2
