@@ -13,10 +13,12 @@ def passo_cte(direcao, P0, f, step = 0.01):
     else:
         sentido_busca = -direcao.copy()
         flag = 1
+    
         
     P = P0.copy()
     P_next = P + step*sentido_busca
     alpha = 0
+   
     while (f(P) > f(P_next)):           
         alpha = alpha + step
         P = P0 + alpha*sentido_busca
