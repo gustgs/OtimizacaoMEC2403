@@ -1,0 +1,743 @@
+\documentclass[10pt, a4paper]{article}
+% \usepackage[english]{babel}
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{lipsum}
+
+% matlab code
+% \usepackage{matlab-prettifier}
+%\usepackage[numbered,framed]{matlab-prettifier}
+\usepackage{pythonhighlight}
+\renewcommand{\lstlistingname}{Anexo} % Listing->Code
+\let\ph\mlplaceholder % shorter macro
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{myStyle}{
+    language=Matlab,
+    breaklines=true,
+    frame=single,
+    numbers=none,
+    basicstyle=\ttfamily\footnotesize,
+%     basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\bfseries\color{magenta},
+    commentstyle=\color{codegreen},
+    identifierstyle=\color{blue},
+    backgroundcolor=\color{backcolour},
+    stringstyle=\color{codepurple},
+}
+\usepackage{adjustbox}
+
+% For subfigure use
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{subcaption}
+
+% Set page size and margins
+% Replace `letterpaper' with`a4paper' for UK/EU standard size
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=2cm]{geometry}
+
+% tabelas
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\usepackage{float}
+
+% Useful packages
+\usepackage{amsmath}
+
+\usepackage{graphicx}
+%\graphicspath{{figures/}} %Setting the graphicspath
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{cleveref}
+\newcommand{\crefrangeconjunction}{--}
+\DeclareMathOperator{\sen}{sen}
+
+
+\begin{document}
+
+\def\TITLE{Trabalho 1}
+\def\DISCIPLINE{MEC 2403 - Otimização, Algoritmos e Aplicações na Engenharia Mecânica}
+\def\PROFESSOR{Ivan Menezes}
+\def\AUTHOR{Gustavo Henrique Gomes dos Santos}
+\def\CONTACT{gustavohgs@gmail.com}
+\def\DATE{maio de 2023}
+
+\title{\textbf{\TITLE} \\ \DISCIPLINE}
+\author{\AUTHOR}
+\date{\DATE}
+
+\begin{titlepage}
+      \begin{center}
+          \vspace*{1cm}
+
+          \Huge
+          \textbf{\TITLE}
+
+          \vspace{0.5cm}
+          \LARGE
+          \DISCIPLINE
+
+          \vspace{1.5cm}
+
+          \textbf{\AUTHOR \\ {\tt \CONTACT}}
+
+          \vfill
+          Professor: \PROFESSOR
+
+          \vspace{0.8cm}
+
+          \includegraphics[width=0.2\textwidth]{../general/puc.jpg}
+
+          \Large
+          Departamento de Engenharia Mecânica\\
+          PUC-RJ Pontifícia Universidade Católica do Rio de Janeiro\\
+          \DATE
+
+      \end{center}
+  \end{titlepage}
+
+\maketitle
+
+\section{Introdução}
+
+\subsection{Objetivos}
+
+Esse trabalho tem como objetivo a implementação, em Python, e a realização de análise de convergência, para diferentes funções e pontos iniciais, dos seguintes métodos de otimização:
+\renewcommand{\theenumi}{\alph{enumi}}
+\begin{enumerate}
+  \item Univariante
+  \item Powell
+  \item Steepest Descent
+  \item Fletcher-Reeves
+  \item BFGS
+  \item Newton-Raphson
+\end{enumerate}
+
+\section{Implementações}
+
+A estratégia adotada neste trabalho foi de implementar algoritmos que, dados inputs específicos de cada método, retornam a próxima direção de busca. Para a busca unidirecional na direção especificada por cada método, 
+foram aproveitados e melhorados os códigos do passo constante e da seção áurea utilizados na resolução da Lista-1.
+
+\subsection{Pacotes utilizados}
+As seguintes bibliotecas são necessárias para execução do código final do arquivo principal :
+
+\begin{python}
+  import numpy as np
+  import matplotlib.pyplot as plt
+  from timeit import default_timer as timer
+\end{python}
+
+Os métodos de busca unidimensional, assim como os métodos de otimização foram implementados em arquivos distintos (osr\_methods.py e line\_search\_methods.py). Com isso, no arquivo principal também é necessário realizar o import desses algoritmos.
+
+\begin{python}
+  import osr_methods as osr
+  import line_search_methods as lsm
+\end{python}
+
+Esses arquivos distintos necessitam apenas do pacote numpy. Com isso apenas o seguinte import é necessário nos dois arquivos citados acima.
+
+\begin{python}
+  import numpy as np
+\end{python}
+
+\subsection{Busca Unidirecional}
+Os algoritmos do passo constante e da seção áurea foram implementados em um arquivo denominado line\_search\_methods.py. O seguinte pacote é necessário nesse arquivo : 
+\begin{python}
+  import numpy as np
+\end{python}
+
+\subsubsection{Passo Constante}
+
+
+Foi implementado um método que recebe como parâmetros de entrada um vetor direção ($\overrightarrow{dir}$), um ponto inicial ($\overrightarrow{P_1}$), 
+a função que se deseja encontrar o mínimo ($f(\overrightarrow{P})$), um valor opcional de epsilon da máquina ($\epsilon$ default com valor $10^{-8}$), um valor opcional de passo ($\Delta\alpha$ default com valor 0.01).
+
+Para definir o sentido da busca, é feita uma comparação entre o valor de $f(\overrightarrow{P_1}-\epsilon\,\overrightarrow{dir})$ e $f(\overrightarrow{P_1}+\epsilon\,\overrightarrow{dir})$.
+Caso este último valor seja maior do que o primeiro, o sentido de busca considerado é o oposto do vetor direção ($-\overrightarrow{dir}$). Caso o primeiro seja
+o maior valor, o sentido do vetor direção é mantido na busca ($\overrightarrow{dir}$).
+
+Com o passo default de 0.01 ou um qualquer outro passo desejado informado na passagem de parâmetro opcional, o método percorre o sentido
+de busca definido até encontrar um valor de $f(\overrightarrow{P_1}+ \alpha\,\overrightarrow{dir})$ que seja inferior ao valor do próximo passo.
+Quando essa condição é alcançada, esse último valor de $\alpha$ é definido como mínimo ($\alpha_{min}$). 
+
+Para garantir que a cada incremento
+de $\alpha$ não tenha sido pulado um mínimo da função, é feito uma comparação entre os valores de $f(\overrightarrow{P}-\epsilon\,\hat{dir})$ e $f(\overrightarrow{P})$, 
+onde $\overrightarrow{P} = \overrightarrow{P_1} + \alpha\,\overrightarrow{dir}$. Caso o último valor seja superior ao primeiro, o passo é desfeito e o $\alpha$ mínimo é considerado encontarado.
+
+Caso uma das condições abaixo seja atingida, o algoritmo é interrompido e  retorna o intervalo [$\alpha$,  $\alpha + \Delta\alpha$], fazendo os devidos ajustes para adequar os sinais de acordo com sentido de busca.
+\begin{enumerate}
+  \item $f(\overrightarrow{P}-\epsilon\,\hat{dir})$ e $f(\overrightarrow{P})$, com $\overrightarrow{P} = \overrightarrow{P_1} + \alpha\,\overrightarrow{dir}$
+  \item $f(\overrightarrow{P_1}+ \alpha\,\overrightarrow{dir}) < f(\overrightarrow{P_1}+ (\alpha + \Delta\alpha)\,\overrightarrow{dir})$  
+\end{enumerate}
+
+
+\begin{python}
+  def passo_cte(direcao, P0, f, eps = 1E-8, step = 0.01):
+    #line search pelo metodo do passo constante
+      
+    #define o sentido correto de busca
+    if (f(P0 - eps*(direcao/np.linalg.norm(direcao))) > f(P0 + eps*(direcao/np.linalg.norm(direcao)))):
+        sentido_busca = direcao.copy()
+        flag = 0
+    else:
+        sentido_busca = -direcao.copy()
+        flag = 1
+        
+    P = P0.copy()
+    P_next = P + step*sentido_busca
+    alpha = 0
+   
+    while (f(P) > f(P_next)):           
+        alpha = alpha + step
+        P = P0 + alpha*sentido_busca
+        P_next = P0 + (alpha+step)*sentido_busca
+        if (f(P - eps*(sentido_busca/np.linalg.norm(sentido_busca))) < f(P)):
+            alpha = alpha - step
+            break
+    
+    intervalo = np.array([alpha, alpha + step])
+    
+    if(flag == 1):
+        intervalo = -intervalo
+        
+    #retorna o intervalo de busca = [alpha min, alpha min + step]                 
+    return intervalo
+\end{python}
+
+\subsubsection{Seção Áurea}
+
+Implementado um método que recebe como parâmetros de entrada um intervalo de busca
+($\overrightarrow{interv} = [\alpha^L, \alpha^U]$), um vetor direção de busca ($\overrightarrow{dir}$), um ponto inicial ($\overrightarrow{P_1}$), a função f ($f(\overrightarrow{P})$) 
+e um parâmetro opcional para a tolerância de convergência com valor default de $10^{-5}$.
+
+Resumidamente, o método utiliza a razão áurea ($R_a = \frac{\sqrt{5} - 1}{2}$) para comparar os 
+valores de $f(\overrightarrow{P_1} + \alpha_{E}\,\overrightarrow{dir}$) e $f(\overrightarrow{P_1} + \alpha_{D}\,\overrightarrow{dir})$,
+onde $\alpha_{E} = \alpha^L + (1 - R_a )\beta$, $\alpha_{D} = \alpha^L + R_a\beta$ e $\beta = \alpha^U - \alpha^L$, 
+para determinar em qual trecho, $[\alpha^L, \alpha_{D}]$ ou $[\alpha_{E}, \alpha^U]$, o ponto mínimo se encontra. Enquanto a
+convergência não é alcançada, os valores de $\alpha^L, \alpha^U, \alpha_E$ e $\alpha_D$ vão sendo recalculados e atualizados.
+
+Quando o comprimento do trecho a ser avaliado é inferior à tolerância, o método finaliza e retorna o seguinte valor:
+
+\begin{itemize}
+  \item $\alpha_{min}$, tal que $\alpha_{min} = \frac{\alpha^L + \alpha^U}{2}$ e $\alpha^L$, $\alpha^U$ são os extremos do
+  intervalo do último passo do algortimo, quando a convergência foi obtida
+\end{itemize} 
+
+Importante destacar que o algortimo identifica o sentido de busca e os sinal correto do valor de alpha mínimo através do valor do intervalo passado como parâmetro.
+
+
+\begin{python}
+
+def secao_aurea(intervalo, direcao, P0, f, tol=0.00001):
+    #line search pelo metodo da secao aurea
+    
+    #verifica o sentido da busca
+    if(intervalo[1] < 0):
+        intervalo = -intervalo
+        sentido_busca = -direcao.copy()
+        flag = 1
+    else:
+        sentido_busca = direcao.copy()
+        flag = 0
+    
+    #atribui os limites superior e inferior da busca a variaveis internas do metodo
+    alpha_upper = intervalo[1]
+    alpha_lower = intervalo[0]
+    beta = alpha_upper - alpha_lower
+    
+    #razao aurea
+    Ra = (np.sqrt(5)-1)/2
+    
+    # define os pontos de analise de f com base na razao aurea
+    alpha_e = alpha_lower + (1-Ra)*beta
+    alpha_d = alpha_lower + Ra*beta 
+    
+    #primeira iteracao avalia f nos 2 pontos selecionados pela razao aurea
+    f1 = f(P0 + alpha_e*sentido_busca)
+    f2 = f(P0 + alpha_d*sentido_busca)
+    
+    #loop enquanto a convergencia nao for obtida
+    while (beta > tol):
+        if (f1 > f2):
+            #caso positivo, define novo intervalo variando de alpha_e ate alpha_upper
+            # e aproveita os valores anteriores de alpha_d e f2 como novos alpha_e e f1
+            alpha_lower = alpha_e
+            f1 = f2
+            alpha_e = alpha_d
+            
+            #calcula novo alpha_d e f2=f(alpha_d)
+            beta = alpha_upper - alpha_lower
+            #alpha_e = alpha_lower + (1-Ra)*beta
+            alpha_d = alpha_lower + Ra*beta 
+            f2 = f(P0 + alpha_d*sentido_busca)
+        else:
+            #caso negativo, define novo intervalo variando de alpha_lower ate alpha_d
+            # e aproveita os valores anteriores de alpha_e e f1 como novos alpha_d e f2
+            alpha_upper = alpha_d
+            f2 = f1
+            alpha_d = alpha_e
+            
+            #calcula novo alpha_e e f1=f(alpha_e)
+            beta = alpha_upper - alpha_lower
+            alpha_e = alpha_lower + (1-Ra)*beta
+            #alpha_d = alpha_lower + Ra*beta 
+            f1 = f(P0 + alpha_e*sentido_busca)
+            
+    # calcula Pmin e alpha min apos convergencia
+    alpha_med = (alpha_lower + alpha_upper)/2
+    alpha_min = alpha_med
+    
+    if (flag == 1):
+        alpha_min = -alpha_min
+    
+    return alpha_min
+\end{python}
+
+\subsection{Métodos OSR}
+
+Os algoritmos dos métodos Univariante, Powell, Steepest Descent, Fletcher-Reeves, BFGS e Newton-Raphson foram implementados em um arquivo denominado osr\_methods.py. O seguinte pacote é necessário nesse arquivo : 
+\begin{python}
+  import numpy as np
+\end{python}
+
+\subsubsection{Univariante}
+
+O método univariante alterna entre as direções canônicas. A primeira vez que ele é chamado, retorna a primeira direção canônica. Na segunda vez, a segunda direção canônica, e assim por diante.
+Quando todas as direções canônicas são utilizadas, reinicia-se pela primeira direção.
+
+A implementação considerou como parâmetros de entrada o número de dimensões  e o passo em que a otimização se encontra. Ambos valores são facilmente calculados no código principal que irá chamar 
+os métodos de OSR. O número de dimensões é extraído do ponto inicial e o passo é um valor controlado durante o processo de convergência que irá ser implementado no código principal.
+
+Toda vez que o método é chamado, inicializa-se um vetor com n zeros, sendo n o número de dimensões. O índice do vetor cujo valor será alterado para 1 é calculado 
+através de manipulações em cima do resto da divisão do npumero do passo pelo número de dimensões.
+
+\begin{python}
+  def univariante(passo, dimens):
+    indice = passo%dimens - 1
+    if (indice == -1) :
+        indice = dimens - 1
+    ek = np.zeros(dimens)
+    ek[indice] = 1
+    
+    return ek
+\end{python}
+
+\subsubsection{Powell}
+
+
+\begin{python}
+  def powell(P, P1, direcoes, passos, ciclos, dimens):
+    indice = passos%(dimens + 1) - 1
+    if (indice == -1):
+        dir = P - P1
+        direcoes[dimens - 1] = dir        
+    elif (indice == 0):
+        ciclos = ciclos + 1
+        if (ciclos%(dimens+2) == 0):
+            direcoes = np.eye(dimens, dtype=float)
+        P1 = P.copy()
+        dir = direcoes[indice].copy()
+    else:
+        dir = direcoes[indice].copy()
+        direcoes[indice-1] = dir
+  
+    return dir, direcoes, P1, ciclos 
+\end{python}
+
+\subsection{Exercício 2}
+
+Utilizando os métodos implementados na questão anterior, testar a sua implementação encontrando o ponto mínimo
+das seguintes funções:
+
+\begin{enumerate}
+  \item Função 1: 
+  \begin{equation*}
+    f(x_1, x_2) = x_1^2 - 3x_1x_2 + 4x_2^2 + x_1 - x_2 \;\; com \;\; \\
+    \overrightarrow{P_1} = 
+    \begin{bmatrix}
+     1 \\ 2
+    \end{bmatrix} \;\; e \;\; \overrightarrow{d} =
+    \begin{bmatrix}
+    -1 \\ -2
+    \end{bmatrix}
+ \end{equation*}
+
+ \item Função 2 - McCormick:
+ \begin{equation*}
+  f(x_1, x_2) = \sen{(x_1 + x_2)} + (x_1 - x_2)^2 - 1,5x_1 + 2,5x_2 \;\; com \;\; \\
+  \overrightarrow{P_1} = 
+  \begin{bmatrix}
+   -2 \\ \phantom{-}3
+  \end{bmatrix} \;\; e \;\; \overrightarrow{d} =
+  \begin{bmatrix}
+  \phantom{-}1.453 \\ -4.547
+  \end{bmatrix}
+\end{equation*}
+
+\item Função 3 - Himmelblau:
+ \begin{equation*}
+  f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2 \;\; com \;\; \\
+  \overrightarrow{P_1} = 
+  \begin{bmatrix}
+   0 \\ 5
+  \end{bmatrix} \;\; e \;\; \overrightarrow{d} =
+  \begin{bmatrix}
+  3 \\ 1.5
+  \end{bmatrix}
+\end{equation*}
+
+\end{enumerate}
+
+\begin{itemize}
+  \item Para cada função acima, desenhar(na mesma figura): as curvas de nível e o segmento de reta
+  conectando o ponto inicial ao ponto de mínimo.
+  \item Adotar uma tolerância de $10^{-5}$ para verificação da convergência numérica.
+\end{itemize}
+
+\subsubsection{Função 1}
+
+Importação das bibliotecas, da implementação dos métodos de busca unidimensional do exercício anterior e
+definição da função do exercício:
+
+\begin{python}
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import linear_search_methods as lsm
+
+  def f(P):
+    # P = [x1, x2]
+    return P[0]**2 - 3*P[0]*P[1] + 4*(P[1]**2) + P[0] - P[1]
+\end{python}
+
+  Cálculo do ponto mínimo usando os 3 métodos do exercício 1:
+
+\begin{itemize}
+  \item Passo constante
+  \item Bisseção
+  \item Seção Áurea
+\end{itemize}
+
+\begin{python}
+
+  #inputs de Ponto inicial e direcao de busca
+  P1 = np.array([1, 2])
+  dir = np.array([-1, -2])
+
+  #chama o metodo do passo constante
+  q2_a_pss_ct = lsm.passo_cte(dir.copy(), P1, f)
+
+  #funcao lsm.passo_cte entrega o intervalo de busca na segunda posicao do array de retorno
+  intervalo = q2_a_pss_ct[1]
+
+  #resgata o sentido unitario correto da busca unidimensional
+  sentido_busca = q2_a_pss_ct[2]
+
+  #chama o o metodo da bissecao
+  q2_a_bssc = lsm.bissecao(intervalo.copy(), sentido_busca.copy(), P1, f)
+
+  #chama o metodo da secao aurea
+  q2_a_sc_ar = lsm.secao_aurea(intervalo.copy(), sentido_busca.copy(), P1, f)
+
+  print(f'Passo constante : |\u03B1 min| = {intervalo[0]:.10f} e P min = ({q2_a_pss_ct[0][0]:.10f}, {q2_a_pss_ct[0][1]:.10f}) ')
+  print(f'Bissecao        : |\u03B1 min| = {q2_a_bssc[1]:.10f} e P min = ({q2_a_bssc[0][0]:.10f}, {q2_a_bssc[0][1]:.10f}) ')
+  print(f'Secao Aurea     : |\u03B1 min| = {q2_a_sc_ar[1]:.10f} e P min = ({q2_a_sc_ar[0][0]:.10f}, {q2_a_sc_ar[0][1]:.10f}) ')
+
+\end{python}
+
+Resultados obtidos (Saída do terminal):
+\newline
+
+
+Passo constante : $|\alpha \,\, min|$ = 2.1300000000 e P min = (0.0474350416, 0.0948700832)
+
+Bisseção        : $|\alpha \,\, min|$ = 2.1344287109 e P min = (0.0454544618, 0.0909089237)
+
+Seção Áurea     : $|\alpha \,\,  min|$ = 2.1344280564 e P min = (0.0454547546, 0.0909095092)\newline
+
+A solução para a função $f(x_1, x_2) = x_1^2 - 3x_1x_2 + 4x_2^2 + x_1 - x_2$ então fica :
+\newline
+
+\begin{itemize}
+  \item Passo constante: $|\alpha_{min}| = 2.1300000000$ e $\overrightarrow{P_{min}} =  
+  \begin{bmatrix}
+    0.0474350416 \\ 0.0948700832
+  \end{bmatrix}$
+  \item Bisseção: $|\alpha_{min}| = 2.1344287109$ e $\overrightarrow{P_{min}} =  
+  \begin{bmatrix}
+    0.0454544618 \\ 0.0909089237
+  \end{bmatrix}$
+  \item Seção Áurea: $|\alpha_{min}| = 2.1344280564$ e $\overrightarrow{P_{min}} =  
+  \begin{bmatrix}
+    0.0454547546 \\ 0.0909095092
+  \end{bmatrix}$
+\end{itemize}
+
+Como todos os métodos entregam respostas de $P_{min}$ muito parecidas, com diferenças relativamente pequenas,
+para a etapa de desenhar as curvas de nível e o segmento de reta conectando $P_1$ ao $P_{min}$ tomei a liberdade
+de plotar apenas o resultado da Seção Áurea.
+
+\begin{python}
+  #Escolhido o Pmin gerado pelo metodo da secao aurea para representar graficamente
+  Pmin = q2_a_sc_ar[0]
+
+  x1 = np.linspace(-7.5, 7.5, 100)
+  x2 = np.linspace(-7.5, 7.5, 100)
+  X1, X2 = np.meshgrid(x1, x2)
+  x3 = f([X1, X2])
+  niveis = plt.contour(X1, X2, x3, [0, 3, 10, 25, 40, 60, 100, 150], colors='black')
+  plt.clabel(niveis, inline=1, fontsize=10)
+  plt.annotate('', xy=Pmin, xytext=P1,
+                  arrowprops=dict(width=1, color='green', headwidth=10, headlength=10, shrink=0.05), fontsize='10')
+  plt.annotate(f'({P1[0]}, {P1[1]})', xy=P1, xytext=(5,-10), textcoords='offset points', color='green')
+  plt.annotate(f'$P_{{min}}$=({round(Pmin[0], 7)}, {round(Pmin[1], 7)})', xy=Pmin, xytext=(0.03,0.95), textcoords='axes fraction', color='green')
+  plt.plot(P1[0], P1[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
+  plt.plot(Pmin[0], Pmin[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
+  plt.xlabel('$x_1$', fontsize='16')
+  plt.ylabel('$x_2$', fontsize='16')
+  plt.grid(linestyle='--')
+  plt.title("$f(x_1, x_2)$ - Metodo da Secao Aurea", fontsize='16')
+  plt.savefig("A_solution.pdf", format="pdf")
+  plt.show()
+\end{python}
+
+\begin{figure}[htpb]
+  \centering
+  %\includegraphics[width=1\textwidth]{A_solution.pdf}
+  \caption{Função 1 - Seção Áurea}
+  \label{fig:q2a}
+\end{figure}
+\subsubsection{Função 2: McCormick}
+
+Importação das bibliotecas, da implementação dos métodos de busca unidimensional do exercício anterior e
+definição da função do exercício:
+
+\begin{python}
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import linear_search_methods as lsm
+
+  def mcCormick(P):
+    # P = [x1, x2]
+    return np.sin(P[0] + P[1]) + (P[0] - P[1])**2 - 1.5*P[0] + 2.5*P[1]
+\end{python}
+
+  Cálculo do ponto mínimo usando os 3 métodos do exercício 1:
+
+\begin{itemize}
+  \item Passo constante
+  \item Bisseção
+  \item Seção Áurea
+\end{itemize}
+
+\begin{python}
+
+  #inputs de Ponto inicial e direcao de busca
+  P1 = np.array([-2, 3])
+  dir= np.array([1.453, -4.547])
+
+  #chama o metodo do passo constante
+  q2_b_pss_ct = lsm.passo_cte(dir.copy(), P1, mcCormick)
+
+  #funcao lsm.passo_cte entrega o intervalo de busca na segunda posicao do array de retorno
+  intervalo = q2_b_pss_ct[1]
+
+  #resgata o sentido unitario correto da busca unidimensional
+  sentido_busca = q2_b_pss_ct[2]
+
+  #chama o o metodo da bissecao
+  q2_b_bssc = lsm.bissecao(intervalo.copy(), sentido_busca.copy(), P1, mcCormick)
+
+  #chama o metodo da secao aurea
+  q2_b_sc_ar = lsm.secao_aurea(intervalo.copy(), sentido_busca.copy(), P1, mcCormick)
+
+  print(f'Passo constante : |\u03B1| min = {intervalo[0]:.10f} e P min = ({q2_b_pss_ct[0][0]:.10f}, {q2_b_pss_ct[0][1]:.10f}) ')
+  print(f'Bissecao        : |\u03B1| min = {q2_b_bssc[1]:.10f} e P min = ({q2_b_bssc[0][0]:.10f}, {q2_b_bssc[0][1]:.10f}) ')
+  print(f'Secao Aurea     : |\u03B1| min = {q2_b_sc_ar[1]:.10f} e P min = ({q2_b_sc_ar[0][0]:.10f}, {q2_b_sc_ar[0][1]:.10f}) ')
+
+\end{python}
+
+Resultados obtidos (Saída do terminal):
+\newline
+
+
+Passo constante : $|\alpha \,\, min|$ = 4.7700000000 e P min = (-0.5480690486, -1.5436545327)
+
+Bisseção        : $|\alpha \,\, min|$ = 4.7735791016 e P min = (-0.5469796129, -1.5470637991)
+
+Seção Áurea     : $|\alpha \,\,  min|$ = 4.7735766069 e P min = (-0.5469803722, -1.5470614229)\newline
+
+A solução para a função $f(x_1, x_2) = \sen{(x_1 + x_2)} + (x_1 - x_2)^2 - 1,5x_1 + 2,5x_2$ então fica :
+\newline
+
+\begin{itemize}
+  \item Passo constante: $|\alpha_{min}| = 4.7700000000$ e $\overrightarrow{P_{min}} =  
+  \begin{bmatrix}
+    -0.5480690486 \\ -1.5436545327
+  \end{bmatrix}$
+  \item Bisseção: $|\alpha_{min}| = 4.77357910169$ e $\overrightarrow{P_{min}} =  
+  \begin{bmatrix}
+    -0.5469796129 \\ -1.5470637991
+  \end{bmatrix}$
+  \item Seção Áurea: $|\alpha_{min}| = 4.7735766069$ e $\overrightarrow{P_{min}} =  
+  \begin{bmatrix}
+    -0.5469803722 \\ -1.5470614229
+  \end{bmatrix}$
+\end{itemize}
+
+Como todos os métodos entregam respostas de $P_{min}$ muito parecidas, com diferenças relativamente pequenas,
+para a etapa de desenhar as curvas de nível e o segmento de reta conectando $P_1$ ao $P_{min}$ tomei a liberdade
+de plotar apenas o resultado do Passo Constante.
+
+\begin{python}
+  #Escolhido o Pmin gerado pelo metodo do passo constante para representar graficamente
+  Pmin = q2_b_pss_ct[0]
+
+  x1 = np.linspace(-7.5, 7.5, 100)
+  x2 = np.linspace(-7.5, 7.5, 100)
+  X1, X2 = np.meshgrid(x1, x2)
+  x3 = mcCormick([X1, X2])
+  niveis = plt.contour(X1, X2, x3, [0, 5, 15, 40, 60], colors='black')
+  plt.clabel(niveis, inline=1, fontsize=10)
+  plt.annotate('', xy=Pmin, xytext=P1,
+                  arrowprops=dict(width=1, color='green', headwidth=10, headlength=10, shrink=0.05), fontsize='10')
+  plt.annotate(f'({P1[0]}, {P1[1]})', xy=P1, xytext=(10,0), textcoords='offset points', color='green')
+  plt.annotate(f'$P_{{min}}$=({round(Pmin[0], 7)}, {round(Pmin[1], 7)})', xy=Pmin, xytext=(0.03, 0.95), textcoords='axes fraction', color='green')
+  plt.plot(P1[0], P1[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
+  plt.plot(Pmin[0], Pmin[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
+  plt.xlabel('$x_1$', fontsize='16')
+  plt.ylabel('$x_2$', fontsize='16')
+  plt.grid(linestyle='--')
+  plt.title("$mcCormick(x_1, x_2)$ - Metodo do Passo Constante", fontsize='16')
+  plt.savefig("B_solution.pdf", format="pdf")
+  plt.show()
+\end{python}
+
+\begin{figure}[htpb]
+  \centering
+  %\includegraphics[width=1\textwidth]{B_solution.pdf}
+  \caption{McCormick - Passo Constante}
+  \label{fig:q2b}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{apalike}
+\bibliography{export}
+\subsubsection{Função 3: Himmelblau}
+
+Importação das bibliotecas, da implementação dos métodos de busca unidimensional do exercício anterior e
+definição da função do exercício:
+
+\begin{python}
+  import numpy as np
+  import matplotlib.pyplot as plt
+  import linear_search_methods as lsm
+
+  def himmelblau(P):
+    # P = [x1, x2]
+    return (P[0]**2 + P[1] - 11)**2 + (P[0] + P[1]**2 - 7)**2
+\end{python}
+
+  Cálculo do ponto mínimo usando os 3 métodos do exercício 1:
+
+\begin{itemize}
+  \item Passo constante
+  \item Bisseção
+  \item Seção Áurea
+\end{itemize}
+
+\begin{python}
+
+  #inputs de Ponto inicial e direcao de busca
+  P1 = np.array([0, 5])
+  dir = np.array([3, 1.5])
+
+  #chama o metodo do passo constante
+  q2_c_pss_ct = lsm.passo_cte(dir, P1, himmelblau)
+
+  #funcao lsm.passo_cte entrega o intervalo de busca na segunda posicao do array de retorno
+  intervalo = q2_c_pss_ct[1]
+
+  #resgata o sentido unitario correto da busca unidimensional
+  sentido_busca = q2_c_pss_ct[2]
+
+  #chama o o metodo da bissecao
+  q2_c_bssc = lsm.bissecao(intervalo.copy(), sentido_busca.copy(), P1, himmelblau)
+
+  #chama o metodo da secao aurea
+  q2_c_sc_ar = lsm.secao_aurea(intervalo.copy(), sentido_busca.copy(), P1, himmelblau)
+
+  print(f'Passo constante : |\u03B1 min| = {intervalo[0]:.10f} e P min = ({q2_c_pss_ct[0][0]:.10f}, {q2_c_pss_ct[0][1]:.10f}) ')
+  print(f'Bissecao        : |\u03B1 min| = {q2_c_bssc[1]:.10f} e P min = ({q2_c_bssc[0][0]:.10f}, {q2_c_bssc[0][1]:.10f}) ')
+  print(f'Secao Aurea     : |\u03B1 min| = {q2_c_sc_ar[1]:.10f} e P min = ({q2_c_sc_ar[0][0]:.10f}, {q2_c_sc_ar[0][1]:.10f}) ')
+
+\end{python}
+
+Resultados obtidos (Saída do terminal):
+\newline
+
+
+Passo constante : $|\alpha \,\, min|$ = 3.3900000000 e P min = (-3.0321081775, 3.4839459113)
+
+Bisseção        : $|\alpha \,\, min|$ = 3.3921630859 e P min = (-3.0340429004, 3.4829785498)
+
+Seção Áurea     : $|\alpha \,\,  min|$ = 3.3921633455 e P min = (-3.0340431325, 3.4829784337)\newline
+
+A solução para a função $f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2$ então fica :
+\newline
+
+\begin{itemize}
+  \item Passo constante: $|\alpha_{min}| = 3.3900000000$ e $\overrightarrow{P_{min}} =  
+  \begin{bmatrix}
+    -3.0321081775 \\ \phantom{-}3.4839459113
+  \end{bmatrix}$
+  \item Bisseção: $|\alpha_{min}| = 3.3921630859$ e $\overrightarrow{P_{min}} =  
+  \begin{bmatrix}
+    -3.0340429004 \\ \phantom{-}3.4829785498
+  \end{bmatrix}$
+  \item Seção Áurea: $|\alpha_{min}| = 3.3921633455$ e $\overrightarrow{P_{min}} =  
+  \begin{bmatrix}
+    -3.0340431325 \\ \phantom{-}3.4829784337
+  \end{bmatrix}$
+\end{itemize}
+
+Como todos os métodos entregam respostas de $P_{min}$ muito parecidas, com diferenças relativamente pequenas,
+para a etapa de desenhar as curvas de nível e o segmento de reta conectando $P_1$ ao $P_{min}$ tomei a liberdade
+de plotar apenas o resultado da Bisseção.
+
+\begin{python}
+  #Escolhido o Pmin gerado pelo metodo da bissecao para representar graficamente
+  Pmin = q2_c_bssc[0]
+
+  x1 = np.linspace(-7.5, 7.5, 1000)
+  x2 = np.linspace(-7.5, 7.5, 1000)
+  X1, X2 = np.meshgrid(x1, x2)
+  x3 = himmelblau([X1, X2])
+  niveis = plt.contour(X1, X2, x3, [10,50,100,200, 350, 1000], colors='black')
+  plt.clabel(niveis, inline=1, fontsize=10)
+  plt.annotate('', xy=Pmin, xytext=P1,
+                  arrowprops=dict(width=1, color='green', headwidth=10, headlength=10, shrink=0.05), fontsize='10')
+  plt.annotate(f'$P_1$=({P1[0]}, {P1[1]})', xy=P1, xytext=(0.03,0.95), textcoords='axes fraction', color='green')
+  plt.annotate(f'$P_{{min}}$=({round(Pmin[0], 7)}, {round(Pmin[1], 7)})', xy=Pmin, xytext=(0.55,0.95), textcoords='axes fraction', color='green')
+  plt.plot(P1[0], P1[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
+  plt.plot(Pmin[0], Pmin[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
+  plt.xlabel('$x_1$', fontsize='16')
+  plt.ylabel('$x_2$', fontsize='16')
+  plt.grid(linestyle='--')
+  plt.title("$himmelblau(x_1, x_2)$ - Metodo da Bissecao", fontsize='16')
+  plt.savefig("C_solution.pdf", format="pdf")
+  plt.show()
+\end{python}
+
+\begin{figure}[htpb]
+  \centering
+  %\includegraphics[width=1\textwidth]{C_solution.pdf}
+  \caption{Himmelblau - Bisseção}
+  \label{fig:q2c}
+\end{figure}
+
+\end{document}

@@ -31,7 +31,7 @@ def passo_cte(direcao, P0, f, eps = 1E-8, step = 0.01):
     #retorna o intervalo de busca = [alpha min, alpha min + step]                 
     return intervalo
     
-def secao_aurea(intervalo, direcao, P0, f, tol=0.00000001):
+def secao_aurea(intervalo, direcao, P0, f, tol=0.00001):
     #line search pelo metodo da secao aurea
     
     #verifica o sentido da busca
