@@ -327,6 +327,23 @@ através de manipulações em cima do resto da divisão do npumero do passo pelo
 
 \subsubsection{Powell}
 
+O método de Powell consiste de ciclos de n + 1 passos, onde n é o número de dimensões. No primeiro ciclo e toda vez que o número do ciclo for múltiplo de n + 2, 
+o conjunto de n direções é inicializado com as direções canônicas. A direção n + 1 de todo ciclo será o igual a  $\overrightarrow{P_n} - \overrightarrow{P_0}$, 
+onde $\overrightarrow{P_n}$ é o ponto encontrado na otimização até o passo n do ciclo atual e $\overrightarrow{P_0}$ é o ponto inicial do primeiro passo do ciclo atual,
+que por sua vez é igual ao ponto final do ciclo anterior. Outra característica do método de Powell é que uma direção de um passo genérico k de um determinado ciclo será 
+a direção do passo k - 1 do ciclo seguinte.
+
+A implementação considerou como parâmetros de entrada o ponto mínimo encontrado no passo anterior ($\overrightarrow{P}$), o ponto inicial do 
+ciclo atual ($\overrightarrow{P}_1$), um array com o conjunto de direções, um número representando o passo global da convergência
+no código principal, um número representado o ciclo do método e o número de dimensões.
+
+Na primeira chamada do método, ou seja, para o primeiro passo do primeiro ciclo, o código principal envia o conjunto de direções canônicas e número de ciclo igual a zero.
+Com manipulações com o resto da divisão do número do passo pelo número de dimensões, o algoritmo consegue identificar qual direção utilizar do conjunto de direções
+enviado como parâmetro e atualizar o mesmo para o ciclo seguinte. O algoritmo também precisa atualizar o número do ciclo a cada n + 1 passos e voltar para as direções
+canônicas a cada n + 2 ciclos.  
+
+A cada achamada do método, são retornadas a direção para o passo atual, o conjunto de direções atualizado, o ponto inicial do ciclo atual  e o número de ciclos atual.
+Esses valores precisam ser recebidos no código principal e utilizados para a chamado do método no passo seguinte.
 
 \begin{python}
   def powell(P, P1, direcoes, passos, ciclos, dimens):
@@ -346,6 +363,342 @@ através de manipulações em cima do resto da divisão do npumero do passo pelo
   
     return dir, direcoes, P1, ciclos 
 \end{python}
+
+\subsubsection{Steepest Descent}
+O método Steepest Descent recebe um ponto $\overrightarrow{P}$ e a função a ser minimizada e retorna como direção o vetor com sentido oposto ao gradiente da função no ponto $\overrightarrow{P}$.
+
+A implementação considerou como parâmetro de entrada apenas o vetor gradiente da função no ponto $\overrightarrow{P}$, uma vez que o código principal já faz o 
+cálculo dessa variável para verificar convergência e a mesma já está disponível no momento de chamada do método.
+\begin{python}
+ def steepestDescent(grad):
+    return -grad
+\end{python}
+
+\subsubsection{Fletcher-Reeves}
+O método Fletcher-Reeves utiliza $-\overrightarrow{\nabla}f$ no ponto $\overrightarrow{P_0}$ como primeira direção. A partir da segunda direção
+ele utiliza uma correção $\beta$ que é a razão ao quadrado entre o gradiente da função no ponto encontrado no passo anterior e o gradiente da função no ponto
+inicial do passo anterior. Ou seja, $\beta^k = \frac{(\lvert\overrightarrow{\nabla f}(\overrightarrow{P}^{k+1})\rvert)^2}{(\lvert\overrightarrow{\nabla f}(\overrightarrow{P}^k)\rvert)^2}$.
+A correção é então utilizada em conjunto com a direção do último passo e o gradiente da função no ponto obtido no último passo. Dessa forma,
+$\overrightarrow{d}^{k+1} = -\overrightarrow{\nabla}f(\overrightarrow{P}^{k+1}) + \beta^k\,\overrightarrow{d^k}$
+
+A implementação considerou como parâmetros de entrada a direção utilizada no passo anterior, o gradiente da função no ponto obtido no passo anterior, o gradiente 
+da função no ponto inicial do passo anterior e o número do passo. Para o primeiro passo do método, o código principal envia o gradiente da função no ponto inicial.
+O método retorna a direção a ser utilizada e o gradiente a ser usado no passo seguinte como gradiente da função f no ponto inicial do passo anterior. O código principal,
+recebe esses valores e utiliza nas chamadas subsequentes.
+
+\begin{python}
+ def fletcherReeves(dir_last, grad, grad_last, passo):
+    if passo == 1:
+        grad_last = grad.copy()
+        return -grad, grad_last
+    else:
+        beta = (np.linalg.norm(grad)/np.linalg.norm(grad_last))**2
+        grad_last = grad.copy()
+        return -grad + beta*dir_last, grad_last
+\end{python}
+
+\subsubsection{BFGS}
+
+O método BFGS retorna $\overrightarrow{d}^k = -\bar{\bar{S}}^k\,\overrightarrow{\nabla}f(\overrightarrow{P}^k)$ como direção, sendo $\bar{\bar{S}}^0 = \bar{\bar{I}}$.
+É capaz de minimizar funções quadráticas em n + 1 passos, sendo n o número de dimensões.
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[scale=0.5]{bfgs_auxiliares.PNG}
+  \caption{Variáveis Auxiliares. Fonte: Aula-3\_MetodosOSR.pdf}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[scale=0.5]{bfgs_sk.PNG}
+  \caption{Cálculo de $S^{k+1}$. Fonte: Aula-3\_MetodosOSR.pdf}
+\end{figure}
+
+A implementação considerou como parâmetros de entrada os pontos inicial e final do passo anterior, os gradientes da função nos pontos inicial e final do passo anterior,
+a matriz $\bar{\bar{S}}$ calculada no último passo, o número do passo e o número de dimensões. O algortimo retorna a direção atual a ser utilizada na busca, bem como os
+demais parâmetros atualizados necessários para a chamada subsequente do método, que precisarão ser lidos no código principal.
+
+\begin{python}
+  def bfgs(P, P_last, grad, grad_last, S_last, passo, dimens):
+    if (passo == 1):
+        dir = -S_last.dot(grad)
+    else:
+        delta_x_k = P - P_last
+        delta_g_k = grad - grad_last
+        
+        #para o numpy, vetor 1-D linha e vetor coluna sao a mesma coisa (nao e necessrio transpor)
+        #matrizes
+        A = np.outer(delta_x_k, np.transpose(delta_x_k))
+        B = S_last.dot(np.outer(delta_g_k, np.transpose(delta_x_k)))
+        C = np.outer(delta_x_k, np.transpose(S_last.dot(delta_g_k)))
+        
+        #Escalares        
+        d = np.transpose(delta_x_k).dot(delta_g_k)
+        e = np.transpose(delta_g_k).dot(S_last.dot(delta_g_k))
+                
+        S = S_last + (d + e)*A/(d**2) - (B + C)/d
+        dir = -S.dot(grad)
+        S_last = S.copy()
+    P_last = P
+    grad_last = grad
+    return dir, P_last, grad_last, S_last
+\end{python}
+
+\subsubsection{Newton-Raphson}
+O método Newton-raphson retorna $\overrightarrow{d}^k = -\bar{\bar{H}}(\overrightarrow{P}^k)^{-1}\,\overrightarrow{\nabla}f(\overrightarrow{P}^k)$.
+
+A implementação considerou como parâmetros de entrada o ponto inicial ou ponto obtido no passo anterior, o gradiente da função nesse ponto e o método que caclula
+a matriz Hessiana de f.
+
+\begin{python}
+  def newtonRaphson(P, grad_P, hessian_f):
+    return -np.linalg.inv(hessian_f(P)).dot(grad_P)
+\end{python}
+
+\subsection{Código Principal}
+
+Os seguintes pacotes foram utilizados na implementação do código principal, já inclusos os arquivos .py com as implementações dos métodos OSR e busca unidimensional.
+
+\begin{python}
+  import numpy as np
+  import osr_methods as osr
+  import line_search_methods as lsm
+  import numdifftools as nd
+  import matplotlib.pyplot as plt
+  from timeit import default_timer as timer
+\end{python}
+
+Criada uma seção com as variáveis responsáveis pelo controle numérico da minimização das funções.
+
+\begin{python}
+  # numero maximo de iteracoes 
+  maxiter = 200
+
+  # tolerancia para convergencia do gradiente
+  tol_conv = 1E-5
+
+  # tolerancia para a busca unidirecional
+  tol_search = 1E-5
+
+  # delta alpha do passo constante
+  line_step = 1E-2
+
+  #epsilon da maquina
+  eps = 1E-8
+\end{python}
+
+Seção para escolha do método a ser utilizado na minimização.
+
+\begin{python}
+  # 1 - Univariante
+  # 2 - Powell
+  # 3 - Steepest Descent
+  # 4 - Newton Raphson
+  # 5 - Fletcher Reeves
+  # 6 - BFGS
+
+  metodo = 1
+
+  if (metodo == 1):
+      n_met = 'Univariante'
+  elif (metodo == 2):
+      n_met = 'Powell'
+  elif (metodo == 3):
+      n_met = 'Steepest Descent'
+  elif (metodo == 4):
+      n_met = 'Newton Raphson'
+  elif (metodo == 5):
+      n_met = 'Fletcher-Reeves'
+  elif (metodo == 6):
+      n_met = 'BFGS'
+\end{python}
+
+Seção reservada para definição da função f, do gradiente de f, da Hessiana de f e ponto inicial. Nesse momento deixei em branco as definições, mas na seção de cada 
+questão com sua função específica as definições serão apresentadas.
+
+\begin{python}
+  def f(Xn):
+    return ...
+      
+   def grad_f(Xn):
+    return ...
+      
+   def hessian_f(Xn):
+    return ...   
+  
+  P0 = ...
+  
+  #numero da funcao  - apenas para automatizacao do plot de contorno
+  #1 = Questao 1 letra a
+  #2 = Questao 1 letra b
+  #3 = Questao 2 letra a
+  #4 = Questao 2 lebra b
+  func = ...
+
+  # nome da questao e letra - apenas para automatizcao do plot
+  if (func == 1):
+    n_func = 'Q1.a'
+  elif (func == 2):
+    n_func = 'Q1.b'
+  elif (func == 3):
+    n_func = 'Q2.a'
+  elif (func == 4):
+    n_func = 'Q2.b'
+\end{python}
+
+
+
+Seção para inicialização de variáveis auxiliares para chamada inicial dos métodos de otimização OSR.
+
+\begin{python}
+  passos = 0
+  dimens = P0.size
+  Pmin = P0.copy()
+  listPmin = []
+  listPmin.append(Pmin)
+  grad = grad_f(Pmin)
+  norm_grad = np.linalg.norm(grad)
+
+  if (metodo == 2):
+      direcoes = np.eye(dimens, dtype=float)
+      ciclos = 0
+      P1 = P0.copy()
+  elif (metodo == 5):
+      #o metodo recebe a direcao anterior 
+      #inicializo a direcao com um vetor de zeros mas que nunca e usado
+      #uso apenas para enviar como parametro na primeira iteracao do metodo, o qual atualiza o valor de dir para a iteracao seguinte
+      dir = np.zeros((1, dimens))
+      grad_last = grad.copy()
+  elif(metodo == 6):
+      S_last = np.eye(dimens)
+      grad_last = grad.copy()
+      P_last = P0.copy()
+\end{python}
+
+Loop para chamada dos métodos e convergência da otimização.
+
+\begin{python}
+  start = timer()
+
+  while (norm_grad > tol_conv):
+      if (passos == maxiter):
+          print('Nao convergiu')
+          break
+      passos = passos + 1
+      if (metodo == 1):
+          dir = osr.univariante(passos, dimens)
+      elif (metodo == 2):
+          dir, direcoes, P1, ciclos = osr.powell(Pmin, P1, direcoes,passos, ciclos, dimens)
+      elif (metodo == 3):
+          dir = osr.steepestDescent(grad)
+      elif (metodo == 4):
+          dir = osr.newtonRaphson(Pmin, grad, hessian_f)
+      elif (metodo == 5):
+          dir, grad_last = osr.fletcherReeves(dir, grad, grad_last, passos)
+      elif (metodo == 6):
+          dir, P_last, grad_last, S_last = osr.bfgs(Pmin, P_last, grad, grad_last, S_last, passos, dimens)
+      
+      intervalo = lsm.passo_cte(dir, Pmin, f, eps, line_step)
+      alpha = lsm.secao_aurea(intervalo, dir, Pmin, f, tol_search)
+      Pmin = Pmin + alpha*dir
+      listPmin.append(Pmin)
+      grad = grad_f(Pmin)
+      norm_grad = np.linalg.norm(grad)    
+
+  end = timer()
+
+  tempoExec = end - start
+\end{python}
+
+Seção para geração automática do gráfico de configuração dos nós da questão 2 letra b e dos mapas de contorno para as demais questões.
+
+\begin{python}
+  if (func < 4):
+    if (func == 1):
+        x1 = np.linspace(-6, 3, 100)
+        x2 = np.linspace(-4, 2.5, 100)
+        X1, X2 = np.meshgrid(x1, x2)
+        X3 = f([X1, X2])
+        niveis = plt.contour(X1, X2, X3, [0, 1, 3, 8, 15, 25, 40], colors='black')
+    elif (func == 2):
+        x1 = np.linspace(-5, 25, 100)
+        x2 = np.linspace(-10, 10, 100)
+        X1, X2 = np.meshgrid(x1, x2)
+        X3 = f([X1, X2])
+        niveis = plt.contour(X1, X2, X3,[50, 100,200,500, 1000, 2000, 5000], colors='black')
+    elif (func == 3):
+        x1 = np.linspace(-3, 3, 100)
+        x2 = np.linspace(-6, 15, 100)
+        X1, X2 = np.meshgrid(x1, x2)
+        X3 = f([X1, X2])
+        niveis = plt.contour(X1, X2, X3,[-2000,-1500, -1000, -500,500,2000], colors='black')
+        
+    plt.clabel(niveis, inline=1, fontsize=10)
+    x = []
+    y = []
+    for P in listPmin:
+        x.append(P[0])
+        y.append(P[1])
+    plt.plot(x, y, color='g', linewidth='3')
+    plt.xlabel('$x_1$', fontsize='16')
+    plt.ylabel('$x_2$', fontsize='16')
+    plt.grid(linestyle='--')
+    titulo = n_func + ' ' + n_met
+    plt.title(titulo, fontsize='16')
+    file_name = n_func + '_' + n_met + '_P0=' + np.array2string(P0, precision = 2, separator=' ') + '.pdf'
+    plt.savefig(file_name, format="pdf")
+    plt.show()
+  elif (func == 4):
+      x = []
+      y = []
+      n = int(dimens/2)
+      m = n + 1
+      Li = np.zeros(m, dtype=float) # comprimentos iniciais das molas
+      Li = Li + 60/m
+      print(Li)
+      x.append(0)
+      y.append(0)
+      comp = 0
+      for k in np.arange(n):
+          comp = comp + Li[k]
+          x.append(comp + Pmin[2*k])
+          y.append(Pmin[2*k + 1])
+      x.append(60)
+      y.append(0)
+      
+      fig, ax = plt.subplots()
+      ax.tick_params(top=True, labeltop=True, bottom=False, labelbottom=False)
+      ax.xaxis.set_label_position('top')
+      ax.spines['left'].set_position(('data', 0))
+      ax.spines['top'].set_position(('data', 0))
+
+          
+      plt.plot(x, y, marker = 'o', color='g', linewidth='3')
+      plt.ylim([0, 8])
+      plt.xlim([0, 60])
+      plt.xlabel('$x$', fontsize='16')
+      plt.ylabel('$y$', fontsize='16')
+      plt.grid()
+      plt.gca().invert_yaxis()
+      plt.show()
+\end{python}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Exercício 2}
 
