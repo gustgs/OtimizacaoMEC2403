@@ -1229,7 +1229,8 @@ de 90 segundos para convergir. Após depuração do código e dos resultados fic
 para essa função e ponto inicial, o método de Powell, no sexto passo, segundo ciclo, gera uma direção com módulo muito pequeno e que
 que necessita de um $\alpha$(aproximadante 60000) muito grande para alcançar o mínimo. Isso faz com que o algoritmo leve o tempo apresentado.
 Essa talvez seja uma grande indicação de que trabalhar com direções normalizadas na busca unidirecional
-seja mais adequado, evitando esse tipo de problema.
+seja mais adequado, evitando esse tipo de problema que pode ocorrer com outros métodos também a depender da combimação 
+dos parâmetros de entrada.
 
 Para fins de apresentação dos demais resultados, irei utilizar como base o estudo feito com tolerância de $10^{-3}$.
 
@@ -1283,7 +1284,262 @@ Abaixo seguem as curvas de nível para um ponto inicial diferente do proposto no
 
 \subsection{Questão 2 (b)}
 \subsubsection{Enunciado}
+Desenvolver um estudo de convergência da solução do deslocamento do ponto A, do sistema de molas, para níveis crescentes
+de discretização do modelo (ou seja, considerando o número de molas n = 2,4,6...). A rigidez de cada mola ($k_i$, i =1,...n)
+é obtida como a razão entre o módulo de rigidez axial do material e o seu comprimento. Os valores $W_j$ (com j = 1,...n-1)
+correspondem às cargas nodais equivalentes aos pesos das molas.
+
 \subsubsection{Formulação}
+
+Para a generalização do problema do sistema de molas, foi considerado que sempre existirá um número par de molas.
+
+$n_{nodes} = n_{molas} -1$
+
+Como cada nó possui duas variáveis (Deslocamento horizontal $(u_i)$ e Deslocamento vertical $(v_i)$), o número de dimensões
+será sempre $n_{dimens} = 2n_{nodes}$.
+
+Usando a mesma ideia do equacionamento dos comprimentos finais de cada mola para o sistema com apenas 2 molas, e
+extrapolando para $n_{dimens}$, podemos escrever o seguinte :
+
+\vspace{3mm}
+Seja $Li_m = $ comprimeto inicial da mola m, com m=1,2,...$n_{molas}$
+
+\vspace{3mm}
+Seja $Lf_m = $ comprimeto final da mola k, com m=1,2,...$n_{molas}$
+
+\vspace{3mm}
+$Lf_m = \sqrt{(Li_m + u_m - u_{m-1})^2 + (v_m - v_{m-1})^2}$, com $u_0 = v_0 = u_{n_{molas}} = v_{n_{molas}} = 0 $
+
+\vspace{3mm}
+$U_m = \frac{1}{2}K_m\Delta L_m^2$, sendo $K_m = \frac{EA_m}{Li_m}$ e $\Delta L_m = Lf_m - Li_m$ = Energia Interna de deformação
+
+\vspace{3mm}
+$W_n = \frac{1}{2}(\rho_n Li_n + \rho_{n+1} Li_{n+1})$, com n=1,2,...$n_{nodes}$
+
+\vspace{3mm}
+$V_n = W_nv_n$ = Trabalho das forças externas
+
+\vspace{3mm}
+Finalmente :
+
+\vspace{3mm}
+$\Pi = \sum_{m=1}^{n_{molas}}{U_m} - \sum_{n=1}^{n_{nodes}}{V_n}$ = Energia Potencial Total
+
+\vspace{3mm}
+Para o cálculo do $\overrightarrow{\nabla} \Pi$, o seguinte raciocínio foi adotado :
+
+A variável $u_n$ aparece apenas nos termos $U_n$ e $U_{n+1}$, enquanto $v_n$ aparece em $U_n$, $U_{n+1}$ e $V_n$.
+
+Dessa forma $\frac{\partial \Pi}{\partial u_n} = \frac{\partial U_n}{\partial u_n} + \frac{\partial U_{n+1}}{\partial u_n}$ e 
+$\frac{\partial \Pi}{\partial v_n} = \frac{\partial U_n}{\partial v_n} + \frac{\partial U_{n+1}}{\partial v_n} -
+\frac{\partial V_n}{\partial v_n} $. Todos esses termos são possíveis de se calcular analiticamente usando as expressões
+apresentadas acima para $Lf_m$, $U_m$ e $V_n$, e com isso temos uma expressão para cálculo do gradiente da função e que
+foi implementada no meu código.
+
+O mesmo raciocínio poderia ser aplicado para cálculo da Hessiana da função, porém, como sua utilidade fica restrita ao
+método de Newton-Raphson, para fins desse trabalho usei um pacote pronto para cálculo diferencial numérico no Python 
+(numdifftools) com resultados bem satisfatórios e coincidentes com todos os cálculos dos métodos
+analíticos de gradiente e Hessiana implementados para as funções da questão 1 e questão 2a.
+
+Na implementação o parâmetro que controla o número de molas do sistema é o número de dimensões do ponto inicial. Ou seja,
+para um sistema 2 molas, 1 nó livre, é necessário fornecer $x^0$ com 2 dimensões ($x^0 = \{u_1, v_1\}^t$). Para um
+sistema 4 molas, 3 nós livres, é necessar informar $x^0 = \{u_1, v_1, u_2, v_2, u_3, v_3\}^t$, e assim por diante.
+
+\vspace{5mm}
+Definição da função, gradiente, Hessiana no código principal :
+
+\begin{python}
+  def f(Xn):
+    dimens = Xn.size
+    #numero de nos
+    n = int(dimens/2)
+
+    #numero de molas
+    m = n + 1
+
+    #Inicializacao dos vetores com as variaveis do problema
+    Li = np.zeros(m, dtype=float) # comprimentos iniciais das molas
+    EA = np.zeros(m, dtype=float)
+    RHO = np.zeros(m, dtype=float)
+    W = np.zeros(n, dtype=float) # peso em cada no
+    
+    #Atribuicao dos valores do problema
+    #Cada mola mede inicialmente 60/n_molas
+    #molas a esquerda possuem EA = 27000 e rho 8
+    #molas a direita possuem EA = 18000 e rho 16
+    Li = Li + 60/m
+
+    EA[ : int(m/2)] = 27000
+    EA[int(m/2) : ] = 18000
+    RHO[ : int(m/2)] = 8
+    RHO[int(m/2) : ] = 16
+    
+    #Calculo dos pesos atuando em cada no
+    # W[j] = (1/2)*(RHO[j]*Li[j] + RHO[j+1]*Li[j+1])
+    RHO_e = RHO[:m-1]
+    RHO_d = RHO[1:m]
+    Li_e = Li[:m-1]
+    Li_d = Li[1:m]
+    W = (1/2)*(RHO_e*Li_e + RHO_d*Li_d)
+    
+    Lf = np.zeros(m, dtype=float) # comprimentos finais das molas
+    U = np.zeros(m, dtype=float) # energia elastica das molas0.01, -0.1    
+    V = np.zeros(n, dtype=float) # trabalho em cada no (desloc vert)  
+      
+    #array com os deslocamentos horizontais do Xn
+    dx = Xn[0::2].copy()
+    #array com os deslocamentos verticais do Xn
+    dy = Xn[1::2].copy()
+       
+    #Calculo dos comprimentos finais
+    # Lf[0] = np.sqrt( (Li[0] + dx[0] )**2 + dy[0]**2 ) 
+    # Lf[k] = np.sqrt(a**2 + b**2)
+    # Lf[m-1] = np.sqrt((Li[m-1] - dx[n-1])**2 + dy[n-1]**2)
+    dx_d = np.zeros(m, dtype= float)
+    dx_d[1:] = dx.copy()    
+    dx_e = np.zeros(m, dtype=float)
+    dx_e[:m-1] = dx.copy()
+    dy_d = np.zeros(m, dtype= float)
+    dy_d[1:] = dy.copy()
+    dy_e = np.zeros(m, dtype=float)
+    dy_e[:m-1] = dy.copy()
+    
+    a = Li + dx_e - dx_d
+    b = dy_e - dy_d
+    
+    Lf = np.sqrt(a**2 + b**2)
+    
+    #calculo da energia elastica em cada mola
+    U = (1/2)*(EA/Li)*((Lf - Li)**2)
+    
+    #calculo do trabalho em cada no    
+    V = W*dy
+    
+    #Calculo da Energia Total
+    E = np.sum(U) - np.sum(V)
+    
+    return E
+
+  def grad_f(Xn):
+      dimens = Xn.size
+      #numero de nos
+      n = int(dimens/2)
+
+      #numero de molas
+      m = n + 1
+
+      #Inicializacao dos vetores com as variaveis do problema
+      Li = np.zeros(m, dtype=float) # comprimentos iniciais das molas
+      EA = np.zeros(m, dtype=float)
+      RHO = np.zeros(m, dtype=float)
+      W = np.zeros(n, dtype=float) # peso em cada no
+      
+      #Atribuicao dos valores do problema
+      #Cada mola mede inicialmente 60 sobre numero de molas
+      #molas a esquerda possuem EA = 27000 e rho 8
+      #molas a direita possuem EA = 18000 e rho 16
+      Li = Li + 60/m
+
+      EA[ : int(m/2)] = 27000
+      EA[int(m/2) : ] = 18000
+      RHO[ : int(m/2)] = 8
+      RHO[int(m/2) : ] = 16
+      
+      #Calculo dos pesos atuando em cada no
+      # W[j] = (1/2)*(RHO[j]*Li[j] + RHO[j+1]*Li[j+1])
+      RHO_e = RHO[:m-1]
+      RHO_d = RHO[1:m]
+      Li_e = Li[:m-1]
+      Li_d = Li[1:m]
+      W = (1/2)*(RHO_e*Li_e + RHO_d*Li_d)
+
+      Lf = np.zeros(m, dtype=float) # comprimentos finais das molas
+          
+      #array com os deslocamentos horizontais do Xn
+      dx = Xn[0::2].copy()
+      #array com os deslocamentos verticais do Xn
+      dy = Xn[1::2].copy()
+      
+      #Calculo dos comprimentos finais
+      # Lf[0] = np.sqrt( (Li[0] + dx[0] )**2 + dy[0]**2 ) 
+      # Lf[k] = np.sqrt(a**2 + b**2)
+      # Lf[m-1] = np.sqrt((Li[m-1] - dx[n-1])**2 + dy[n-1]**2)
+      dx_d = np.zeros(m, dtype= float)
+      dx_d[1:] = dx.copy()
+      
+      dx_e = np.zeros(m, dtype=float)
+      dx_e[:m-1] = dx.copy()
+      dy_d = np.zeros(m, dtype= float)
+      dy_d[1:] = dy.copy()
+      dy_e = np.zeros(m, dtype=float)
+      dy_e[:m-1] = dy.copy()
+      
+      a = Li + dx_e - dx_d
+      b = dy_e - dy_d
+      
+      Lf = np.sqrt(a**2 + b**2)
+      
+      #calculo gradiente
+      gradx = np.zeros(n, dtype=float)
+      grady = np.zeros(n, dtype=float)
+      Li_e = np.zeros(n, dtype=float)
+      Li_d = np.zeros(n, dtype=float)
+      EA_e = np.zeros(n, dtype=float)
+      EA_d = np.zeros(n, dtype=float)
+      Lf_e = np.zeros(n, dtype=float)
+      Lf_d = np.zeros(n, dtype=float)
+      
+      Li_e = Li[:m-1]
+      Li_d = Li[1:m]
+      EA_e = EA[:m-1]
+      EA_d = EA[1:m]
+      Lf_e = Lf[:m-1]
+      Lf_d = Lf[1:m]
+      
+      dx_d = np.zeros(n, dtype=float)   
+      dx_d[1:] = dx[:m-2]
+      
+      dy_d = np.zeros(n, dtype=float)  
+      dy_d[1:] = dy[:m-2]
+      
+      dx_e = np.zeros(n, dtype=float)
+      dx_e[:m-2] = dx[1:]
+      
+      dy_e = np.zeros(n, dtype=float)
+      dy_e[:m-2] = dy[1:]
+      
+      deriv1 = np.zeros(n, dtype=float)
+      deriv2 = np.zeros(n, dtype=float)
+      deriv3 = np.zeros(n, dtype=float)
+      deriv4 = np.zeros(n, dtype=float)
+      deriv5 = np.zeros(n, dtype=float)
+        
+      deriv1 = (1/2)*((Li_e + dx - dx_d)**2 + (dy - dy_d)**2)**(-1/2)*(2*Li_e + 2*dx - 2*dx_d)        
+      deriv2 = (1/2)*((Li_d + dx_e - dx)**2 + (dy_e - dy)**2)**(-1/2)*(-2*Li_d - 2*dx_e + 2*dx)    
+      deriv3 = (1/2)*((Li_e + dx - dx_d)**2 + (dy - dy_d)**2)**(-1/2)*(2*dy - 2*dy_d)
+      deriv4 = (1/2)*((Li_d + dx_e - dx)**2 + (dy_e - dy)**2)**(-1/2)*(-2*dy_e + 2*dy)
+      deriv5 = W    
+      
+      # dUk/dxk + dU(k+1)/dxk
+      gradx = (1/2)*(EA_e/Li_e)*2*(Lf_e - Li_e)*deriv1 + (1/2)*(EA_d/Li_d)*2*(Lf_d - Li_d)*deriv2
+      
+      #dUk/dyk + dU(k+1)/dyk - dVk/dyk
+      grady = (1/2)*(EA_e/Li_e)*2*(Lf_e - Li_e)*deriv3 + (1/2)*(EA_d/Li_d)*2*(Lf_d - Li_d)*deriv4 - deriv5
+      
+      grad = np.zeros(2*n, dtype=float)
+      grad[0::2] = gradx
+      grad[1::2] = grady
+          
+      return grad
+
+  def hessian_f(Xn):
+      return nd.Hessian(f)(Xn)
+
+  func = 4
+
+\end{python}
+
+
 \subsubsection{Resultados}
 
 \begin{figure}[H]
@@ -1292,10 +1548,16 @@ Abaixo seguem as curvas de nível para um ponto inicial diferente do proposto no
   \caption{Número de passos, por método OSR, para diferentes números de molas. Questão 2b.}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[H]b
   \centering
   \includegraphics[scale=0.4]{figuras/q2b_tempo.png}
   \caption{Tempo de Execução, por método OSR, para diferentes números de molas. Questão 2b.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.45]{figuras/q2b_fxpassos_20molas.PNG}
+  \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 2b com 20 molas}
 \end{figure}
 
 \begin{figure}[H]
