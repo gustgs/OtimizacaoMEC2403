@@ -105,7 +105,9 @@
 
 \subsection{Objetivos}
 
-Esse trabalho tem como objetivo a implementação, em Python, e a realização de análise de convergência, para diferentes funções e pontos iniciais, dos seguintes métodos de otimização:
+Esse trabalho tem como objetivo a implementação, em Python, o teste dessa implementação, em diferentes funções 
+e pontos iniciais, bem como a aplicação da implementação na minimização da Energia Potencial Total de um sistema de molas,
+dos seguintes métodos de otimização sem restrição :
 \renewcommand{\theenumi}{\alph{enumi}}
 \begin{enumerate}
   \item Univariante
@@ -116,35 +118,18 @@ Esse trabalho tem como objetivo a implementação, em Python, e a realização d
   \item Newton-Raphson
 \end{enumerate}
 
-\section{Implementações}
+\section{Implementação}
 
 A estratégia adotada neste trabalho foi de implementar algoritmos que, dados inputs específicos de cada método, retornam a próxima direção de busca. Para a busca unidirecional na direção especificada por cada método, 
-foram aproveitados e melhorados os códigos do passo constante e da seção áurea utilizados na resolução da Lista-1.
+foram aproveitados e melhorados os códigos do passo constante e da seção áurea utilizados na resolução da Lista-1. 
 
-\subsection{Pacotes utilizados}
-As seguintes bibliotecas são necessárias para execução do código final do arquivo principal :
-
-\begin{python}
-  import numpy as np
-  import matplotlib.pyplot as plt
-  from timeit import default_timer as timer
-\end{python}
-
-Os métodos de busca unidimensional, assim como os métodos de otimização foram implementados em arquivos distintos (osr\_methods.py e line\_search\_methods.py). Com isso, no arquivo principal também é necessário realizar o import desses algoritmos.
-
-\begin{python}
-  import osr_methods as osr
-  import line_search_methods as lsm
-\end{python}
-
-Esses arquivos distintos necessitam apenas do pacote numpy. Com isso apenas o seguinte import é necessário nos dois arquivos citados acima.
-
-\begin{python}
-  import numpy as np
-\end{python}
+O código principal fica responsável pela chamada passo a passo dos métodos de OSR, recebendo uma direção
+de busca e repassando a mesma para a busca unidirecional. Com o valor de alpha obtido da seção áurea, um novo ponto é calculado e a convergência verificada.
 
 \subsection{Busca Unidirecional}
-Os algoritmos do passo constante e da seção áurea foram implementados em um arquivo denominado line\_search\_methods.py. O seguinte pacote é necessário nesse arquivo : 
+
+Os algoritmos dos métodos do Passo Constante e da Seção Áurea foram implementados em um arquivo denominado line\_search\_methods.py.
+O seguinte pacote é necessário nesse arquivo: 
 \begin{python}
   import numpy as np
 \end{python}
@@ -298,7 +283,7 @@ def secao_aurea(intervalo, direcao, P0, f, tol=0.00001):
 
 \subsection{Métodos OSR}
 
-Os algoritmos dos métodos Univariante, Powell, Steepest Descent, Fletcher-Reeves, BFGS e Newton-Raphson foram implementados em um arquivo denominado osr\_methods.py. O seguinte pacote é necessário nesse arquivo : 
+Os algoritmos dos métodos Univariante, Powell, Steepest Descent, Fletcher-Reeves, BFGS e Newton-Raphson foram implementados em um arquivo denominado osr\_methods.py. O seguinte pacote é necessário nesse arquivo: 
 \begin{python}
   import numpy as np
 \end{python}
@@ -331,7 +316,7 @@ O método de Powell consiste de ciclos de n + 1 passos, onde n é o número de d
 o conjunto de n direções é inicializado com as direções canônicas. A direção n + 1 de todo ciclo será o igual a  $\overrightarrow{P_n} - \overrightarrow{P_0}$, 
 onde $\overrightarrow{P_n}$ é o ponto encontrado na otimização até o passo n do ciclo atual e $\overrightarrow{P_0}$ é o ponto inicial do primeiro passo do ciclo atual,
 que por sua vez é igual ao ponto final do ciclo anterior. Outra característica do método de Powell é que uma direção de um passo genérico k de um determinado ciclo será 
-a direção do passo k - 1 do ciclo seguinte.
+a direção do passo k - 1 do ciclo seguinte. Consegue
 
 A implementação considerou como parâmetros de entrada o ponto mínimo encontrado no passo anterior ($\overrightarrow{P}$), o ponto inicial do 
 ciclo atual ($\overrightarrow{P}_1$), um array com o conjunto de direções, um número representando o passo global da convergência
@@ -400,17 +385,16 @@ recebe esses valores e utiliza nas chamadas subsequentes.
 \subsubsection{BFGS}
 
 O método BFGS retorna $\overrightarrow{d}^k = -\bar{\bar{S}}^k\,\overrightarrow{\nabla}f(\overrightarrow{P}^k)$ como direção, sendo $\bar{\bar{S}}^0 = \bar{\bar{I}}$.
-É capaz de minimizar funções quadráticas em n + 1 passos, sendo n o número de dimensões.
 
 \begin{figure}[htpb]
   \centering
-  \includegraphics[scale=0.5]{bfgs_auxiliares.PNG}
+  \includegraphics[scale=0.5]{figuras/bfgs_auxiliares.PNG}
   \caption{Variáveis Auxiliares. Fonte: Aula-3\_MetodosOSR.pdf}
 \end{figure}
 
 \begin{figure}[htpb]
   \centering
-  \includegraphics[scale=0.5]{bfgs_sk.PNG}
+  \includegraphics[scale=0.5]{figuras/bfgs_sk.PNG}
   \caption{Cálculo de $S^{k+1}$. Fonte: Aula-3\_MetodosOSR.pdf}
 \end{figure}
 
@@ -610,7 +594,7 @@ Loop para chamada dos métodos e convergência da otimização.
   tempoExec = end - start
 \end{python}
 
-Seção para geração automática do gráfico de configuração dos nós da questão 2 letra b e dos mapas de contorno para as demais questões.
+Seção para geração automática do gráfico de configuração dos nós da questão 2 letra b e das curvas de nível para as demais questões.
 
 \begin{python}
   if (func < 4):
@@ -683,414 +667,652 @@ Seção para geração automática do gráfico de configuração dos nós da que
       plt.show()
 \end{python}
 
+\section{Teste da Implementação}
+A questão 1 solicita a busca dos pontos de mínimo de duas funções distintas como forma de testar a implementação dos métodos de OSR e busca unidirecional apresentados na seção anterior.
+Uma das funções é quadrática e a outra não. Para funções qudráticas, é esperado que o método de Powell atinja convergência em até $(n + 1)^2 passos$, o método de Fletcher-Reeves em até $n + 1$ passos,
+o método BFGS em até $n + 1$ passos e o método Newton-Raphson em $n$ passos, sendo n o número de dimensões (ou variáveis) da função.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Exercício 2}
-
-Utilizando os métodos implementados na questão anterior, testar a sua implementação encontrando o ponto mínimo
-das seguintes funções:
-
-\begin{enumerate}
-  \item Função 1: 
-  \begin{equation*}
-    f(x_1, x_2) = x_1^2 - 3x_1x_2 + 4x_2^2 + x_1 - x_2 \;\; com \;\; \\
-    \overrightarrow{P_1} = 
-    \begin{bmatrix}
-     1 \\ 2
-    \end{bmatrix} \;\; e \;\; \overrightarrow{d} =
-    \begin{bmatrix}
-    -1 \\ -2
-    \end{bmatrix}
- \end{equation*}
-
- \item Função 2 - McCormick:
- \begin{equation*}
-  f(x_1, x_2) = \sen{(x_1 + x_2)} + (x_1 - x_2)^2 - 1,5x_1 + 2,5x_2 \;\; com \;\; \\
-  \overrightarrow{P_1} = 
-  \begin{bmatrix}
-   -2 \\ \phantom{-}3
-  \end{bmatrix} \;\; e \;\; \overrightarrow{d} =
-  \begin{bmatrix}
-  \phantom{-}1.453 \\ -4.547
-  \end{bmatrix}
-\end{equation*}
-
-\item Função 3 - Himmelblau:
- \begin{equation*}
-  f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2 \;\; com \;\; \\
-  \overrightarrow{P_1} = 
-  \begin{bmatrix}
-   0 \\ 5
-  \end{bmatrix} \;\; e \;\; \overrightarrow{d} =
-  \begin{bmatrix}
-  3 \\ 1.5
-  \end{bmatrix}
-\end{equation*}
-
-\end{enumerate}
+O seguinte controle numérico foi utilizado para a convergência das funções da questão 1, independente do ponto inicial:
 
 \begin{itemize}
-  \item Para cada função acima, desenhar(na mesma figura): as curvas de nível e o segmento de reta
-  conectando o ponto inicial ao ponto de mínimo.
-  \item Adotar uma tolerância de $10^{-5}$ para verificação da convergência numérica.
+  \item Número máximo de passos (ou iterações): 200
+  \item Tolerância para convergência do gradiente: $10^{-5}$
+  \item Tolerância para convergência da busca unidirecional: $10^{-6}$
+  \item $\Delta\alpha$ do passo constante: $10^{-2}$
 \end{itemize}
 
-\subsubsection{Função 1}
+\subsection{Questão 1 (a)}
 
-Importação das bibliotecas, da implementação dos métodos de busca unidimensional do exercício anterior e
-definição da função do exercício:
+\vspace{5mm}
 
-\begin{python}
-  import numpy as np
-  import matplotlib.pyplot as plt
-  import linear_search_methods as lsm
+\begin{center}
+$f(x_1,x_2) = x_1^2 - 3x_1x_2 + 4x_2^2 + x_1 - x_2$
 
-  def f(P):
-    # P = [x1, x2]
-    return P[0]**2 - 3*P[0]*P[1] + 4*(P[1]**2) + P[0] - P[1]
-\end{python}
+\vspace{5mm}
+$\overrightarrow{\nabla} f(x_1,x_2) = 
+\begin{bmatrix}
+  2x_1 - 3x_2 + 1 \\ -3x_1 + 8x_2 -1
+\end{bmatrix}$
 
-  Cálculo do ponto mínimo usando os 3 métodos do exercício 1:
+\vspace{5mm}
 
-\begin{itemize}
-  \item Passo constante
-  \item Bisseção
-  \item Seção Áurea
-\end{itemize}
+$H(x_1,x_2) = 
+\begin{bmatrix}
+  \phantom{-}2 & -3 \\ -3 & \phantom{-}8
+\end{bmatrix}$
 
-\begin{python}
+\end{center}
 
-  #inputs de Ponto inicial e direcao de busca
-  P1 = np.array([1, 2])
-  dir = np.array([-1, -2])
+\vspace{5mm}
 
-  #chama o metodo do passo constante
-  q2_a_pss_ct = lsm.passo_cte(dir.copy(), P1, f)
-
-  #funcao lsm.passo_cte entrega o intervalo de busca na segunda posicao do array de retorno
-  intervalo = q2_a_pss_ct[1]
-
-  #resgata o sentido unitario correto da busca unidimensional
-  sentido_busca = q2_a_pss_ct[2]
-
-  #chama o o metodo da bissecao
-  q2_a_bssc = lsm.bissecao(intervalo.copy(), sentido_busca.copy(), P1, f)
-
-  #chama o metodo da secao aurea
-  q2_a_sc_ar = lsm.secao_aurea(intervalo.copy(), sentido_busca.copy(), P1, f)
-
-  print(f'Passo constante : |\u03B1 min| = {intervalo[0]:.10f} e P min = ({q2_a_pss_ct[0][0]:.10f}, {q2_a_pss_ct[0][1]:.10f}) ')
-  print(f'Bissecao        : |\u03B1 min| = {q2_a_bssc[1]:.10f} e P min = ({q2_a_bssc[0][0]:.10f}, {q2_a_bssc[0][1]:.10f}) ')
-  print(f'Secao Aurea     : |\u03B1 min| = {q2_a_sc_ar[1]:.10f} e P min = ({q2_a_sc_ar[0][0]:.10f}, {q2_a_sc_ar[0][1]:.10f}) ')
-
-\end{python}
-
-Resultados obtidos (Saída do terminal):
-\newline
-
-
-Passo constante : $|\alpha \,\, min|$ = 2.1300000000 e P min = (0.0474350416, 0.0948700832)
-
-Bisseção        : $|\alpha \,\, min|$ = 2.1344287109 e P min = (0.0454544618, 0.0909089237)
-
-Seção Áurea     : $|\alpha \,\,  min|$ = 2.1344280564 e P min = (0.0454547546, 0.0909095092)\newline
-
-A solução para a função $f(x_1, x_2) = x_1^2 - 3x_1x_2 + 4x_2^2 + x_1 - x_2$ então fica :
-\newline
-
-\begin{itemize}
-  \item Passo constante: $|\alpha_{min}| = 2.1300000000$ e $\overrightarrow{P_{min}} =  
-  \begin{bmatrix}
-    0.0474350416 \\ 0.0948700832
-  \end{bmatrix}$
-  \item Bisseção: $|\alpha_{min}| = 2.1344287109$ e $\overrightarrow{P_{min}} =  
-  \begin{bmatrix}
-    0.0454544618 \\ 0.0909089237
-  \end{bmatrix}$
-  \item Seção Áurea: $|\alpha_{min}| = 2.1344280564$ e $\overrightarrow{P_{min}} =  
-  \begin{bmatrix}
-    0.0454547546 \\ 0.0909095092
-  \end{bmatrix}$
-\end{itemize}
-
-Como todos os métodos entregam respostas de $P_{min}$ muito parecidas, com diferenças relativamente pequenas,
-para a etapa de desenhar as curvas de nível e o segmento de reta conectando $P_1$ ao $P_{min}$ tomei a liberdade
-de plotar apenas o resultado da Seção Áurea.
+Definição da função, gradiente e Hessiana no código principal :
 
 \begin{python}
-  #Escolhido o Pmin gerado pelo metodo da secao aurea para representar graficamente
-  Pmin = q2_a_sc_ar[0]
-
-  x1 = np.linspace(-7.5, 7.5, 100)
-  x2 = np.linspace(-7.5, 7.5, 100)
-  X1, X2 = np.meshgrid(x1, x2)
-  x3 = f([X1, X2])
-  niveis = plt.contour(X1, X2, x3, [0, 3, 10, 25, 40, 60, 100, 150], colors='black')
-  plt.clabel(niveis, inline=1, fontsize=10)
-  plt.annotate('', xy=Pmin, xytext=P1,
-                  arrowprops=dict(width=1, color='green', headwidth=10, headlength=10, shrink=0.05), fontsize='10')
-  plt.annotate(f'({P1[0]}, {P1[1]})', xy=P1, xytext=(5,-10), textcoords='offset points', color='green')
-  plt.annotate(f'$P_{{min}}$=({round(Pmin[0], 7)}, {round(Pmin[1], 7)})', xy=Pmin, xytext=(0.03,0.95), textcoords='axes fraction', color='green')
-  plt.plot(P1[0], P1[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
-  plt.plot(Pmin[0], Pmin[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
-  plt.xlabel('$x_1$', fontsize='16')
-  plt.ylabel('$x_2$', fontsize='16')
-  plt.grid(linestyle='--')
-  plt.title("$f(x_1, x_2)$ - Metodo da Secao Aurea", fontsize='16')
-  plt.savefig("A_solution.pdf", format="pdf")
-  plt.show()
+  def f(Xn):
+    return Xn[0]**2 - 3*Xn[0]*Xn[1] + 4*(Xn[1]**2) + Xn[0] - Xn[1]
+    
+  def grad_f(Xn):
+      return np.array([2*Xn[0] - 3*Xn[1] + 1, -3*Xn[0] + 8*Xn[1] - 1])
+      
+  def hessian_f(Xn):
+      return np.array([[2, -3],
+                      [-3, 8]], dtype=float)
+    
+  func = 1
 \end{python}
 
-\begin{figure}[htpb]
+
+\subsubsection{Ponto inicial: $x^0 = \{2,2\}^t $}
+Definição do ponto inicial no código principal:
+\begin{python}
+  P0 = np.array([2, 2])
+\end{python}
+
+\vspace{3mm}
+\textbf{Principais resultados obtidos: }
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c}
+      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
+      \hline
+      Univariante & 46 & 0.03397 & $\{-0.71427545, -0.14285347\}^t$\\
+      Powell & 6 & 0.09025 & $\{-0.71428536, -0.14285781\}^t$\\
+      Steepest Descent & 31 & 0.03088 & $\{-0.71427858, -0.14285438\}^t$\\
+      Fletcher-Reeves & 3 & 0.00991 & $\{-0.71428613, -0.14285732\}^t$\\
+      BFGS & 2 & 0.00495 & $\{-0.71428573, -0.14285724\}^t$\\
+      Newton-Raphson & 1 & 0.00241 & $\{-0.71428661, -0.14285785\}^t$\\
+    \end{tabular}
+  \end{center}
+  \caption{Resumo dos resultados obtidos na questão 1a para $x^0 = \{2,2\}^t$}
+\end{table}
+
+\begin{figure}[H]
   \centering
-  %\includegraphics[width=1\textwidth]{A_solution.pdf}
-  \caption{Função 1 - Seção Áurea}
-  \label{fig:q2a}
-\end{figure}
-\subsubsection{Função 2: McCormick}
-
-Importação das bibliotecas, da implementação dos métodos de busca unidimensional do exercício anterior e
-definição da função do exercício:
-
-\begin{python}
-  import numpy as np
-  import matplotlib.pyplot as plt
-  import linear_search_methods as lsm
-
-  def mcCormick(P):
-    # P = [x1, x2]
-    return np.sin(P[0] + P[1]) + (P[0] - P[1])**2 - 1.5*P[0] + 2.5*P[1]
-\end{python}
-
-  Cálculo do ponto mínimo usando os 3 métodos do exercício 1:
-
-\begin{itemize}
-  \item Passo constante
-  \item Bisseção
-  \item Seção Áurea
-\end{itemize}
-
-\begin{python}
-
-  #inputs de Ponto inicial e direcao de busca
-  P1 = np.array([-2, 3])
-  dir= np.array([1.453, -4.547])
-
-  #chama o metodo do passo constante
-  q2_b_pss_ct = lsm.passo_cte(dir.copy(), P1, mcCormick)
-
-  #funcao lsm.passo_cte entrega o intervalo de busca na segunda posicao do array de retorno
-  intervalo = q2_b_pss_ct[1]
-
-  #resgata o sentido unitario correto da busca unidimensional
-  sentido_busca = q2_b_pss_ct[2]
-
-  #chama o o metodo da bissecao
-  q2_b_bssc = lsm.bissecao(intervalo.copy(), sentido_busca.copy(), P1, mcCormick)
-
-  #chama o metodo da secao aurea
-  q2_b_sc_ar = lsm.secao_aurea(intervalo.copy(), sentido_busca.copy(), P1, mcCormick)
-
-  print(f'Passo constante : |\u03B1| min = {intervalo[0]:.10f} e P min = ({q2_b_pss_ct[0][0]:.10f}, {q2_b_pss_ct[0][1]:.10f}) ')
-  print(f'Bissecao        : |\u03B1| min = {q2_b_bssc[1]:.10f} e P min = ({q2_b_bssc[0][0]:.10f}, {q2_b_bssc[0][1]:.10f}) ')
-  print(f'Secao Aurea     : |\u03B1| min = {q2_b_sc_ar[1]:.10f} e P min = ({q2_b_sc_ar[0][0]:.10f}, {q2_b_sc_ar[0][1]:.10f}) ')
-
-\end{python}
-
-Resultados obtidos (Saída do terminal):
-\newline
-
-
-Passo constante : $|\alpha \,\, min|$ = 4.7700000000 e P min = (-0.5480690486, -1.5436545327)
-
-Bisseção        : $|\alpha \,\, min|$ = 4.7735791016 e P min = (-0.5469796129, -1.5470637991)
-
-Seção Áurea     : $|\alpha \,\,  min|$ = 4.7735766069 e P min = (-0.5469803722, -1.5470614229)\newline
-
-A solução para a função $f(x_1, x_2) = \sen{(x_1 + x_2)} + (x_1 - x_2)^2 - 1,5x_1 + 2,5x_2$ então fica :
-\newline
-
-\begin{itemize}
-  \item Passo constante: $|\alpha_{min}| = 4.7700000000$ e $\overrightarrow{P_{min}} =  
-  \begin{bmatrix}
-    -0.5480690486 \\ -1.5436545327
-  \end{bmatrix}$
-  \item Bisseção: $|\alpha_{min}| = 4.77357910169$ e $\overrightarrow{P_{min}} =  
-  \begin{bmatrix}
-    -0.5469796129 \\ -1.5470637991
-  \end{bmatrix}$
-  \item Seção Áurea: $|\alpha_{min}| = 4.7735766069$ e $\overrightarrow{P_{min}} =  
-  \begin{bmatrix}
-    -0.5469803722 \\ -1.5470614229
-  \end{bmatrix}$
-\end{itemize}
-
-Como todos os métodos entregam respostas de $P_{min}$ muito parecidas, com diferenças relativamente pequenas,
-para a etapa de desenhar as curvas de nível e o segmento de reta conectando $P_1$ ao $P_{min}$ tomei a liberdade
-de plotar apenas o resultado do Passo Constante.
-
-\begin{python}
-  #Escolhido o Pmin gerado pelo metodo do passo constante para representar graficamente
-  Pmin = q2_b_pss_ct[0]
-
-  x1 = np.linspace(-7.5, 7.5, 100)
-  x2 = np.linspace(-7.5, 7.5, 100)
-  X1, X2 = np.meshgrid(x1, x2)
-  x3 = mcCormick([X1, X2])
-  niveis = plt.contour(X1, X2, x3, [0, 5, 15, 40, 60], colors='black')
-  plt.clabel(niveis, inline=1, fontsize=10)
-  plt.annotate('', xy=Pmin, xytext=P1,
-                  arrowprops=dict(width=1, color='green', headwidth=10, headlength=10, shrink=0.05), fontsize='10')
-  plt.annotate(f'({P1[0]}, {P1[1]})', xy=P1, xytext=(10,0), textcoords='offset points', color='green')
-  plt.annotate(f'$P_{{min}}$=({round(Pmin[0], 7)}, {round(Pmin[1], 7)})', xy=Pmin, xytext=(0.03, 0.95), textcoords='axes fraction', color='green')
-  plt.plot(P1[0], P1[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
-  plt.plot(Pmin[0], Pmin[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
-  plt.xlabel('$x_1$', fontsize='16')
-  plt.ylabel('$x_2$', fontsize='16')
-  plt.grid(linestyle='--')
-  plt.title("$mcCormick(x_1, x_2)$ - Metodo do Passo Constante", fontsize='16')
-  plt.savefig("B_solution.pdf", format="pdf")
-  plt.show()
-\end{python}
-
-\begin{figure}[htpb]
-  \centering
-  %\includegraphics[width=1\textwidth]{B_solution.pdf}
-  \caption{McCormick - Passo Constante}
-  \label{fig:q2b}
+  \includegraphics[scale=0.4]{figuras/q1a_passos_P1.PNG}
+  \caption{Número de passos por método OSR. Questão 1a e $x^0 = \{2,2\}^t$ }
 \end{figure}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\bibliographystyle{apalike}
-\bibliography{export}
-\subsubsection{Função 3: Himmelblau}
-
-Importação das bibliotecas, da implementação dos métodos de busca unidimensional do exercício anterior e
-definição da função do exercício:
-
-\begin{python}
-  import numpy as np
-  import matplotlib.pyplot as plt
-  import linear_search_methods as lsm
-
-  def himmelblau(P):
-    # P = [x1, x2]
-    return (P[0]**2 + P[1] - 11)**2 + (P[0] + P[1]**2 - 7)**2
-\end{python}
-
-  Cálculo do ponto mínimo usando os 3 métodos do exercício 1:
-
-\begin{itemize}
-  \item Passo constante
-  \item Bisseção
-  \item Seção Áurea
-\end{itemize}
-
-\begin{python}
-
-  #inputs de Ponto inicial e direcao de busca
-  P1 = np.array([0, 5])
-  dir = np.array([3, 1.5])
-
-  #chama o metodo do passo constante
-  q2_c_pss_ct = lsm.passo_cte(dir, P1, himmelblau)
-
-  #funcao lsm.passo_cte entrega o intervalo de busca na segunda posicao do array de retorno
-  intervalo = q2_c_pss_ct[1]
-
-  #resgata o sentido unitario correto da busca unidimensional
-  sentido_busca = q2_c_pss_ct[2]
-
-  #chama o o metodo da bissecao
-  q2_c_bssc = lsm.bissecao(intervalo.copy(), sentido_busca.copy(), P1, himmelblau)
-
-  #chama o metodo da secao aurea
-  q2_c_sc_ar = lsm.secao_aurea(intervalo.copy(), sentido_busca.copy(), P1, himmelblau)
-
-  print(f'Passo constante : |\u03B1 min| = {intervalo[0]:.10f} e P min = ({q2_c_pss_ct[0][0]:.10f}, {q2_c_pss_ct[0][1]:.10f}) ')
-  print(f'Bissecao        : |\u03B1 min| = {q2_c_bssc[1]:.10f} e P min = ({q2_c_bssc[0][0]:.10f}, {q2_c_bssc[0][1]:.10f}) ')
-  print(f'Secao Aurea     : |\u03B1 min| = {q2_c_sc_ar[1]:.10f} e P min = ({q2_c_sc_ar[0][0]:.10f}, {q2_c_sc_ar[0][1]:.10f}) ')
-
-\end{python}
-
-Resultados obtidos (Saída do terminal):
-\newline
-
-
-Passo constante : $|\alpha \,\, min|$ = 3.3900000000 e P min = (-3.0321081775, 3.4839459113)
-
-Bisseção        : $|\alpha \,\, min|$ = 3.3921630859 e P min = (-3.0340429004, 3.4829785498)
-
-Seção Áurea     : $|\alpha \,\,  min|$ = 3.3921633455 e P min = (-3.0340431325, 3.4829784337)\newline
-
-A solução para a função $f(x_1, x_2) = (x_1^2 + x_2 - 11)^2 + (x_1 + x_2^2 - 7)^2$ então fica :
-\newline
-
-\begin{itemize}
-  \item Passo constante: $|\alpha_{min}| = 3.3900000000$ e $\overrightarrow{P_{min}} =  
-  \begin{bmatrix}
-    -3.0321081775 \\ \phantom{-}3.4839459113
-  \end{bmatrix}$
-  \item Bisseção: $|\alpha_{min}| = 3.3921630859$ e $\overrightarrow{P_{min}} =  
-  \begin{bmatrix}
-    -3.0340429004 \\ \phantom{-}3.4829785498
-  \end{bmatrix}$
-  \item Seção Áurea: $|\alpha_{min}| = 3.3921633455$ e $\overrightarrow{P_{min}} =  
-  \begin{bmatrix}
-    -3.0340431325 \\ \phantom{-}3.4829784337
-  \end{bmatrix}$
-\end{itemize}
-
-Como todos os métodos entregam respostas de $P_{min}$ muito parecidas, com diferenças relativamente pequenas,
-para a etapa de desenhar as curvas de nível e o segmento de reta conectando $P_1$ ao $P_{min}$ tomei a liberdade
-de plotar apenas o resultado da Bisseção.
-
-\begin{python}
-  #Escolhido o Pmin gerado pelo metodo da bissecao para representar graficamente
-  Pmin = q2_c_bssc[0]
-
-  x1 = np.linspace(-7.5, 7.5, 1000)
-  x2 = np.linspace(-7.5, 7.5, 1000)
-  X1, X2 = np.meshgrid(x1, x2)
-  x3 = himmelblau([X1, X2])
-  niveis = plt.contour(X1, X2, x3, [10,50,100,200, 350, 1000], colors='black')
-  plt.clabel(niveis, inline=1, fontsize=10)
-  plt.annotate('', xy=Pmin, xytext=P1,
-                  arrowprops=dict(width=1, color='green', headwidth=10, headlength=10, shrink=0.05), fontsize='10')
-  plt.annotate(f'$P_1$=({P1[0]}, {P1[1]})', xy=P1, xytext=(0.03,0.95), textcoords='axes fraction', color='green')
-  plt.annotate(f'$P_{{min}}$=({round(Pmin[0], 7)}, {round(Pmin[1], 7)})', xy=Pmin, xytext=(0.55,0.95), textcoords='axes fraction', color='green')
-  plt.plot(P1[0], P1[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
-  plt.plot(Pmin[0], Pmin[1], marker="o", markersize=7, markeredgecolor="green", markerfacecolor="green")
-  plt.xlabel('$x_1$', fontsize='16')
-  plt.ylabel('$x_2$', fontsize='16')
-  plt.grid(linestyle='--')
-  plt.title("$himmelblau(x_1, x_2)$ - Metodo da Bissecao", fontsize='16')
-  plt.savefig("C_solution.pdf", format="pdf")
-  plt.show()
-\end{python}
-
-\begin{figure}[htpb]
+\begin{figure}[H]
   \centering
-  %\includegraphics[width=1\textwidth]{C_solution.pdf}
-  \caption{Himmelblau - Bisseção}
-  \label{fig:q2c}
+  \includegraphics[scale=0.45]{figuras/q1a_fxpassos_P1.PNG}
+  \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 1a e $x^0 = \{2,2\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Univariante_P0=[2 2].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Powell_P0=[2 2].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Steepest Descent_P0=[2 2].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Fletcher-Reeves_P0=[2 2].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_BFGS_P0=[2 2].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Newton Raphson_P0=[2 2].pdf}
+  \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 1a e $x^0 = \{2,2\}^t$}
+\end{figure}
+
+\subsubsection{Ponto inicial : $x^0 = \{-1,-3\}^t$}
+Definição do ponto inicial no código principal:
+\begin{python}
+  P0 = np.array([-1, -3])
+\end{python}
+
+\vspace{3mm}
+\textbf{Principais resultados obtidos:}
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c}
+      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
+      \hline
+      Univariante & 48 & 0.04435 & $\{-0.7142935, -0.14286022\}^t$\\
+      Powell & 6 & 0.02483 & $\{-0.71428418, -0.14285757\}^t$\\
+      Steepest Descent & 7 & 0.00690 & $\{-0.71429411, -0.14286059\}^t$\\
+      Fletcher-Reeves & 3 & 0.00467 & $\{-0.71428581, -0.14285718\}^t$\\
+      BFGS & 2 & 0.00332 & $\{-0.71428583, -0.14285714\}^t$\\
+      Newton-Raphson & 1 & 0.00219 & $\{-0.71428562, -0.1428562\}^t$\\
+    \end{tabular}
+  \end{center}
+  \caption{Resumo dos resultados obtidos na questão 1a para $x^0 = \{-1,-3\}^t$}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{figuras/q1a_passos_P2.PNG}
+  \caption{Número de passos por método OSR. Questão 1a e $x^0 = \{-1,-3\}^t$ }
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.45]{figuras/q1a_fxpassos_P2.PNG}
+  \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 1a e $x^0 = \{-1,-3\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Univariante_P0=[-1 -3].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Powell_P0=[-1 -3].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Steepest Descent_P0=[-1 -3].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Fletcher-Reeves_P0=[-1 -3].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_BFGS_P0=[-1 -3].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Newton Raphson_P0=[-1 -3].pdf}
+  \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 1a e $x^0 = \{-1,-3\}^t$}
+\end{figure}
+
+\subsection{Questão 1 (b)}
+Considerar $a = 10$ e $b = 1$. Utilizei o site Wolfram Alpha para cálculo do gradiente e da Hessiana.
+
+\vspace{5mm}
+
+\begin{center}
+$f(x_1,x_2) = (1 + a -bx_1 - bx_2)^2 + (b + x_1 + ax_2 - bx_1x_2)^2$
+
+\vspace{5mm}
+$\overrightarrow{\nabla} f(x_1,x_2) = 
+\begin{bmatrix}
+  2(-a(bx_2^2 + b - x_2) + b^2x_1(x_2^2 + 1) -2bx_1x_2 + x_1) \\ -2b(2ax_1x_2 + x_1^2 + 1) + 2a(ax_2 + x_1) + 2b^2(x_1^2 +1)x_2
+\end{bmatrix}$
+
+\vspace{5mm}
+
+$H_{1\text{x}1}(x_1,x_2) = 2b^2 + 2(1 - bx_2)^2$
+
+$H_{1\text{x}2}(x_1,x_2) = -2b(ax_2 + b(-x_1)x_2 + b + x_1) + 2(1 - bx_2)(a - bx_1) + 2 b^2$
+
+$H_{2\text{x}1}(x_1,x_2) = -2b(ax_2 + b(-x_1)x_2 + b + x_1) + 2(1 - bx_2) (a - bx_1) + 2 b^2$
+
+$H_{2\text{x}2}(x_1,x_2) = 2(a - bx_1)^2 + 2b^2$
+
+\end{center}
+
+\vspace{5mm}
+
+Definição da função, gradiente e Hessiana no código principal :
+
+\begin{python}
+  def f(Xn):
+    a = 10
+    b = 1
+    return (1 + a - b*Xn[0] - b*Xn[1])**2 + (b + Xn[0] + a*Xn[1] - b*Xn[0]*Xn[1])**2 
+    
+  def grad_f(Xn):
+      a = 10
+      b = 1
+      return np.array([2*(-a*(b*(Xn[1]**2) + b - Xn[1]) + (b**2)*Xn[0]*(Xn[1]**2 + 1) - 2*b*Xn[0]*Xn[1] + Xn[0]),
+                      -2*b*(2*a*Xn[0]*Xn[1] + Xn[0]**2 + 1) + 2*a*(a*Xn[1] + Xn[0]) + 2*(b**2)*(Xn[0]**2 + 1)*Xn[1]])
+  def hessian_f(Xn):
+      a = 10
+      b = 1
+      hessian = np.zeros((2,2))
+      hessian[0, 0] = 2*(b**2) + 2*((1 - b*Xn[1])**2)
+      hessian[0, 1] = -2*b*(a*Xn[1] + b*(-Xn[0]*Xn[1]) + b + Xn[0]) + 2*(1-b*Xn[1])*(a - b*Xn[0]) + 2*(b**2)
+      hessian[1, 0] = -2*b*(a*Xn[1] + b*(-Xn[0]*Xn[1]) + b + Xn[0]) + 2*(1-b*Xn[1])*(a-b*Xn[0]) + 2*(b**2)
+      hessian[1, 1] = 2*((a-b*Xn[0])**2) + 2*(b**2)
+      return hessian
+      
+  func = 2
+\end{python}
+
+\subsubsection{Ponto inicial : $x^0 = \{10,2\}^t $}
+
+Definição do ponto inicial no código principal:
+\begin{python}
+  P0 = np.array([10, 2])
+\end{python}
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c}
+      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
+      \hline
+      Univariante & 64 & 0.03673 & $\{13.00000142, 3.99999883\}^t$\\
+      Powell & 15 & 0.02147 & $\{13.00000057, 3.99999962\}^t$\\
+      Steepest Descent & 55 & 0.00927 & $\{13.00000099, 3.99999874\}^t$\\
+      Fletcher-Reeves & 71 & 0.01208 & $\{12.99999937, 4.00000089\}^t$\\
+      BFGS & 9 & 0.01836 & $\{13.00000042, 3.99999969\}^t$\\
+      Newton-Raphson & 1 & 0.00272 & $\{10, 0.99999967\}^t$\\
+    \end{tabular}
+  \end{center}
+  \caption{Resumo dos resultados obtidos na questão 1b para $x^0 = \{10,2\}^t$}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{figuras/q1b_passos_P1.PNG}
+  \caption{Número de passos por método OSR. Questão 1b e $x^0 = \{10,2\}^t$ }
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.45]{figuras/q1b_fxpassos_P1.PNG}
+  \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 1b e $x^0 = \{10,2\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Univariante_P0=[10e2].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Powell_P0=[10e2].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Steepest Descent_P0=[10e2].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Fletcher-Reeves_P0=[10e2].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_BFGS_P0=[10e2].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Newton Raphson_P0=[10e2].pdf}
+  \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 1b e $x^0 = \{10,2\}^t$}
+\end{figure}
+
+Um resultado que chama a atenção é o método Fletcher-Reeves ter levado 71 passos para convergir. Alterar a tolerância
+de convergência global para $10^{-4}$ e a tolerância da seção áurea, na busca unidirecional, para $10^{-8}$ levou a uma
+redução modesta para 60 iterações. Analisando as curvas de nível e o "caminho" de otimização gerado pelo método,
+percebe-se que ocorre um movimento em espiral em torno do ponto mínimo. Ou seja, para essa função e ponto inicial,
+as direções geradas por Fletcher-Reeves levam a um elevado número de passos.
+
+O método Newton-Raphson também se destaca por ter sido o único dentre os 6 métodos que encontrou um ponto de mínimo diferente.
+Enquanto os outros métodos levam a um mínimo à direita do ponto inicial, Newton-Raphson leva a um ponto de cela abaixo do 
+ponto inicial. Nenhum dos métodos levou ao ponto de mínimo à esquerda do ponto incicial.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.5]{figuras/Q1.b_espiral_Fletcher-Reeves_P0=[10e2].pdf}
+  \caption{Movimento em espiral do método Fletcher-Reeves. Questão 1b e $x^0 = \{10,2\}^t$ }
+\end{figure}
+
+\subsubsection{Ponto inicial : $x^0 = \{-2,-3\}^t $}
+
+Definição do ponto inicial no código principal:
+\begin{python}
+  P0 = np.array([-2, -3])
+\end{python}
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c}
+      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
+      \hline
+      Univariante       & 61  & 0.04288 & $\{7.00000124, -2.00000132\}^t$\\
+      Powell            & 15  & 0.13350 & $\{7.0000002, -1.99999995\}^t$\\
+      Steepest Descent  & 45  & 0.01018 & $\{7.000001, -2.0000009\}^t$\\
+      Fletcher-Reeves   & 21  & 0.00642 & $\{7.00000007, -2.00000017\}^t$\\
+      BFGS              & 8   & 0.04286 & $\{7.00000021, -2.00000023\}^t$\\
+      Newton-Raphson    & 6   & 0.01332 & $\{7.00000001, -2.00000001\}^t$\\
+    \end{tabular}
+  \end{center}
+  \caption{Resumo dos resultados obtidos na questão 1b para $x^0 = \{-2,-3\}^t$}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{figuras/q1b_passos_P2.PNG}
+  \caption{Número de passos por método OSR. Questão 1b e $x^0 = \{-2,-3\}^t$ }
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.45]{figuras/q1b_fxpassos_P2.PNG}
+  \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 1b e $x^0 = \{-2,-3\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Univariante_P0=[-2e-3].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Powell_P0=[-2e-3].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Steepest Descent_P0=[-2e-3].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Fletcher-Reeves_P0=[-2e-3].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_BFGS_P0=[-2e-3].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Newton Raphson_P0=[-2e-3].pdf}
+  \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 1b e $x^0 = \{-2,-3\}^t$}
+\end{figure}
+
+Todos os métodos convergiram para o ponto de mínimo mais próximo do ponto inicial.
+
+\section{Aplicação da Implementação}
+\subsection{Questão 2 (a)}
+\subsubsection{Enunciado}
+Determinar os deslocamentos $(u_A, v_A)$ do ponto $A$, que minimizam a Energia Potencial Total $(\Pi)$ do sitema de molas
+indicado na figura abaixo. Adotar o ponto inicial: $z^0 = \{0.01, -0.10\} ^t$
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=1]{figuras/enunciado_2a.png}
+  \caption{Sistema 2 molas. Fonte: Questão 2a do Trabalho 1. }
+\end{figure}
+
+\subsubsection{Formulação}
+A seguinte formulação foi apresentada em sala de aula :
+\vspace{3mm}
+
+$A = (x_A, y_A)$ = Posição inicial do ponto A
+
+\vspace{3mm}
+$A' = (x_A + u_A, y_A + v_A)$ = Posição final do ponto A
+
+\vspace{3mm}
+$\Pi = U - V$ = Energia Potencial total
+
+\vspace{3mm}
+$U = U_{mola1} + U_{mola2}$ = energia interna de deformação
+
+\vspace{3mm}
+$V$ = trabalho das forças externas
+
+\vspace{5mm}
+$U_i = \frac{1}{2}K_i\Delta L_i^2$
+
+\vspace{3mm}
+$L'_1 = \sqrt{(L_1 + u_A)^2 + v_A^2}$ , $L'_2 = \sqrt{(L_2 - u_A)^2 + v_A^2}$ e $W = \frac{1}{2}(\rho_1L_1 + \rho_2L_2)$
+
+\vspace{3mm}
+$V = Wv_A$
+
+\vspace{5mm}
+$\Pi = \frac{1}{2}\frac{EA_1}{L_1}(\sqrt{(L_1 + x_1)^2 + x_2^2} - L_1)^2 +
+        \frac{1}{2}\frac{EA_2}{L_2}(\sqrt{(L_2 - x_1)^2 + x_2^2} - L_2)^2 - 
+        (\frac{\rho_1L_1}{2} + \frac{\rho_2L_2}{2})x_2$
+
+\vspace{3mm}
+Substituindo os valores do enunciado e usando o site Wolfram ALpha para cálculo do gradiente e Hessiana :
+
+\vspace{3mm}
+$\Pi = 450(\sqrt{(30 + x_1)^2 + x_2^2} - 30)^2 +
+        300(\sqrt{(30 - x_1)^2 + x_2^2} - 30)^2 - 
+        360x_2$
+
+\vspace{3mm}
+
+ $\overrightarrow{\nabla}\Pi =
+\begin{bmatrix}
+  \frac{900 (x_1 + 30) (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{\sqrt{(x_1 + 30)^2 + x_2^2}} - 
+  \frac{600 (30 - x_1) (\sqrt{(x_1 - 30)^2 + x_2^2} - 30)}{\sqrt{(x_1 - 30)^2 + x_2^2}} \\[5mm]
+  60 (x_2 (\frac{-450}{\sqrt{x_1^2 + 60 x_1 + x_2^2 + 900}} - \frac{300}{\sqrt{x_1^2 - 60 x_1 + x_2^2 + 900}} + 25) - 6)
+\end{bmatrix}$
+
+\vspace{5mm}
+
+$H_{1\text{x}1} = -\frac{600 (30 - x_1)^2 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{((30 - x_1)^2 + x_2^2)^{3/2}} +
+\frac{600 (30 - x_1)^2}{(30 - x_1)^2 + x_2^2} +
+\frac{600 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{\sqrt{(30 - x_1)^2 + x_2^2}} +
+\frac{900 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{\sqrt{(x_1 + 30)^2 + x_2^2}}$
+
+\hspace{3em}
+$-\frac{900 (x_1 + 30)^2 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{((x_1 + 30)^2 + x_2^2)^{3/2}} +
+\frac{900 (x_1 + 30)^2}{(x_1 + 30)^2 + x_2^2}$
+
+\vspace{5mm}
+
+$H_{1\text{x}2} = \frac{600 (30 - x_1) x_2 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{((30 - x_1)^2 + x_2^2)^{3/2}} -
+\frac{900 (x_1 + 30) x_2 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{((x_1 + 30)^2 + x_2^2)^{3/2}} -
+\frac{600 (30 - x_1) x_2}{(30 - x_1)^2 + x_2^2} +
+\frac{900 (x_1 + 30) x_2}{(x_1 + 30)^2 + x_2^2}$
+
+\vspace{5mm}
+
+$H_{2\text{x}1} = \frac{600 (30 - x_1) x_2 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{((30 - x_1)^2 + x_2^2)^{3/2}} -
+\frac{900 (x_1 + 30) x_2 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{((x_1 + 30)^2 + x_2^2)^{3/2}} -
+\frac{600 (30 - x_1) x_2}{(30 - x_1)^2 + x_2^2} +
+\frac{900 (x_1 + 30) x_2}{(x_1 + 30)^2 + x_2^2}$
+
+\vspace{5mm}
+
+$H_{2\text{x}2} = -\frac{600 x_2^2 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{((30 - x_1)^2 + x_2^2)^{3/2}} -
+\frac{900 x_2^2 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{((x_1 + 30)^2 + x_2^2)^{3/2}} +
+\frac{600 x_2^2}{(30 - x_1)^2 + x_2^2} +
+\frac{900 x_2^2}{(x_1 + 30)^2 + x_2^2} +
+\frac{600 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{\sqrt{(30 - x_1)^2 + x_2^2}}$
+
+\hspace{3em}
+$+\frac{900 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{\sqrt{(x_1 + 30)^2 + x_2^2}}$
+
+\vspace{5mm}
+Definição da função, gradiente, Hessiana no código principal :
+
+\begin{python}
+  def f(Xn):
+    return 450 *((np.sqrt((30 + Xn[0])**2 + Xn[1]**2) - 30 )**2) + 300 *((np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30)**2) - 360*Xn[1]
+
+  def grad_f(Xn):
+      return np.array([(900*(Xn[0] + 30)*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - (600*(30 - Xn[0])*(np.sqrt((Xn[0] - 30)**2 + Xn[1]**2) - 30))/np.sqrt((Xn[0] - 30)**2 + Xn[1]**2),
+                      60*(Xn[1]*(-450/np.sqrt(Xn[0]**2 + 60*Xn[0] + Xn[1]**2 + 900) - 300/np.sqrt(Xn[0]**2 - 60*Xn[0] + Xn[1]**2 + 900) + 25) - 6)])
+      
+  def hessian_f(Xn):
+      hessian = np.zeros((2,2))
+      hessian[0, 0] = -(600*(30 - Xn[0])**2*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/((30 - Xn[0])**2 + Xn[1]**2)**(3/2) + \
+      (600*(30 - Xn[0])**2)/((30 - Xn[0])**2 + Xn[1]**2) + \
+      (600*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/np.sqrt((30 - Xn[0])**2 + Xn[1]**2) + \
+      (900*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - \
+      (900*(Xn[0] + 30)**2*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/((Xn[0] + 30)**2 + Xn[1]**2)**(3/2) + \
+      (900*(Xn[0] + 30)**2)/((Xn[0] + 30)**2 + Xn[1]**2)
+      
+      hessian[0, 1] = (600*(30 - Xn[0])*Xn[1]*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/((30 - Xn[0])**2 + Xn[1]**2)**(3/2) - \
+      (900*(Xn[0] + 30)*Xn[1]*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/((Xn[0] + 30)**2 + Xn[1]**2)**(3/2) - \
+      (600*(30 - Xn[0])*Xn[1])/((30 - Xn[0])**2 + Xn[1]**2) + \
+      (900*(Xn[0] + 30)*Xn[1])/((Xn[0] + 30)**2 + Xn[1]**2)
+      
+      hessian[1, 0] = (600*(30 - Xn[0])*Xn[1]*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/((30 - Xn[0])**2 + Xn[1]**2)**(3/2) - \
+      (900*(Xn[0] + 30)*Xn[1]*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/((Xn[0] + 30)**2 + Xn[1]**2)**(3/2) - \
+      (600*(30 - Xn[0])*Xn[1])/((30 - Xn[0])**2 + Xn[1]**2) + \
+      (900*(Xn[0] + 30)*Xn[1])/((Xn[0] + 30)**2 + Xn[1]**2)
+      
+      hessian[1, 1] = -(600*Xn[1]**2*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/((30 - Xn[0])**2 + Xn[1]**2)**(3/2) - \
+      (900*Xn[1]**2*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/((Xn[0] + 30)**2 + Xn[1]**2)**(3/2) + \
+      (600*Xn[1]**2)/((30 - Xn[0])**2 + Xn[1]**2) + \
+      (900*Xn[1]**2)/((Xn[0] + 30)**2 + Xn[1]**2) + \
+      (600*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/np.sqrt((30 - Xn[0])**2 + Xn[1]**2) + \
+      (900*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/np.sqrt((Xn[0] + 30)**2 + Xn[1]**2)
+      
+      return hessian
+
+  func = 3
+\end{python}
+
+\subsubsection{Resultados}
+
+Definição do ponto inicial no código principal:
+\begin{python}
+  P0 = np.array([0.01, -0.1])
+\end{python}
+
+Utilizei o seguinte controle numérico para resolução da questão 2(a):
+\begin{itemize}
+  \item Número máximo de passos (ou iterações): 200
+  \item Tolerância para convergência do gradiente: Sensibilidade com $10^{-5}$, $10^{-4}$ e $10^{-3}$
+  \item Tolerância para convergência da busca unidirecional: $10^{-6}$
+  \item $\Delta\alpha$ do passo constante: $10^{-2}$
+\end{itemize}
+
+\vspace{3mm}
+\textbf{Principais resultados obtidos:}
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c}
+      \multicolumn{4}{c}{tol = $10^{-5}$}\\
+      \hline
+      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
+      \hline
+      Univariante       & 200   & 0.07850 & $\{-0.20510911, 7.78899302\}^t$\\
+      Powell            & 200   & 91.21617 & $\{-0.20510878, 7.78899254\}^t$\\
+      Steepest Descent  & 20    & 0.00304 & $\{-0.20510889, 7.78899266\}^t$\\
+      Fletcher-Reeves   & 200   & 0.02659 & $\{-0.20510878, 7.78899218\}^t$\\
+      BFGS              & 200   & 0.03755 & $\{-0.20510893, 7.78899288\}^t$\\
+      Newton-Raphson    & 200   & 0.03705 & $\{-0.2051089, 7.78899288\}^t$\\
+    \end{tabular}
+  \end{center}
+  \caption{Resumo dos resultados obtidos na questão 2a para $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-5}$}
+\end{table}
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c}
+      \multicolumn{4}{c}{tol = $10^{-4}$}\\
+      \hline
+      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
+      \hline
+      Univariante       & 200   & 0.05557 & $\{-0.20510911, 7.78899302\}^t$\\
+      Powell            & 9     & 92.83198 & $\{-0.20510884, 7.78899251\}^t$\\
+      Steepest Descent  & 6     & 0.00090 & $\{-0.20510891, 7.78899276\}^t$\\
+      Fletcher-Reeves   & 12    & 0.00123 & $\{-0.20510891, 7.78899332\}^t$\\
+      BFGS              & 4     & 0.00324 & $\{-0.2051089,  7.78899268\}^t$\\
+      Newton-Raphson    & 49    & 0.12737 & $\{-0.20510894, 7.78899296\}^t$\\
+    \end{tabular}
+  \end{center}
+  \caption{Resumo dos resultados obtidos na questão 2a para $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-4}$}
+\end{table}
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c}
+      \multicolumn{4}{c}{tol = $10^{-3}$}\\
+      \hline
+      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
+      \hline
+      Univariante       & 9     & 0.04030 & $\{-0.20510877, 7.78899022\}^t$\\
+      Powell            & 8     & 91.89477 & $\{-0.20510883, 7.78899446\}^t$\\
+      Steepest Descent  & 5     & 0.00073 & $\{-0.20510863, 7.78899279\}^t$\\
+      Fletcher-Reeves   & 10    & 0.00255 & $\{-0.2051088, 7.78899188\}^t$\\
+      BFGS              & 4     & 0.00500 & $\{-0.20510894, 7.78899296\}^t$\\
+      Newton-Raphson    & 3     & 0.00425 & $\{-0.20510893, 7.78899416\}^t$\\
+    \end{tabular}
+  \end{center}
+  \caption{Resumo dos resultados obtidos na questão 2a para $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
+\end{table}
+
+Pelas tabelas apresentadas acima, um aumento da tolerância da convergência do gradiente leva a uma redução drástica
+do número de iterações e, aparentemente, sem grandes perdas de precisão no valor de ponto mínimo obtido. Para a 
+tolerância de $10^{-5}$ apenas o método Steepest Descent convergiu, levando um total de 20 passos, enquanto os 
+demais métodos usaram o máximo especificado de 200 iterações. Para uma tolerância de $10^{-4}$ apenas o método univariante
+não convergiu em menos de 200 passos, enquanto que para uma tolerância de $10^{-3}$ todos os métodos convergiram em até 10
+passos e com resultados satisfatórios.
+
+Em termos de tempo de execução, o método de Powell é o que mais se destaca. Independente da tolerância, o mesmo leva por volta
+de 90 segundos para convergir. Após depuração do código e dos resultados ficou claro que o motivo disso ocorrer é que, 
+para essa função e ponto inicial, o método de Powell, no sexto passo, segundo ciclo, gera uma direção com módulo muito pequeno e que
+que necessita de um $\alpha$(aproximadante 60000) muito grande para alcançar o mínimo. Isso faz com que o algoritmo leve o tempo apresentado.
+Essa talvez seja uma grande indicação de que trabalhar com direções normalizadas na busca unidirecional
+seja mais adequado, evitando esse tipo de problema.
+
+Para fins de apresentação dos demais resultados, irei utilizar como base o estudo feito com tolerância de $10^{-3}$.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{figuras/q2a_passos_P1.PNG}
+  \caption{Número de passos por método OSR. Questão 2a e $x^0 = \{0.01,-0.1\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.45]{figuras/q2a_fxpassos_P1.PNG}
+  \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 2a com $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Univariante_P0=[0.01e-0.1].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Powell_P0=[0.01e-0.1].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Steepest Descent_P0=[0.01e-0.1].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Fletcher-Reeves_P0=[0.01e-0.1].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_BFGS_P0=[0.01e-0.1].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Newton Raphson_P0=[0.01e-0.1].pdf}
+  \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 2a com $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
+\end{figure}
+
+Abaixo seguem as curvas de nível para um ponto inicial diferente do proposto no enuncado. $x^0 = \{-2,10\}^t$
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Univariante_P0=[-2 10].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Powell_P0=[-2 10].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Steepest Descent_P0=[-2 10].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Fletcher-Reeves_P0=[-2 10].pdf}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_BFGS_P0=[-2 10].pdf}
+    \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Newton Raphson_P0=[-2 10].pdf}
+  \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 2a e $x^0 = \{-2,10\}^t$ e tol = $10^{-3}$}
+\end{figure}
+
+\subsection{Questão 2 (b)}
+\subsubsection{Enunciado}
+\subsubsection{Formulação}
+\subsubsection{Resultados}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{figuras/q2b_passos.png}
+  \caption{Número de passos, por método OSR, para diferentes números de molas. Questão 2b.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.4]{figuras/q2b_tempo.png}
+  \caption{Tempo de Execução, por método OSR, para diferentes números de molas. Questão 2b.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/q2bUnivGraf.png}
+    \includegraphics[width=0.49\textwidth]{figuras/q2bPowellGraf.png}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/q2bSteepDGraf.png}
+    \includegraphics[width=0.49\textwidth]{figuras/q2bFRGraf.png}
+  \end{subfigure}
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{figuras/q2bBFGSGraf.png}
+    \includegraphics[width=0.49\textwidth]{figuras/q2bNRGraf.png}
+  \end{subfigure}
+  \caption{Posição dos nós, por método, para diferentes números de molas}
 \end{figure}
 
 \end{document}
