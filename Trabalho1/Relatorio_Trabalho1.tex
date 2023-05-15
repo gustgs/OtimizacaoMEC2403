@@ -105,9 +105,8 @@
 
 \subsection{Objetivos}
 
-Esse trabalho tem como objetivo a implementação, em Python, o teste dessa implementação, em diferentes funções 
-e pontos iniciais, bem como a aplicação da implementação na minimização da Energia Potencial Total de um sistema de molas,
-dos seguintes métodos de otimização sem restrição :
+Esse trabalho tem como objetivo a implementação, teste e aplicação de métodos de otimização sem restrição.
+Os seguintes métodos propostos foram implementados :
 \renewcommand{\theenumi}{\alph{enumi}}
 \begin{enumerate}
   \item Univariante
@@ -118,14 +117,29 @@ dos seguintes métodos de otimização sem restrição :
   \item Newton-Raphson
 \end{enumerate}
 
+A otimização também faz uso de uma busca unidirecional usando os seguintes métodos que trabalham em conjunto, também implementados :
+
+\begin{enumerate}
+  \item Passo constante
+  \item Seção áurea
+\end{enumerate}
+
+Testes em diferentes funções e pontos iniciais foram realizados. Um deles numa função quadrática,
+na qual alguns resultados são esperados para determinados métodos e que puderam ser comparados e verificados, 
+e o segundo teste numa função não quadrática, aumentando a complexidade e exigindo mais iterações dos algoritmos.
+
+Por fim, foi realizada a aplicação da otimização num problema de minimização da Energia Potencial Total de um sistema de molas,
+que pode ter sua discretização variável e complexidade cada vez maior com o aumento de variáveis do problema.
+
 \section{Implementação}
 
-A estratégia adotada neste trabalho foi de implementar algoritmos que, dados inputs específicos de cada método, retornam a próxima direção de busca. Para a busca unidirecional na direção especificada por cada método, 
-foram aproveitados e melhorados os códigos do passo constante e da seção áurea utilizados na resolução da Lista-1. 
+A estratégia adotada neste trabalho foi de implementar algoritmos que, dados inputs específicos de cada método, retornam uma direção de busca. A busca unidirecional consiste na procura 
+do ponto de mínimo mais próximo, dado um ponto inicial, na direção especificada. Esse trabalho utilizou os algortimos do passo constante e seção áurea na busca unidirecional.
 
 O código principal fica responsável pela chamada passo a passo dos métodos de OSR,
 recebendo uma direção de busca e repassando a mesma para a busca unidirecional.
-Com o valor de alpha obtido da seção áurea, um novo ponto é calculado e a convergência verificada.
+Com o valor de alpha obtido da seção áurea, um novo ponto é calculado e a convergência verificada. Essas etapas se repetem até que o critério de convergência seja atingido.
+Para esse trabalho, o critério de convergência adotado é $\overrightarrow{\nabla}f(\overrightarrow{x}) < tol$, onde tol é um valor de tolerância arbitrário, desejavelmente pequeno, e que variou entre $10^{-3}$ e $10^{-5}$ nos estudos aqui realizados.
 
 Cabe destacar que o pacote numpy usado no python para cálculos vetoriais e matriciais não faz distinção,
 para vetores 1-D, entre vetores coluna e vetores linha. Dessa forma, mesmo que possa parecer, nos códigos apresentados abaixo,
