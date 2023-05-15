@@ -123,8 +123,15 @@ dos seguintes métodos de otimização sem restrição :
 A estratégia adotada neste trabalho foi de implementar algoritmos que, dados inputs específicos de cada método, retornam a próxima direção de busca. Para a busca unidirecional na direção especificada por cada método, 
 foram aproveitados e melhorados os códigos do passo constante e da seção áurea utilizados na resolução da Lista-1. 
 
-O código principal fica responsável pela chamada passo a passo dos métodos de OSR, recebendo uma direção
-de busca e repassando a mesma para a busca unidirecional. Com o valor de alpha obtido da seção áurea, um novo ponto é calculado e a convergência verificada.
+O código principal fica responsável pela chamada passo a passo dos métodos de OSR,
+recebendo uma direção de busca e repassando a mesma para a busca unidirecional.
+Com o valor de alpha obtido da seção áurea, um novo ponto é calculado e a convergência verificada.
+
+Cabe destacar que o pacote numpy usado no python para cálculos vetoriais e matriciais não faz distinção,
+para vetores 1-D, entre vetores coluna e vetores linha. Dessa forma, mesmo que possa parecer, nos códigos apresentados abaixo,
+estarem sendo utilizados vetores linha para representar pontos, direções e gradientes, as especificidades das multiplicações
+entre matrizes e vetores são tratadas de tal forma que o resultado seja coerente com o esperado entre a multiplicação
+entre Matrizes e vetores e entre vetores e vetores.
 
 \subsection{Busca Unidirecional}
 
@@ -137,25 +144,35 @@ O seguinte pacote é necessário nesse arquivo:
 \subsubsection{Passo Constante}
 
 
-Foi implementado um método que recebe como parâmetros de entrada um vetor direção ($\overrightarrow{dir}$), um ponto inicial ($\overrightarrow{P_1}$), 
-a função que se deseja encontrar o mínimo ($f(\overrightarrow{P})$), um valor opcional de epsilon da máquina ($\epsilon$ default com valor $10^{-8}$), um valor opcional de passo ($\Delta\alpha$ default com valor 0.01).
+Foi implementado um método que recebe como parâmetros de entrada um vetor direção ($\overrightarrow{d}$),
+um ponto inicial ($\overrightarrow{x}^0$), 
+a função que se deseja encontrar o mínimo ($f(\overrightarrow{x})$),
+um valor opcional de $\epsilon$ da máquina ($\epsilon$ default com valor $10^{-8}$) e
+um valor opcional de passo ($\Delta\alpha$ default com valor 0.01).
 
-Para definir o sentido da busca, é feita uma comparação entre o valor de $f(\overrightarrow{P_1}-\epsilon\,\overrightarrow{dir})$ e $f(\overrightarrow{P_1}+\epsilon\,\overrightarrow{dir})$.
-Caso este último valor seja maior do que o primeiro, o sentido de busca considerado é o oposto do vetor direção ($-\overrightarrow{dir}$). Caso o primeiro seja
-o maior valor, o sentido do vetor direção é mantido na busca ($\overrightarrow{dir}$).
+Para definir o sentido da busca, é feita uma comparação entre o valor de $f(\overrightarrow{x}^0-\epsilon\,\overrightarrow{d})$ e $f(\overrightarrow{x}^0+\epsilon\,\overrightarrow{d})$.
+Caso este último valor seja maior do que o primeiro, o sentido de busca considerado é o oposto do vetor direção ($-\overrightarrow{d}$). Caso o primeiro seja
+o maior valor, o sentido do vetor direção é mantido na busca ($\overrightarrow{d}$).
 
-Com o passo default de 0.01 ou um qualquer outro passo desejado informado na passagem de parâmetro opcional, o método percorre o sentido
-de busca definido até encontrar um valor de $f(\overrightarrow{P_1}+ \alpha\,\overrightarrow{dir})$ que seja inferior ao valor do próximo passo.
+Com o passo default de 0.01 ou um qualquer outro passo desejado informado na passagem de parâmetro opcional,
+o método percorre o sentido de busca definido até encontrar um valor de
+$f(\overrightarrow{x}^0+ \alpha\,\overrightarrow{d})$ que seja inferior ao valor do próximo passo.
 Quando essa condição é alcançada, esse último valor de $\alpha$ é definido como mínimo ($\alpha_{min}$). 
 
-Para garantir que a cada incremento
-de $\alpha$ não tenha sido pulado um mínimo da função, é feito uma comparação entre os valores de $f(\overrightarrow{P}-\epsilon\,\hat{dir})$ e $f(\overrightarrow{P})$, 
-onde $\overrightarrow{P} = \overrightarrow{P_1} + \alpha\,\overrightarrow{dir}$. Caso o último valor seja superior ao primeiro, o passo é desfeito e o $\alpha$ mínimo é considerado encontarado.
+Para garantir que a cada incremento de $\alpha$ não tenha sido pulado um mínimo da função,
+é feita uma comparação entre os valores de $f(\overrightarrow{x}-\epsilon\,\hat{d}_{unit})$ e $f(\overrightarrow{x})$, 
+onde $\overrightarrow{x} = \overrightarrow{x}^0 + \alpha\,\overrightarrow{d}$.
+Caso o último valor seja superior ao primeiro, o passo é desfeito e o $\alpha$ mínimo é considerado alcançado.
 
-Caso uma das condições abaixo seja atingida, o algoritmo é interrompido e  retorna o intervalo [$\alpha$,  $\alpha + \Delta\alpha$], fazendo os devidos ajustes para adequar os sinais de acordo com sentido de busca.
+Caso uma das condições abaixo seja atingida, o algoritmo é interrompido e
+retorna o intervalo [$\alpha$,  $\alpha + \Delta\alpha$],
+fazendo os devidos ajustes para adequar os sinais de $\alpha$ de acordo com sentido de busca.
+
 \begin{enumerate}
-  \item $f(\overrightarrow{P}-\epsilon\,\hat{dir})$ e $f(\overrightarrow{P})$, com $\overrightarrow{P} = \overrightarrow{P_1} + \alpha\,\overrightarrow{dir}$
-  \item $f(\overrightarrow{P_1}+ \alpha\,\overrightarrow{dir}) < f(\overrightarrow{P_1}+ (\alpha + \Delta\alpha)\,\overrightarrow{dir})$  
+  \item $f(\overrightarrow{x}-\epsilon\,\hat{d}_{unit}) < f(\overrightarrow{x})$,
+  com $\overrightarrow{x} = \overrightarrow{x}^0 + \alpha\,\overrightarrow{d}$ : retorna $\alpha = \alpha - \Delta \alpha$
+  \item $f(\overrightarrow{x}^0+ \alpha\,\overrightarrow{d}) < f(\overrightarrow{x}^0 +
+  (\alpha + \Delta\alpha)\,\overrightarrow{d})$ : retorna $\alpha$  
 \end{enumerate}
 
 
@@ -195,11 +212,13 @@ Caso uma das condições abaixo seja atingida, o algoritmo é interrompido e  re
 \subsubsection{Seção Áurea}
 
 Implementado um método que recebe como parâmetros de entrada um intervalo de busca
-($\overrightarrow{interv} = [\alpha^L, \alpha^U]$), um vetor direção de busca ($\overrightarrow{dir}$), um ponto inicial ($\overrightarrow{P_1}$), a função f ($f(\overrightarrow{P})$) 
+($\overrightarrow{interv} = [\alpha^L, \alpha^U]$), um vetor direção de busca ($\overrightarrow{d}$),
+um ponto inicial ($\overrightarrow{x}^0$), a função f ($f(\overrightarrow{x})$) 
 e um parâmetro opcional para a tolerância de convergência com valor default de $10^{-5}$.
 
 Resumidamente, o método utiliza a razão áurea ($R_a = \frac{\sqrt{5} - 1}{2}$) para comparar os 
-valores de $f(\overrightarrow{P_1} + \alpha_{E}\,\overrightarrow{dir}$) e $f(\overrightarrow{P_1} + \alpha_{D}\,\overrightarrow{dir})$,
+valores de $f(\overrightarrow{x}^0 + \alpha_{E}\,\overrightarrow{d}$) e
+$f(\overrightarrow{x}^0 + \alpha_{D}\,\overrightarrow{d})$,
 onde $\alpha_{E} = \alpha^L + (1 - R_a )\beta$, $\alpha_{D} = \alpha^L + R_a\beta$ e $\beta = \alpha^U - \alpha^L$, 
 para determinar em qual trecho, $[\alpha^L, \alpha_{D}]$ ou $[\alpha_{E}, \alpha^U]$, o ponto mínimo se encontra. Enquanto a
 convergência não é alcançada, os valores de $\alpha^L, \alpha^U, \alpha_E$ e $\alpha_D$ vão sendo recalculados e atualizados.
@@ -207,11 +226,12 @@ convergência não é alcançada, os valores de $\alpha^L, \alpha^U, \alpha_E$ e
 Quando o comprimento do trecho a ser avaliado é inferior à tolerância, o método finaliza e retorna o seguinte valor:
 
 \begin{itemize}
-  \item $\alpha_{min}$, tal que $\alpha_{min} = \frac{\alpha^L + \alpha^U}{2}$ e $\alpha^L$, $\alpha^U$ são os extremos do
+  \item $\alpha_{m}$, tal que $\alpha_{m} = \frac{\alpha^L + \alpha^U}{2}$ e $\alpha^L$, $\alpha^U$ são os extremos do
   intervalo do último passo do algortimo, quando a convergência foi obtida
 \end{itemize} 
 
-Importante destacar que o algortimo identifica o sentido de busca e os sinal correto do valor de alpha mínimo através do valor do intervalo passado como parâmetro.
+Importante destacar que o algortimo identifica o sentido de busca e
+o sinal correto do valor de alpha através do valor do intervalo passado como parâmetro.
 
 
 \begin{python}
@@ -297,13 +317,20 @@ A implementação considerou como parâmetros de entrada o número de dimensões
 os métodos de OSR. O número de dimensões é extraído do ponto inicial e o passo é um valor controlado durante o processo de convergência que irá ser implementado no código principal.
 
 Toda vez que o método é chamado, inicializa-se um vetor com n zeros, sendo n o número de dimensões. O índice do vetor cujo valor será alterado para 1 é calculado 
-através de manipulações em cima do resto da divisão do npumero do passo pelo número de dimensões.
+através de manipulações em cima do resto da divisão do número do passo pelo número de dimensões.
 
 \begin{python}
   def univariante(passo, dimens):
+    #indice do vetor = (resto da divisao do passo pela dimensao) - 1
+    #primeira posicao do vetor no python tem indice 0
     indice = passo%dimens - 1
+    
     if (indice == -1) :
+        #indice = -1 indica que se trata da ultima posicao do array
+        #no pyton esse indice eh o tamanho do vetor - 1
         indice = dimens - 1
+        
+    #define a direcao canonica a ser utilizada
     ek = np.zeros(dimens)
     ek[indice] = 1
     
@@ -312,59 +339,82 @@ através de manipulações em cima do resto da divisão do npumero do passo pelo
 
 \subsubsection{Powell}
 
-O método de Powell consiste de ciclos de n + 1 passos, onde n é o número de dimensões. No primeiro ciclo e toda vez que o número do ciclo for múltiplo de n + 2, 
-o conjunto de n direções é inicializado com as direções canônicas. A direção n + 1 de todo ciclo será o igual a  $\overrightarrow{P_n} - \overrightarrow{P_0}$, 
-onde $\overrightarrow{P_n}$ é o ponto encontrado na otimização até o passo n do ciclo atual e $\overrightarrow{P_0}$ é o ponto inicial do primeiro passo do ciclo atual,
-que por sua vez é igual ao ponto final do ciclo anterior. Outra característica do método de Powell é que uma direção de um passo genérico k de um determinado ciclo será 
-a direção do passo k - 1 do ciclo seguinte. Consegue
+O método de Powell consiste de ciclos de n + 1 passos, onde n é o número de dimensões.
+No primeiro ciclo e toda vez que o número do ciclo for múltiplo de n + 2, 
+o conjunto de n direções é inicializado com as direções canônicas.
+A direção n + 1 de todo ciclo será o igual a  $\overrightarrow{x}^n - \overrightarrow{x}^0$, 
+onde $\overrightarrow{x}^n$ é o ponto encontrado na otimização até o passo n do ciclo atual e
+$\overrightarrow{x}^0$ é o ponto inicial do primeiro passo do ciclo atual,
+que por sua vez é igual ao ponto final do ciclo anterior.
+Outra característica do método de Powell é que uma direção de um passo genérico k de um determinado ciclo será 
+a direção do passo k - 1 do ciclo seguinte.
 
-A implementação considerou como parâmetros de entrada o ponto mínimo encontrado no passo anterior ($\overrightarrow{P}$), o ponto inicial do 
-ciclo atual ($\overrightarrow{P}_1$), um array com o conjunto de direções, um número representando o passo global da convergência
-no código principal, um número representado o ciclo do método e o número de dimensões.
+A implementação considerou como parâmetros de entrada o ponto mínimo encontrado no passo anterior ($\overrightarrow{x}$),
+o ponto inicial do ciclo atual ($\overrightarrow{x}^0$), um array com o conjunto de direções,
+um número representando o passo global da convergência no código principal,
+um número representando o ciclo do método e o número de dimensões.
 
-Na primeira chamada do método, ou seja, para o primeiro passo do primeiro ciclo, o código principal envia o conjunto de direções canônicas e número de ciclo igual a zero.
-Com manipulações com o resto da divisão do número do passo pelo número de dimensões, o algoritmo consegue identificar qual direção utilizar do conjunto de direções
-enviado como parâmetro e atualizar o mesmo para o ciclo seguinte. O algoritmo também precisa atualizar o número do ciclo a cada n + 1 passos e voltar para as direções
-canônicas a cada n + 2 ciclos.  
+Na primeira chamada do método, ou seja, para o primeiro passo do primeiro ciclo,
+o código principal envia o conjunto de direções canônicas e número de ciclo igual a zero.
+Com manipulações com o resto da divisão do número do passo pelo número de dimensões,
+o algoritmo consegue identificar qual direção utilizar do conjunto de direções
+enviado como parâmetro e atualizar o mesmo para o ciclo seguinte.
+O algoritmo também precisa atualizar o número do ciclo a cada n + 1 passos e
+voltar para as direções canônicas a cada n + 2 ciclos.
 
-A cada achamada do método, são retornadas a direção para o passo atual, o conjunto de direções atualizado, o ponto inicial do ciclo atual  e o número de ciclos atual.
-Esses valores precisam ser recebidos no código principal e utilizados para a chamado do método no passo seguinte.
+A cada chamada do método, são retornadas a direção para o passo atual, o conjunto de direções atualizado,
+o ponto inicial do ciclo atual  e o número de ciclos atual.
+Esses valores precisam ser recebidos no código principal e utilizados para a chamada do método no passo seguinte.
 
 \begin{python}
-  def powell(P, P1, direcoes, passos, ciclos, dimens):
+  def powell(P, P0, direcoes, passos, ciclos, dimens):
+    #indice do vetor = (resto da divisao do passo pela dimensao) - 1
+    #primeira posicao do vetor no python tem indice 0
     indice = passos%(dimens + 1) - 1
+    
     if (indice == -1):
-        dir = P - P1
+        #indice = -1 indica que se trata da ultima posicao do array
+        #no pyton esse indice eh o tamanho do vetor - 1
+        #direcao n + 1 do ciclo = Patual - P0
+        dir = P - P0
         direcoes[dimens - 1] = dir        
     elif (indice == 0):
+        #indice = 0 significa que vamos usar a primeira direcao do conjunto
+        #representa o inicio de um novo ciclo
         ciclos = ciclos + 1
+
         if (ciclos%(dimens+2) == 0):
+            #se ciclo for multipl de dimens + 2, conjunto de direcoes = canonicas
             direcoes = np.eye(dimens, dtype=float)
-        P1 = P.copy()
+        P0 = P.copy()
         dir = direcoes[indice].copy()
+        
     else:
         dir = direcoes[indice].copy()
         direcoes[indice-1] = dir
   
-    return dir, direcoes, P1, ciclos 
+    return dir, direcoes, P0, ciclos 
 \end{python}
 
 \subsubsection{Steepest Descent}
-O método Steepest Descent recebe um ponto $\overrightarrow{P}$ e a função a ser minimizada e retorna como direção o vetor com sentido oposto ao gradiente da função no ponto $\overrightarrow{P}$.
+O método Steepest Descent em tese recebe um ponto $\overrightarrow{x}$ e a função a ser minimizada e
+retorna $\overrightarrow{d} = - \overrightarrow{\nabla} f(\overrightarrow{x})$.
 
-A implementação considerou como parâmetro de entrada apenas o vetor gradiente da função no ponto $\overrightarrow{P}$, uma vez que o código principal já faz o 
-cálculo dessa variável para verificar convergência e a mesma já está disponível no momento de chamada do método.
+Porém, a implementação considerou como parâmetro de entrada apenas o vetor gradiente da função no ponto $\overrightarrow{P}$,
+uma vez que o código principal já faz o cálculo dessa variável para verificar convergência e
+a mesma já está disponível no momento de chamada do método.
+
 \begin{python}
  def steepestDescent(grad):
     return -grad
 \end{python}
 
 \subsubsection{Fletcher-Reeves}
-O método Fletcher-Reeves utiliza $-\overrightarrow{\nabla}f$ no ponto $\overrightarrow{P_0}$ como primeira direção. A partir da segunda direção
+O método Fletcher-Reeves utiliza $-\overrightarrow{\nabla}f$ no ponto $\overrightarrow{x}^0$ como primeira direção. A partir da segunda direção
 ele utiliza uma correção $\beta$ que é a razão ao quadrado entre o gradiente da função no ponto encontrado no passo anterior e o gradiente da função no ponto
-inicial do passo anterior. Ou seja, $\beta^k = \frac{(\lvert\overrightarrow{\nabla f}(\overrightarrow{P}^{k+1})\rvert)^2}{(\lvert\overrightarrow{\nabla f}(\overrightarrow{P}^k)\rvert)^2}$.
+inicial do passo anterior. Ou seja, $\beta^k = \frac{(\lvert\overrightarrow{\nabla f}(\overrightarrow{x}^{k+1})\rvert)^2}{(\lvert\overrightarrow{\nabla f}(\overrightarrow{x}^k)\rvert)^2}$.
 A correção é então utilizada em conjunto com a direção do último passo e o gradiente da função no ponto obtido no último passo. Dessa forma,
-$\overrightarrow{d}^{k+1} = -\overrightarrow{\nabla}f(\overrightarrow{P}^{k+1}) + \beta^k\,\overrightarrow{d^k}$
+$\overrightarrow{d}^{k+1} = -\overrightarrow{\nabla}f(\overrightarrow{x}^{k+1}) + \beta^k\,\overrightarrow{d^k}$
 
 A implementação considerou como parâmetros de entrada a direção utilizada no passo anterior, o gradiente da função no ponto obtido no passo anterior, o gradiente 
 da função no ponto inicial do passo anterior e o número do passo. Para o primeiro passo do método, o código principal envia o gradiente da função no ponto inicial.
@@ -384,7 +434,8 @@ recebe esses valores e utiliza nas chamadas subsequentes.
 
 \subsubsection{BFGS}
 
-O método BFGS retorna $\overrightarrow{d}^k = -\bar{\bar{S}}^k\,\overrightarrow{\nabla}f(\overrightarrow{P}^k)$ como direção, sendo $\bar{\bar{S}}^0 = \bar{\bar{I}}$.
+O método BFGS retorna $\overrightarrow{d}^k = -\bar{\bar{S}}^k\,\overrightarrow{\nabla}f(\overrightarrow{x}^k)$ como direção,
+sendo $\bar{\bar{S}}^0 = \bar{\bar{I}}$.
 
 \begin{figure}[htpb]
   \centering
@@ -398,9 +449,13 @@ O método BFGS retorna $\overrightarrow{d}^k = -\bar{\bar{S}}^k\,\overrightarrow
   \caption{Cálculo de $S^{k+1}$. Fonte: Aula-3\_MetodosOSR.pdf}
 \end{figure}
 
-A implementação considerou como parâmetros de entrada os pontos inicial e final do passo anterior, os gradientes da função nos pontos inicial e final do passo anterior,
-a matriz $\bar{\bar{S}}$ calculada no último passo, o número do passo e o número de dimensões. O algortimo retorna a direção atual a ser utilizada na busca, bem como os
-demais parâmetros atualizados necessários para a chamada subsequente do método, que precisarão ser lidos no código principal.
+A implementação considerou como parâmetros de entrada os pontos inicial e final do passo anterior,
+os gradientes da função nos pontos inicial e final do passo anterior,
+a matriz $\bar{\bar{S}}$ calculada no último passo, o número do passo e o número de dimensões.
+O algortimo retorna a direção atual a ser utilizada na busca,
+bem como os demais parâmetros atualizados necessários para a chamada subsequente do método,
+que precisarão ser lidos no código principal.
+O código principal se encarrega de fornecer o valor de $\bar{\bar{S}}^0$ na chamada do primeiro passo.
 
 \begin{python}
   def bfgs(P, P_last, grad, grad_last, S_last, passo, dimens):
@@ -429,10 +484,11 @@ demais parâmetros atualizados necessários para a chamada subsequente do métod
 \end{python}
 
 \subsubsection{Newton-Raphson}
-O método Newton-raphson retorna $\overrightarrow{d}^k = -\bar{\bar{H}}(\overrightarrow{P}^k)^{-1}\,\overrightarrow{\nabla}f(\overrightarrow{P}^k)$.
+O método Newton-raphson retorna
+$\overrightarrow{d}^k = -\bar{\bar{H}}(\overrightarrow{x}^k)^{-1}\,\overrightarrow{\nabla} f(\overrightarrow{x}^k)$.
 
-A implementação considerou como parâmetros de entrada o ponto inicial ou ponto obtido no passo anterior, o gradiente da função nesse ponto e o método que caclula
-a matriz Hessiana de f.
+A implementação considerou como parâmetros de entrada o ponto inicial ou ponto obtido no passo anterior,
+o gradiente da função nesse ponto e o método que caclula a matriz Hessiana de f.
 
 \begin{python}
   def newtonRaphson(P, grad_P, hessian_f):
@@ -559,7 +615,8 @@ Seção para inicialização de variáveis auxiliares para chamada inicial dos m
       P_last = P0.copy()
 \end{python}
 
-Loop para chamada dos métodos e convergência da otimização.
+Loop para chamada dos métodos e convergência da otimização. A cada iteração armazeno o valor do ponto encontrado na variável
+$P_{min}$ e adiciono o ponto numa lista(vetor) para acesso futuro e plot do caminho do método nas curvas de nível.
 
 \begin{python}
   start = timer()
@@ -668,11 +725,16 @@ Seção para geração automática do gráfico de configuração dos nós da que
 \end{python}
 
 \section{Teste da Implementação}
-A questão 1 solicita a busca dos pontos de mínimo de duas funções distintas como forma de testar a implementação dos métodos de OSR e busca unidirecional apresentados na seção anterior.
-Uma das funções é quadrática e a outra não. Para funções qudráticas, é esperado que o método de Powell atinja convergência em até $(n + 1)^2 passos$, o método de Fletcher-Reeves em até $n + 1$ passos,
-o método BFGS em até $n + 1$ passos e o método Newton-Raphson em $n$ passos, sendo n o número de dimensões (ou variáveis) da função.
+A questão 1 solicita a busca dos pontos de mínimo de duas funções distintas como forma de testar a implementação
+dos métodos de OSR e busca unidirecional apresentados na seção anterior.
+Uma das funções é quadrática e a outra não. Para funções qudráticas,
+é esperado que o método de Powell atinja convergência em até $(n + 1)^2$ passos,
+o método de Fletcher-Reeves em até $n + 1$ passos, o método BFGS em até $n + 1$ passos e
+o método Newton-Raphson em até $n$ passos, sendo n o número de dimensões (ou variáveis) da função.
 
-O seguinte controle numérico foi utilizado para a convergência das funções da questão 1, independente do ponto inicial:
+\vspace{5mm}
+\textbf{O seguinte controle numérico foi utilizado para a convergência das funções da questão 1,
+ independente do ponto inicial:}
 
 \begin{itemize}
   \item Número máximo de passos (ou iterações): 200
@@ -731,6 +793,10 @@ Definição do ponto inicial no código principal:
 \vspace{3mm}
 \textbf{Principais resultados obtidos: }
 
+\vspace{3mm}
+A tabela resumo abaixo mostra que para essa função quadrática os métodos apresentaram resultados satisfatórios,
+com os métodos de Powell, Fletcher-Reeves, BFGS e Newton-Rapshon respeitando o número máximo de passos para convergência.
+
 \begin{table}[H]
   \begin{center}
     \begin{tabular}{c|c|c|c}
@@ -753,11 +819,20 @@ Definição do ponto inicial no código principal:
   \caption{Número de passos por método OSR. Questão 1a e $x^0 = \{2,2\}^t$ }
 \end{figure}
 
+\vspace{3mm}
+A figura abaixo mostra, por método, o valor da função a cada iteração. A ideia é podermos comparar 
+a rapidez com que cada método se aproxima do mínimo. Para essa função e ponto inicial, os métodos univariante e Powell
+foram os que mais demoraram para se aproximar, levando por volta de 6 passos, enquanto os demais precisaram de no máximo
+3 passos.
+
 \begin{figure}[H]
   \centering
   \includegraphics[scale=0.45]{figuras/q1a_fxpassos_P1.PNG}
   \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 1a e $x^0 = \{2,2\}^t$}
 \end{figure}
+
+As figuras abaixo representam as curvas de nível e o caminho de otimização percorrido por cada método. Como a função 
+só possui um mínimo, todos os métodos convergiram o ponto correto (mínimo mais próximo).
 
 \begin{figure}[H]
   \centering
@@ -765,15 +840,25 @@ Definição do ponto inicial no código principal:
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Univariante_P0=[2 2].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Powell_P0=[2 2].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 1a e $x^0 = \{2,2\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Steepest Descent_P0=[2 2].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Fletcher-Reeves_P0=[2 2].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 1a e $x^0 = \{2,2\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_BFGS_P0=[2 2].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Newton Raphson_P0=[2 2].pdf}
   \end{subfigure}
-  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 1a e $x^0 = \{2,2\}^t$}
+  \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 1a e $x^0 = \{2,2\}^t$}
 \end{figure}
 
 \subsubsection{Ponto inicial : $x^0 = \{-1,-3\}^t$}
@@ -784,6 +869,10 @@ Definição do ponto inicial no código principal:
 
 \vspace{3mm}
 \textbf{Principais resultados obtidos:}
+
+\vspace{3mm}
+Segue tabela resumo e figuras nos mesmos moldes do que foi apresentado para o outro ponto inicial.
+As conclusões são basicamente as mesmas.
 
 \begin{table}[H]
   \begin{center}
@@ -819,15 +908,25 @@ Definição do ponto inicial no código principal:
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Univariante_P0=[-1 -3].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Powell_P0=[-1 -3].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 1a e $x^0 = \{-1,-3\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Steepest Descent_P0=[-1 -3].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Fletcher-Reeves_P0=[-1 -3].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 1a e $x^0 = \{-1,-3\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_BFGS_P0=[-1 -3].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Newton Raphson_P0=[-1 -3].pdf}
   \end{subfigure}
-  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 1a e $x^0 = \{-1,-3\}^t$}
+  \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 1a e $x^0 = \{-1,-3\}^t$}
 \end{figure}
 
 \subsection{Questão 1 (b)}
@@ -891,6 +990,15 @@ Definição do ponto inicial no código principal:
   P0 = np.array([10, 2])
 \end{python}
 
+A tabela resumo abaixo mostra que para essa função, que não é quadrática, todos os métodos conseguiram convergir dentro
+do limite especificado para o número máximo de iterações.
+
+Os métodos de Powell, Fletcher-Reeves e BFGS não convergiram dentro
+do número de passos esperado para funções quadráticas, o que era de certa forma esperado.  Newton-Rapshson convergiu em
+1 passo, mas foi o único que encontrou um ponto diferente dos demais. Ele convergiu para um ponto de sela imediatamente
+abaixo do ponto inicial, enquanto os demais métodos convergiram para o mínimo mais próximo, localizado à direita
+do ponto inicial. Esses detalhes são melhores vistos na figura com as curvas de nível localizada mais abaixo neste documento.
+
 \begin{table}[H]
   \begin{center}
     \begin{tabular}{c|c|c|c}
@@ -913,9 +1021,14 @@ Definição do ponto inicial no código principal:
   \caption{Número de passos por método OSR. Questão 1b e $x^0 = \{10,2\}^t$ }
 \end{figure}
 
+A figura abaixo deixa claro como Newton-Raphson, apesar de ter convergido em 1 iteração, praticamente não minimizou
+a função como os demais métodos, por ter encontrado um ponto de sela. Flecther-Reeves foi o método que mais demorou
+para se aproximar do ponto mínimo, e o motivo ficará mais evidente mais abaixo quando eu apresentar o caminho percorrido
+por este método.
+
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.45]{figuras/q1b_fxpassos_P1.PNG}
+  \includegraphics[scale=0.4]{figuras/q1b_fxpassos_P1.PNG}
   \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 1b e $x^0 = \{10,2\}^t$}
 \end{figure}
 
@@ -925,15 +1038,25 @@ Definição do ponto inicial no código principal:
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Univariante_P0=[10e2].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Powell_P0=[10e2].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 1b e $x^0 = \{10,2\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Steepest Descent_P0=[10e2].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Fletcher-Reeves_P0=[10e2].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 1b e $x^0 = \{10,2\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_BFGS_P0=[10e2].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Newton Raphson_P0=[10e2].pdf}
   \end{subfigure}
-  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 1b e $x^0 = \{10,2\}^t$}
+  \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 1b e $x^0 = \{10,2\}^t$}
 \end{figure}
 
 Um resultado que chama a atenção é o método Fletcher-Reeves ter levado 71 passos para convergir. Alterar a tolerância
@@ -942,9 +1065,7 @@ redução modesta para 60 iterações. Analisando as curvas de nível e o "camin
 percebe-se que ocorre um movimento em espiral em torno do ponto mínimo. Ou seja, para essa função e ponto inicial,
 as direções geradas por Fletcher-Reeves levam a um elevado número de passos.
 
-O método Newton-Raphson também se destaca por ter sido o único dentre os 6 métodos que encontrou um ponto de mínimo diferente.
-Enquanto os outros métodos levam a um mínimo à direita do ponto inicial, Newton-Raphson leva a um ponto de cela abaixo do 
-ponto inicial. Nenhum dos métodos levou ao ponto de mínimo à esquerda do ponto incicial.
+Nenhum dos métodos levou ao ponto de mínimo à esquerda do ponto incicial.
 
 \begin{figure}[H]
   \centering
@@ -958,6 +1079,11 @@ Definição do ponto inicial no código principal:
 \begin{python}
   P0 = np.array([-2, -3])
 \end{python}
+
+Seguem resultados para o segundo ponto inicial proposto no enunciado. Pela posição deste ponto e da proximidade com 
+o mínimo mais à esquerda da função, dessa vez, todos os métodos convergiram corretamente para o mínimo esperado.
+Em relação aos resultados não há novas observações relevantes a serem feitas, com exceção do fato de todos os métodos
+terem conseguido se aproximar muito rápido do mínimo.
 
 \begin{table}[H]
   \begin{center}
@@ -993,24 +1119,32 @@ Definição do ponto inicial no código principal:
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Univariante_P0=[-2e-3].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Powell_P0=[-2e-3].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 1b e $x^0 = \{-2,-3\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Steepest Descent_P0=[-2e-3].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Fletcher-Reeves_P0=[-2e-3].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 1b e $x^0 = \{-2,-3\}^t$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_BFGS_P0=[-2e-3].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Newton Raphson_P0=[-2e-3].pdf}
   \end{subfigure}
-  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 1b e $x^0 = \{-2,-3\}^t$}
+  \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 1b e $x^0 = \{-2,-3\}^t$}
 \end{figure}
-
-Todos os métodos convergiram para o ponto de mínimo mais próximo do ponto inicial.
 
 \section{Aplicação da Implementação}
 \subsection{Questão 2 (a)}
 \subsubsection{Enunciado}
 Determinar os deslocamentos $(u_A, v_A)$ do ponto $A$, que minimizam a Energia Potencial Total $(\Pi)$ do sitema de molas
-indicado na figura abaixo. Adotar o ponto inicial: $z^0 = \{0.01, -0.10\} ^t$
+indicado na figura abaixo. Adotar o ponto inicial: $x^0 = \{0.01, -0.10\} ^t$
 
 \begin{figure}[H]
   \centering
@@ -1152,7 +1286,7 @@ Definição do ponto inicial no código principal:
   P0 = np.array([0.01, -0.1])
 \end{python}
 
-Utilizei o seguinte controle numérico para resolução da questão 2(a):
+\textbf{Utilizei o seguinte controle numérico para resolução da questão 2(a):}
 \begin{itemize}
   \item Número máximo de passos (ou iterações): 200
   \item Tolerância para convergência do gradiente: Sensibilidade com $10^{-5}$, $10^{-4}$ e $10^{-3}$
@@ -1226,11 +1360,11 @@ passos e com resultados satisfatórios.
 
 Em termos de tempo de execução, o método de Powell é o que mais se destaca. Independente da tolerância, o mesmo leva por volta
 de 90 segundos para convergir. Após depuração do código e dos resultados ficou claro que o motivo disso ocorrer é que, 
-para essa função e ponto inicial, o método de Powell, no sexto passo, segundo ciclo, gera uma direção com módulo muito pequeno e que
+para essa função e ponto inicial, o método de Powell, no sexto passo global, terceiro do segundo ciclo, gera uma direção com módulo muito pequeno e que
 que necessita de um $\alpha$(aproximadante 60000) muito grande para alcançar o mínimo. Isso faz com que o algoritmo leve o tempo apresentado.
 Essa talvez seja uma grande indicação de que trabalhar com direções normalizadas na busca unidirecional
 seja mais adequado, evitando esse tipo de problema que pode ocorrer com outros métodos também a depender da combimação 
-dos parâmetros de entrada.
+dos parâmetros de entrada. Alterar o ponto inicial ajuda a resolver esse problema encontrado no método de Powell.
 
 Para fins de apresentação dos demais resultados, irei utilizar como base o estudo feito com tolerância de $10^{-3}$.
 
@@ -1246,21 +1380,33 @@ Para fins de apresentação dos demais resultados, irei utilizar como base o est
   \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 2a com $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
 \end{figure}
 
+Seguem, abaixo, curvas de nível e caminhos obtidos pelos métodos para $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$. 
+
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Univariante_P0=[0.01e-0.1].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Powell_P0=[0.01e-0.1].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 2a com $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Steepest Descent_P0=[0.01e-0.1].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Fletcher-Reeves_P0=[0.01e-0.1].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 2a com $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_BFGS_P0=[0.01e-0.1].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Newton Raphson_P0=[0.01e-0.1].pdf}
   \end{subfigure}
-  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 2a com $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
+  \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 2a com $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
 \end{figure}
 
 Abaixo seguem as curvas de nível para um ponto inicial diferente do proposto no enuncado. $x^0 = \{-2,10\}^t$
@@ -1271,15 +1417,25 @@ Abaixo seguem as curvas de nível para um ponto inicial diferente do proposto no
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Univariante_P0=[-2 10].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Powell_P0=[-2 10].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 2a e $x^0 = \{-2,10\}^t$ e tol = $10^{-3}$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Steepest Descent_P0=[-2 10].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Fletcher-Reeves_P0=[-2 10].pdf}
   \end{subfigure}
+  \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 2a e $x^0 = \{-2,10\}^t$ e tol = $10^{-3}$}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \begin{subfigure}[b]{\textwidth}
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_BFGS_P0=[-2 10].pdf}
     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Newton Raphson_P0=[-2 10].pdf}
   \end{subfigure}
-  \caption{Curvas de nível e os pontos obtidos por método OSR. Questão 2a e $x^0 = \{-2,10\}^t$ e tol = $10^{-3}$}
+  \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 2a e $x^0 = \{-2,10\}^t$ e tol = $10^{-3}$}
 \end{figure}
 
 \subsection{Questão 2 (b)}
@@ -1305,10 +1461,18 @@ extrapolando para $n_{dimens}$, podemos escrever o seguinte :
 Seja $Li_m = $ comprimeto inicial da mola m, com m=1,2,...$n_{molas}$
 
 \vspace{3mm}
-Seja $Lf_m = $ comprimeto final da mola k, com m=1,2,...$n_{molas}$
+Seja $Lf_m = $ comprimeto final da mola m, com m=1,2,...$n_{molas}$
 
 \vspace{3mm}
-$Lf_m = \sqrt{(Li_m + u_m - u_{m-1})^2 + (v_m - v_{m-1})^2}$, com $u_0 = v_0 = u_{n_{molas}} = v_{n_{molas}} = 0 $
+Apenas para facilidade do equacionamento e analogia com a formulação para 2 molas, 
+considerei que cada nó livre (total $n_{molas} - 1$ nós livres) terá deslocamentos positivos tanto em $x$ quanto em $y$. Ou seja,
+cada nó, após equilíbrio, estará à direita do seu ponto inicial e abaixo (considerando eixo $y$ positivo para baixo) do nó livre anterior.
+
+\vspace{3mm}
+Então:
+
+\vspace{3mm}
+$Lf_m = \sqrt{(Li_m + u_m - u_{m-1})^2 + (v_m - v_{m-1})^2}$, com $u_0 = v_0 = u_{n_{molas}} = v_{n_{molas}} = 0 $ e m=1,2,...$n_{molas}$
 
 \vspace{3mm}
 $U_m = \frac{1}{2}K_m\Delta L_m^2$, sendo $K_m = \frac{EA_m}{Li_m}$ e $\Delta L_m = Lf_m - Li_m$ = Energia Interna de deformação
@@ -1333,15 +1497,15 @@ A variável $u_n$ aparece apenas nos termos $U_n$ e $U_{n+1}$, enquanto $v_n$ ap
 Dessa forma $\frac{\partial \Pi}{\partial u_n} = \frac{\partial U_n}{\partial u_n} + \frac{\partial U_{n+1}}{\partial u_n}$ e 
 $\frac{\partial \Pi}{\partial v_n} = \frac{\partial U_n}{\partial v_n} + \frac{\partial U_{n+1}}{\partial v_n} -
 \frac{\partial V_n}{\partial v_n} $. Todos esses termos são possíveis de se calcular analiticamente usando as expressões
-apresentadas acima para $Lf_m$, $U_m$ e $V_n$, e com isso temos uma expressão para cálculo do gradiente da função e que
+apresentadas acima para $Lf_m$, $U_m$ e $V_n$, e com isso conseguimos uma expressão para cálculo do gradiente da função e que
 foi implementada no meu código.
 
 O mesmo raciocínio poderia ser aplicado para cálculo da Hessiana da função, porém, como sua utilidade fica restrita ao
-método de Newton-Raphson, para fins desse trabalho usei um pacote pronto para cálculo diferencial numérico no Python 
+método de Newton-Raphson, para fins desse trabalho usei um pacote pronto para cálculo diferencial de forma numérica no Python 
 (numdifftools) com resultados bem satisfatórios e coincidentes com todos os cálculos dos métodos
 analíticos de gradiente e Hessiana implementados para as funções da questão 1 e questão 2a.
 
-Na implementação o parâmetro que controla o número de molas do sistema é o número de dimensões do ponto inicial. Ou seja,
+Na implementação, o parâmetro que controla o número de molas do sistema é o número de dimensões do ponto inicial. Ou seja,
 para um sistema 2 molas, 1 nó livre, é necessário fornecer $x^0$ com 2 dimensões ($x^0 = \{u_1, v_1\}^t$). Para um
 sistema 4 molas, 3 nós livres, é necessar informar $x^0 = \{u_1, v_1, u_2, v_2, u_3, v_3\}^t$, e assim por diante.
 
@@ -1542,17 +1706,103 @@ Definição da função, gradiente, Hessiana no código principal :
 
 \subsubsection{Resultados}
 
+Para esse exercício, variei o número de molas no sistema de 2 a 20, e com isso precisei de
+diferentes pontos iniciais para as rodadas dos métodos. Por simplificação, usei os mesmos delocamentos iniciais para 
+todos os nós livres. Valores utilizados : $u_i = -1$ e $v_i = 5$, $\forall i$ com $i=1,2,...n_{nodes}$ 
+
+Exemplo de definição do ponto inicial com a premissa acima para o caso 4 molas:
+
+\begin{python}
+  P0 = np.array([-1, 5, -1, 5, -1, 5])
+\end{python}
+
+\textbf{Utilizei o seguinte controle numérico para resolução da questão 2(b):}
+\begin{itemize}
+  \item Número máximo de passos (ou iterações): 200
+  \item Tolerância para convergência do gradiente: $10^{-3}$
+  \item Tolerância para convergência da busca unidirecional: $10^{-6}$
+  \item $\Delta\alpha$ do passo constante: $10^{-2}$
+\end{itemize}
+
+O gráfico abaixo mostra o número de passos por método e por discretizaçao do número de molas. Nele é possível
+constatar que os métodos Univariante e Steepest Descent já não conseguem convergir para um sistema de 4 molas em diante.
+O método de Powell até converge para 4 molas, mas a partir de 6 molas já não consegue mais convergir. O método Fletcher-Reeves,
+na sensibilidade feita nesse trabalho comvergiu até 10 molas, e no caso com 20 molas não convergiu, apesar de ter chegado
+bem próximo dos resultados dos métodos que convergiram. Os métodos BFGS e
+Newton-Raphson convergiram para todos os casos, com um número relativamente baixo de passos.
+
 \begin{figure}[H]
   \centering
-  \includegraphics[scale=0.4]{figuras/q2b_passos.png}
+  \includegraphics[scale=0.35]{figuras/q2b_passos.png}
   \caption{Número de passos, por método OSR, para diferentes números de molas. Questão 2b.}
 \end{figure}
 
-\begin{figure}[H]b
+As tabelas abaixo resumem o estudo de convergência do valor para o deslocamento final do Ponto $A$, representado pelo
+vetor $\{u_A, v_a\}^t$. Pode-se notar que os métodos que não convergem, apresentam resultados divergentes dos que convergiram,
+como esperado. Também é possível notar a diferença entre posição prevista para o ponto $A$ caso a discretização seja muito
+pequena, 2 molas por exemplo, e caso seja muito alta, 20 molas por exemplo, lembrando sempre de olhar o resultado do BFGS
+e Newton-Raphson para essa comparação, dado que foram os métodos que atingiram convergência para todas as discretizações.
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c}
+      \multicolumn{4}{c}{Deslocamento do Ponto $A$ (nó central)}\\
+      \hline
+      \textbf{Método} & \textbf{\# 2 molas} & \textbf{4 molas} & \textbf{6 molas} \\
+      \hline
+      Univariante       & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0867, 7.1702\}^t$ &	$\{-0.1927, 7.1189\}^t$ \\
+      Powell	          & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0863, 7.1700\}^t$ &	$\{-0.3735, 6.8136\}^t$ \\
+      Steepest Descent  & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0860, 7.1676\}^t$ &	$\{-0.0725, 6.9551\}^t$ \\
+      Fletcher-Reeves   & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0863, 7.1700\}^t$ &	$\{-0.0692, 7.0765\}^t$ \\
+      BFGS	            & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0863, 7.1700\}^t$ &	$\{-0.0692, 7.0765\}^t$ \\
+      Newton-Raphson    & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0863, 7.1700\}^t$ &	$\{-0.0692, 7.0765\}^t$
+    \end{tabular}
+  \end{center}
+  \caption{Resumo dos resultados obtidos na questão 2b}
+\end{table}
+
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c}
+      \multicolumn{4}{c}{Deslocamento do Ponto $A$ (nó central)}\\
+      \hline
+      \textbf{Método}   & \textbf{8 molas} & \textbf{10 molas} & \textbf{20 molas} \\
+      \hline
+      Univariante       & $\{-0.4678, 7.1400\}^t$	& $\{-0.6909, 7.2969\}^t$ &	$\{-1.0657, 6.7105\}^t$ \\
+      Powell	          & $\{-0.5929, 7.5628\}^t$	& $\{-0.7793, 6.6867\}^t$ &	$\{-1.0733, 6.7864\}^t$ \\
+      Steepest Descent  & $\{-0.1084, 6.6119\}^t$	& $\{-0.1652, 6.2609\}^t$ &	$\{-0.5561, 5.4032\}^t$ \\
+      Fletcher-Reeves   & $\{-0.0635, 7.0450\}^t$	& $\{-0.0610, 7.0306\}^t$ &	$\{-0.0575, 7.0123\}^t$ \\
+      BFGS	            & $\{-0.0635, 7.0450\}^t$	& $\{-0.0610, 7.0306\}^t$ &	$\{-0.0575, 7.0116\}^t$ \\
+      Newton-Raphson    & $\{-0.0635, 7.0450\}^t$	& $\{-0.0610, 7.0306\}^t$ &	$\{-0.0575, 7.0116\}^t$
+    \end{tabular}
+  \end{center}
+  \caption{Resumo dos resultados obtidos na questão 2b}
+\end{table}
+
+A figura abaixo resume o tempo de execução de cada método para cada discretização do número de molas.
+Importante destacar o tempo maior para os métodos de Powell e Newton-Raphson. O tempo do método de Newton-Raphson 
+acredito que possa ter influência do uso do pacote numdifftools para cálculo da Hessiana, e o tempo para cálculo de sua inversa.
+Porém, o método de Powell sofreu novamente, principalmente no caso 4 molas, com uma direção com módulo pequeno e
+consequente $\alpha$ grande do passo constante, \textbf{reforçando novamente a ideia de se normalizar as direções na busca unidirecional
+ para evitar problemas desse tipo.}
+
+\begin{figure}[H]
   \centering
   \includegraphics[scale=0.4]{figuras/q2b_tempo.png}
   \caption{Tempo de Execução, por método OSR, para diferentes números de molas. Questão 2b.}
 \end{figure}
+
+A figura abaixo mostra o comportamento do valor da função a cada iteração dos métodos para o caso
+com 20 molas, evidenciando o quão rápido Flecther-Reeves,
+BFGS e Newton-Raphson se aproximam do mínimo.  
+
+Um detalhe que também aparece, mas está sutil e pode passar despercebido dada a escala em $y$ utilizada,
+é que o primeiro passo do Newton-Raphson está aumentando consideravelmente o valor da função. Após investigação do resultado,
+notei que esse primeiro passo está usando uma direção com módulo muito grande, da ordem de $5.10^9$ e retornando um 
+$\alpha$ da seção áurea da ordem de $3.10^{-7}$. Como o passo usado é $10^{-2}$, é possível constatar que o $\Delta \alpha$
+absoluto, ao invés de ficar próximo ao ${10^{-2}}$ desejado, atinge valores acima de $1$, dadas as ordens de grandeza dos
+parâmetros. Pode ser que o problema seja o cálculo da Hessiana nesse primeiro passo, apesar de que para os demais passos,
+o Newton-Raphson se comporta adequadamente. \textbf{Esse exemplo é mais um reforço para que seja usado direções normalizadas.}
 
 \begin{figure}[H]
   \centering

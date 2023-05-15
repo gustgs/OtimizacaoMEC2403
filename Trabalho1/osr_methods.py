@@ -1,30 +1,48 @@
 import numpy as np
 
 def univariante(passo, dimens):
+    #indice do vetor = (resto da divisao do passo pela dimensao) - 1
+    #primeira posicao do vetor no python tem indice 0
     indice = passo%dimens - 1
+    
     if (indice == -1) :
+        #indice = -1 indica que se trata da ultima posicao do array
+        #no pyton esse indice eh o tamanho do vetor - 1
         indice = dimens - 1
+        
+    #define a direcao canonica a ser utilizada
     ek = np.zeros(dimens)
     ek[indice] = 1
     
     return ek
     
-def powell(P, P1, direcoes, passos, ciclos, dimens):
+def powell(P, P0, direcoes, passos, ciclos, dimens):
+    #indice do vetor = (resto da divisao do passo pela dimensao) - 1
+    #primeira posicao do vetor no python tem indice 0
     indice = passos%(dimens + 1) - 1
+    
     if (indice == -1):
-        dir = P - P1
+        #indice = -1 indica que se trata da ultima posicao do array
+        #no pyton esse indice eh o tamanho do vetor - 1
+        #direcao n + 1 do ciclo = Patual - P0
+        dir = P - P0
         direcoes[dimens - 1] = dir        
     elif (indice == 0):
+        #indice = 0 significa que vamos usar a primeira direcao do conjunto
+        #representa o inicio de um novo ciclo
         ciclos = ciclos + 1
+
         if (ciclos%(dimens+2) == 0):
+            #se ciclo for multipl de dimens + 2, conjunto de direcoes = canonicas
             direcoes = np.eye(dimens, dtype=float)
-        P1 = P.copy()
+        P0 = P.copy()
         dir = direcoes[indice].copy()
+        
     else:
         dir = direcoes[indice].copy()
         direcoes[indice-1] = dir
   
-    return dir, direcoes, P1, ciclos            
+    return dir, direcoes, P0, ciclos            
 
 def newtonRaphson(P, grad_P, hessian_f):
     return -np.linalg.inv(hessian_f(P)).dot(grad_P)
