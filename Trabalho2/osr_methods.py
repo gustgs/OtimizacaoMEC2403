@@ -107,9 +107,9 @@ def osr_ctrl(P0, params, r, ctrl_num, metodo_ocr, metodo_osr):
     listPmin.append(Pmin)
     
     if metodo_ocr == 1:
-        grad = ocr.grad_phi_penal(params, r)
+        grad = ocr.grad_phi_penal(Pmin, params, r)
     elif metodo_ocr == 2:
-        grad = ocr.grad_phi_bar(params, r)
+        grad = ocr.grad_phi_bar(Pmin, params, r)
     
     norm_grad = np.linalg.norm(grad)
     flag_conv = True
