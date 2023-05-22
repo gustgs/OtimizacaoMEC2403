@@ -89,7 +89,7 @@ def bfgs(P, P_last, grad, grad_last, S_last, passo, dimens):
     grad_last = grad
     return dir, P_last, grad_last, S_last
 
-def osr_ctrl(P0, params, r, ctrl_num, metodo_ocr, metodo_osr):
+def osr_ctrl(P0, params, r, ctrl_num, metodo_ocr, metodo_osr, x1range, x2range, levellist):
     #controle numerico
     maxiter = ctrl_num[0]
     tol_conv = ctrl_num[1]
@@ -152,7 +152,7 @@ def osr_ctrl(P0, params, r, ctrl_num, metodo_ocr, metodo_osr):
             dir, grad_last = osr.fletcherReeves(dir, grad, grad_last, passos)
         elif (metodo == 6):
             dir, P_last, grad_last, S_last = osr.bfgs(Pmin, P_last, grad, grad_last, S_last, passos, dimens)
-        
+        dir = dir/np.linalg.norm(dir)
         intervalo = lsm.passo_cte(dir, Pmin, params, r, metodo_ocr, eps, line_step)
         alpha = lsm.secao_aurea(intervalo, dir, Pmin, params, r, metodo_ocr, tol_search)
         Pmin = Pmin + alpha*dir
@@ -166,6 +166,72 @@ def osr_ctrl(P0, params, r, ctrl_num, metodo_ocr, metodo_osr):
         norm_grad = np.linalg.norm(grad)
         
     end = timer()
-    tempoExec = end - start    
+    tempoExec = end - start
+    fig = plot(params, r , metodo_ocr, metodo_osr, levellist, x1range, x2range, listPmin)
         
-    return listPmin, passos, flag_conv, tempoExec
+    return listPmin, passos, flag_conv, tempoExec, fig
+
+
+def plot(params, r, metodo_ocr, metodo_osr, levellist, x1range, x2range, listP):    
+    x1 = x1range
+    x2 = x2range
+    X1, X2 = np.meshgrid(x1, x2)
+    if metodo_ocr == 1:
+        X3 = ocr.phi_penal([X1, X2], params, r)
+    elif metodo_osr == 2:
+        X3 = ocr.phi_bar([X1, X2], params, r)
+    
+    f, ax = plt.subplots()
+        
+    niveis_phi = ax.contour(X1, X2, X3, levellist, colors='black')
+    ax.clabel(niveis_phi, inline=1, fontsize=10)
+    
+    hklist = params[3]
+    cllist = params[6]
+    
+    for hk in hklist:
+        X3 = hk([X1,X2])
+        plt.contour(X1, X2, X3, [0], colors='red')
+    
+    for cl in cllist:
+        X3 = cl([X1,X2])
+        plt.contour(X1, X2, X3, [0], colors='blue')
+        
+    
+    x = []
+    y = []
+    for P in listP:
+        x.append(P[0])
+        y.append(P[1])
+        
+    if (metodo_osr == 1):
+        n_met = 'Univariante'
+    elif (metodo_osr == 2):
+        n_met = 'Powell'
+    elif (metodo_osr == 3):
+        n_met = 'Steepest Descent'
+    elif (metodo_osr == 4):
+        n_met = 'Newton-Raphson'
+    elif (metodo_osr == 5):
+        n_met = 'Fletcher-Reeves'
+    elif (metodo_osr == 6):
+        n_met = 'BFGS'
+        
+    if metodo_ocr == 1:
+        n_func = 'Penalidade'
+    elif metodo_ocr == 2:
+        n_func = 'Barreira'
+
+    ax.plot(x, y, color='g', linewidth='3')
+    ax.set_xlabel('$x_1$', fontsize='14')
+    ax.set_ylabel('$x_2$', fontsize='14')
+    ax.grid(linestyle='--')
+    ax = plt.gca()
+    ax.set_aspect(1)
+    titulo = n_func + ' - ' + n_met + ' - ' + np.array2string(listP[0], precision = 2, separator=' ') + ' => ' + np.array2string(listP[-1], precision = 2, separator=' ') 
+    ax.set_title(titulo, fontsize='14')
+    #file_name = n_func + '_' + n_met + '_P0=' + np.array2string(listP[0], precision = 2, separator=' ') + '.pdf'
+    #plt.savefig(file_name, format="pdf")
+    #plt.show()      
+    
+    return ax
