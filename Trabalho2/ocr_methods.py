@@ -86,10 +86,10 @@ def phi_bar(x, params, r):
     f = params[0]
     cl_list = params[6]
     
-    b = 0
+    b = 0    
     for cl in cl_list:
         b = b - 1/cl(x)
-            
+                
     return f(x) + r*b
 
 def b_bar(x, params):

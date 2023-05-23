@@ -168,7 +168,7 @@ def osr_ctrl(P0, params, r, ctrl_num, metodo_ocr, metodo_osr, x1range, x2range, 
     end = timer()
     tempoExec = end - start
     fig = plot(params, r , metodo_ocr, metodo_osr, levellist, x1range, x2range, listPmin)
-        
+    
     return listPmin, passos, flag_conv, tempoExec, fig
 
 
@@ -178,7 +178,7 @@ def plot(params, r, metodo_ocr, metodo_osr, levellist, x1range, x2range, listP):
     X1, X2 = np.meshgrid(x1, x2)
     if metodo_ocr == 1:
         X3 = ocr.phi_penal([X1, X2], params, r)
-    elif metodo_osr == 2:
+    elif metodo_ocr == 2:
         X3 = ocr.phi_bar([X1, X2], params, r)
     
     f, ax = plt.subplots()
@@ -223,15 +223,17 @@ def plot(params, r, metodo_ocr, metodo_osr, levellist, x1range, x2range, listP):
         n_func = 'Barreira'
 
     ax.plot(x, y, color='g', linewidth='3')
+    
+    ax.plot(listP[-1][0], listP[-1][1], marker="o", markersize=5, markeredgecolor="green", markerfacecolor='none')
     ax.set_xlabel('$x_1$', fontsize='14')
     ax.set_ylabel('$x_2$', fontsize='14')
     ax.grid(linestyle='--')
     ax = plt.gca()
     ax.set_aspect(1)
-    titulo = n_func + ' - ' + n_met + ' - ' + np.array2string(listP[0], precision = 2, separator=' ') + ' => ' + np.array2string(listP[-1], precision = 2, separator=' ') 
+    titulo = n_func + ' - ' + n_met + ' : ' + np.array2string(listP[0], precision = 2, separator=' ') + ' => ' + np.array2string(listP[-1], precision = 2, separator=' ') 
     ax.set_title(titulo, fontsize='14')
     #file_name = n_func + '_' + n_met + '_P0=' + np.array2string(listP[0], precision = 2, separator=' ') + '.pdf'
     #plt.savefig(file_name, format="pdf")
     #plt.show()      
     
-    return ax
+    return f
