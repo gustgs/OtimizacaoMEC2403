@@ -33,7 +33,7 @@ def passo_cte(direcao, P0, params, r, metodo_ocr, eps = 1E-8, step = 0.01):
     while (f1 > f2):           
         alpha = alpha + step
         P = P0 + alpha*sentido_busca
-        P_next = P0 + (alpha+step)*sentido_busca
+        P_next = P0 + (alpha+step)*sentido_busca        
         
         if metodo_ocr == 1:
             f1 = ocr.phi_penal(P, params, r)
