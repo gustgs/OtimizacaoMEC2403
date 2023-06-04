@@ -158,6 +158,7 @@ def osr_ctrl(P0, params, r, ctrl_num, metodo_ocr, metodo_osr):
         Pmin = Pmin + alpha*dir
         listPmin.append(Pmin)
         
+        
         if metodo_ocr == 1:
             grad = ocr.grad_phi_penal(Pmin, params, r)
         elif metodo_ocr == 2:
