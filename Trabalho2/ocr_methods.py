@@ -73,10 +73,10 @@ def hess_phi_penal(x, params, r):
                 hessian_p[i,j] = hessian_p[i,j] + 2*cl_mont[l]*grad_cl_list[l](x)[j]*grad_cl_list[l](x)[i]
     
     for k in np.arange(len(hk_list)):
-        hessian_p = hessian_p + hk_list[k](x)*hess_hk_list[k](x)
+        hessian_p = hessian_p + 2*hk_list[k](x)*hess_hk_list[k](x)
     
     for k in np.arange(len(cl_list)):
-        hessian_p = hessian_p + cl_mont[k]*cl_list[k](x)*hess_cl_list[k](x)
+        hessian_p = hessian_p + 2*cl_mont[k]*cl_list[k](x)*hess_cl_list[k](x)
      
     return hess_f(x) + (1/2)*r*hessian_p
 
