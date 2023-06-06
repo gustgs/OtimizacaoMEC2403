@@ -1048,6 +1048,13 @@ Definição do ponto inicial $x^0 = \{3,2\}$ no código principal :
   \item $\beta = 10$
 \end{itemize}
 
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.8\textwidth]{fig_p1/Penalidade_f.pdf}
+  \caption{Curvas de nível de $f(x_1,x_2)$, restrições e otimização realizada. }
+\end{figure}
+
+
 \vspace{5mm}
 \begin{table}[H]
   \begin{center}
@@ -1068,6 +1075,16 @@ Definição do ponto inicial $x^0 = \{3,2\}$ no código principal :
   \end{center}
   \caption{Resultados obtidos para o problema 1, método de penalidade, univariante para $x^0=\{3,2\}$}
 \end{table}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_Univariante_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_Univariante_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR Univariante. }
+\end{figure}
+
 
 \vspace{5mm}
 \begin{table}[H]
@@ -1090,6 +1107,15 @@ Definição do ponto inicial $x^0 = \{3,2\}$ no código principal :
   \caption{Resultados obtidos para o problema 1, método de penalidade, powell para $x^0=\{3,2\}$}
 \end{table}
 
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_Powell_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_Powell_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR Powell. }
+\end{figure}
+
 \vspace{5mm}
 \begin{table}[H]
   \begin{center}
@@ -1110,6 +1136,15 @@ Definição do ponto inicial $x^0 = \{3,2\}$ no código principal :
   \end{center}
   \caption{Resultados obtidos para o problema 1, método de penalidade, steepest descent para $x^0=\{3,2\}$}
 \end{table}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_Steepest Descent_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_Steepest Descent_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR Steepest Descent. }
+\end{figure}
 
 \vspace{5mm}
 \begin{table}[H]
@@ -1132,6 +1167,15 @@ Definição do ponto inicial $x^0 = \{3,2\}$ no código principal :
   \caption{Resultados obtidos para o problema 1, método de penalidade, Newton-Raphson para $x^0=\{3,2\}$}
 \end{table}
 
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_Newton-Raphson_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_Newton-Raphson_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR Newton-Raphson. }
+\end{figure}
+
 \vspace{5mm}
 \begin{table}[H]
   \begin{center}
@@ -1152,6 +1196,15 @@ Definição do ponto inicial $x^0 = \{3,2\}$ no código principal :
   \end{center}
   \caption{Resultados obtidos para o problema 1, método de penalidade, Flecther-Reeves para $x^0=\{3,2\}$}
 \end{table}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_Fletcher-Reeves_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_Fletcher-Reeves_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR Fletcher-Reeves }
+\end{figure}
 
 \vspace{5mm}
 \begin{table}[H]
@@ -1174,1052 +1227,265 @@ Definição do ponto inicial $x^0 = \{3,2\}$ no código principal :
   \caption{Resultados obtidos para o problema 1, método de penalidade, BFGS para $x^0=\{3,2\}$}
 \end{table}
 
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_BFGS_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Penalidade_BFGS_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR BFGS. }
+\end{figure}
 
+\subsubsection{Barreira - Prob. 1}
 
+Definição do ponto inicial $x^0 = \{0,1\}$ no código principal :
 
-\subsubsection{Ponto inicial: $x^0 = \{2,2\}^t $}
-Definição do ponto inicial no código principal:
 \begin{python}
-  P0 = np.array([2, 2])
+  x = np.array([0., 1.])
 \end{python}
 
 \vspace{3mm}
-\textbf{Principais resultados obtidos: }
+\textbf{Controle numérico e parâmetros:}
 
-\vspace{3mm}
-A tabela resumo abaixo mostra que para essa função quadrática os métodos apresentaram resultados satisfatórios,
-com os métodos de Powell, Fletcher-Reeves, BFGS e Newton-Rapshon respeitando o número máximo de passos para convergência.
-
-\begin{table}[H]
-  \begin{center}
-    \begin{tabular}{c|c|c|c|c|c|c}
-      \textbf{Iter} & \textbf{$P_{min}$} & \textbf{r} & \textbf{\# Passos} & \textbf{conv\_OCR} & \textbf{conv\_OSR} & \textbf{Tempo}\\
-      \hline
-        1:& [1.25174114 0.7304246 ]& 1e+00& 27& 3.5e-01& 9.6e-07& 0.028   \\
-        2:& [1.02501305 0.81147611]& 1e+01& 1000& 2.9e-01& 3.7e-06& 0.230\\
-        3:& [0.95576688 0.88122316]& 1e+02& 1000& 5.2e-02& 3.5e-06& 0.189\\
-        4:& [0.94659013 0.89267782]& 1e+03& 1000& 5.6e-03& 1.6e-03& 0.214\\
-        5:& [0.94526659 0.89319248]& 1e+04& 1000& 5.7e-04& 1.5e-02& 0.190\\
-        6:& [0.94513054 0.89323808]& 1e+05& 1000& 5.7e-05& 1.5e-02& 0.195\\
-        7:& [0.94511456 0.89323814]& 1e+06& 1000& 5.7e-06& 3.3e-02& 0.180\\
-        8:& [0.94511298 0.8932382 ]& 1e+07& 1000& 6.2e-07& 3.0e-01& 0.228\\
-    \end{tabular}
-  \end{center}
-  \caption{Resumo dos resultados obtidos na questão 1a para $x^0 = \{2,2\}^t$}
-\end{table}
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.4]{figuras/q1a_passos_P1.PNG}
-%   \caption{Número de passos por método OSR. Questão 1a e $x^0 = \{2,2\}^t$ }
-% \end{figure}
-
-\vspace{3mm}
-A figura abaixo mostra, por método, o valor da função a cada iteração. A ideia é podermos comparar 
-a rapidez com que cada método se aproxima do mínimo. Para essa função e ponto inicial, os métodos univariante e Powell
-foram os que mais demoraram para se aproximar, levando por volta de 6 passos, enquanto os demais precisaram de no máximo
-3 passos.
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.45]{figuras/q1a_fxpassos_P1.PNG}
-%   \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 1a e $x^0 = \{2,2\}^t$}
-% \end{figure}
-
-As figuras abaixo representam as curvas de nível e o caminho de otimização percorrido por cada método. Como a função 
-só possui um mínimo, todos os métodos convergiram o ponto correto (mínimo mais próximo).
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Univariante_P0=[2 2].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Powell_P0=[2 2].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 1a e $x^0 = \{2,2\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Steepest Descent_P0=[2 2].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Fletcher-Reeves_P0=[2 2].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 1a e $x^0 = \{2,2\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_BFGS_P0=[2 2].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Newton Raphson_P0=[2 2].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 1a e $x^0 = \{2,2\}^t$}
-% \end{figure}
-
-\subsubsection{Ponto inicial : $x^0 = \{-1,-3\}^t$}
-Definição do ponto inicial no código principal:
-\begin{python}
-  P0 = np.array([-1, -3])
-\end{python}
-
-\vspace{3mm}
-\textbf{Principais resultados obtidos:}
-
-\vspace{3mm}
-Segue tabela resumo e figuras nos mesmos moldes do que foi apresentado para o outro ponto inicial.
-As conclusões são basicamente as mesmas.
-
-\begin{table}[H]
-  \begin{center}
-    \begin{tabular}{c|c|c|c}
-      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
-      \hline
-      Univariante & 48 & 0.04435 & $\{-0.7142935, -0.14286022\}^t$\\
-      Powell & 6 & 0.02483 & $\{-0.71428418, -0.14285757\}^t$\\
-      Steepest Descent & 7 & 0.00690 & $\{-0.71429411, -0.14286059\}^t$\\
-      Fletcher-Reeves & 3 & 0.00467 & $\{-0.71428581, -0.14285718\}^t$\\
-      BFGS & 2 & 0.00332 & $\{-0.71428583, -0.14285714\}^t$\\
-      Newton-Raphson & 1 & 0.00219 & $\{-0.71428562, -0.1428562\}^t$\\
-    \end{tabular}
-  \end{center}
-  \caption{Resumo dos resultados obtidos na questão 1a para $x^0 = \{-1,-3\}^t$}
-\end{table}
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.4]{figuras/q1a_passos_P2.PNG}
-%   \caption{Número de passos por método OSR. Questão 1a e $x^0 = \{-1,-3\}^t$ }
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.45]{figuras/q1a_fxpassos_P2.PNG}
-%   \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 1a e $x^0 = \{-1,-3\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Univariante_P0=[-1 -3].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Powell_P0=[-1 -3].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 1a e $x^0 = \{-1,-3\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Steepest Descent_P0=[-1 -3].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Fletcher-Reeves_P0=[-1 -3].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 1a e $x^0 = \{-1,-3\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_BFGS_P0=[-1 -3].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.a_Newton Raphson_P0=[-1 -3].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 1a e $x^0 = \{-1,-3\}^t$}
-% \end{figure}
-
-\subsection{Questão 1 (b)}
-Considerar $a = 10$ e $b = 1$. Utilizei o site Wolfram Alpha para cálculo do gradiente e da Hessiana.
-
-\vspace{5mm}
-
-\begin{center}
-$f(x_1,x_2) = (1 + a -bx_1 - bx_2)^2 + (b + x_1 + ax_2 - bx_1x_2)^2$
-
-\vspace{5mm}
-$\overrightarrow{\nabla} f(x_1,x_2) = 
-\begin{bmatrix}
-  2(-a(bx_2^2 + b - x_2) + b^2x_1(x_2^2 + 1) -2bx_1x_2 + x_1) \\ -2b(2ax_1x_2 + x_1^2 + 1) + 2a(ax_2 + x_1) + 2b^2(x_1^2 +1)x_2
-\end{bmatrix}$
-
-\vspace{5mm}
-
-$H_{1\text{x}1}(x_1,x_2) = 2b^2 + 2(1 - bx_2)^2$
-
-$H_{1\text{x}2}(x_1,x_2) = -2b(ax_2 + b(-x_1)x_2 + b + x_1) + 2(1 - bx_2)(a - bx_1) + 2 b^2$
-
-$H_{2\text{x}1}(x_1,x_2) = -2b(ax_2 + b(-x_1)x_2 + b + x_1) + 2(1 - bx_2) (a - bx_1) + 2 b^2$
-
-$H_{2\text{x}2}(x_1,x_2) = 2(a - bx_1)^2 + 2b^2$
-
-\end{center}
-
-\vspace{5mm}
-
-Definição da função, gradiente e Hessiana no código principal :
-
-\begin{python}
-  def f(Xn):
-    a = 10
-    b = 1
-    return (1 + a - b*Xn[0] - b*Xn[1])**2 + (b + Xn[0] + a*Xn[1] - b*Xn[0]*Xn[1])**2 
-    
-  def grad_f(Xn):
-      a = 10
-      b = 1
-      return np.array([2*(-a*(b*(Xn[1]**2) + b - Xn[1]) + (b**2)*Xn[0]*(Xn[1]**2 + 1) - 2*b*Xn[0]*Xn[1] + Xn[0]),
-                      -2*b*(2*a*Xn[0]*Xn[1] + Xn[0]**2 + 1) + 2*a*(a*Xn[1] + Xn[0]) + 2*(b**2)*(Xn[0]**2 + 1)*Xn[1]])
-  def hessian_f(Xn):
-      a = 10
-      b = 1
-      hessian = np.zeros((2,2))
-      hessian[0, 0] = 2*(b**2) + 2*((1 - b*Xn[1])**2)
-      hessian[0, 1] = -2*b*(a*Xn[1] + b*(-Xn[0]*Xn[1]) + b + Xn[0]) + 2*(1-b*Xn[1])*(a - b*Xn[0]) + 2*(b**2)
-      hessian[1, 0] = -2*b*(a*Xn[1] + b*(-Xn[0]*Xn[1]) + b + Xn[0]) + 2*(1-b*Xn[1])*(a-b*Xn[0]) + 2*(b**2)
-      hessian[1, 1] = 2*((a-b*Xn[0])**2) + 2*(b**2)
-      return hessian
-      
-  func = 2
-\end{python}
-
-\subsubsection{Ponto inicial : $x^0 = \{10,2\}^t $}
-
-Definição do ponto inicial no código principal:
-\begin{python}
-  P0 = np.array([10, 2])
-\end{python}
-
-A tabela resumo abaixo mostra que para essa função, que não é quadrática, todos os métodos conseguiram convergir dentro
-do limite especificado para o número máximo de iterações.
-
-Os métodos de Powell, Fletcher-Reeves e BFGS não convergiram dentro
-do número de passos esperado para funções quadráticas, o que era de certa forma esperado.  Newton-Rapshson convergiu em
-1 passo, mas foi o único que encontrou um ponto diferente dos demais. Ele convergiu para um ponto de sela imediatamente
-abaixo do ponto inicial, enquanto os demais métodos convergiram para o mínimo mais próximo, localizado à direita
-do ponto inicial. Esses detalhes são melhores vistos na figura com as curvas de nível localizada mais abaixo neste documento.
-
-\begin{table}[H]
-  \begin{center}
-    \begin{tabular}{c|c|c|c}
-      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
-      \hline
-      Univariante & 64 & 0.03673 & $\{13.00000142, 3.99999883\}^t$\\
-      Powell & 15 & 0.02147 & $\{13.00000057, 3.99999962\}^t$\\
-      Steepest Descent & 55 & 0.00927 & $\{13.00000099, 3.99999874\}^t$\\
-      Fletcher-Reeves & 71 & 0.01208 & $\{12.99999937, 4.00000089\}^t$\\
-      BFGS & 9 & 0.01836 & $\{13.00000042, 3.99999969\}^t$\\
-      Newton-Raphson & 1 & 0.00272 & $\{10, 0.99999967\}^t$\\
-    \end{tabular}
-  \end{center}
-  \caption{Resumo dos resultados obtidos na questão 1b para $x^0 = \{10,2\}^t$}
-\end{table}
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.4]{figuras/q1b_passos_P1.PNG}
-%   \caption{Número de passos por método OSR. Questão 1b e $x^0 = \{10,2\}^t$ }
-% \end{figure}
-
-A figura abaixo deixa claro como Newton-Raphson, apesar de ter convergido em 1 iteração, praticamente não minimizou
-a função como os demais métodos, por ter encontrado um ponto de sela. Flecther-Reeves foi o método que mais demorou
-para se aproximar do ponto mínimo, e o motivo ficará mais evidente mais abaixo quando eu apresentar o caminho percorrido
-por este método.
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.4]{figuras/q1b_fxpassos_P1.PNG}
-%   \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 1b e $x^0 = \{10,2\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Univariante_P0=[10e2].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Powell_P0=[10e2].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 1b e $x^0 = \{10,2\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Steepest Descent_P0=[10e2].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Fletcher-Reeves_P0=[10e2].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 1b e $x^0 = \{10,2\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_BFGS_P0=[10e2].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Newton Raphson_P0=[10e2].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 1b e $x^0 = \{10,2\}^t$}
-% \end{figure}
-
-Um resultado que chama a atenção é o método Fletcher-Reeves ter levado 71 passos para convergir. Alterar a tolerância
-de convergência global para $10^{-4}$ e a tolerância da seção áurea, na busca unidirecional, para $10^{-8}$ levou a uma
-redução modesta para 60 iterações. Analisando as curvas de nível e o "caminho" de otimização gerado pelo método,
-percebe-se que ocorre um movimento em espiral em torno do ponto mínimo. Ou seja, para essa função e ponto inicial,
-as direções geradas por Fletcher-Reeves levam a um elevado número de passos.
-
-Nenhum dos métodos levou ao ponto de mínimo à esquerda do ponto incicial.
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.5]{figuras/Q1.b_espiral_Fletcher-Reeves_P0=[10e2].pdf}
-%   \caption{Movimento em espiral do método Fletcher-Reeves. Questão 1b e $x^0 = \{10,2\}^t$ }
-% \end{figure}
-
-\subsubsection{Ponto inicial : $x^0 = \{-2,-3\}^t $}
-
-Definição do ponto inicial no código principal:
-\begin{python}
-  P0 = np.array([-2, -3])
-\end{python}
-
-Seguem resultados para o segundo ponto inicial proposto no enunciado. Pela posição deste ponto e da proximidade com 
-o mínimo mais à esquerda da função, dessa vez, todos os métodos convergiram corretamente para o mínimo esperado.
-Em relação aos resultados não há novas observações relevantes a serem feitas, com exceção do fato de todos os métodos
-terem conseguido se aproximar muito rápido do mínimo.
-
-\begin{table}[H]
-  \begin{center}
-    \begin{tabular}{c|c|c|c}
-      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
-      \hline
-      Univariante       & 61  & 0.04288 & $\{7.00000124, -2.00000132\}^t$\\
-      Powell            & 15  & 0.13350 & $\{7.0000002, -1.99999995\}^t$\\
-      Steepest Descent  & 45  & 0.01018 & $\{7.000001, -2.0000009\}^t$\\
-      Fletcher-Reeves   & 21  & 0.00642 & $\{7.00000007, -2.00000017\}^t$\\
-      BFGS              & 8   & 0.04286 & $\{7.00000021, -2.00000023\}^t$\\
-      Newton-Raphson    & 6   & 0.01332 & $\{7.00000001, -2.00000001\}^t$\\
-    \end{tabular}
-  \end{center}
-  \caption{Resumo dos resultados obtidos na questão 1b para $x^0 = \{-2,-3\}^t$}
-\end{table}
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.4]{figuras/q1b_passos_P2.PNG}
-%   \caption{Número de passos por método OSR. Questão 1b e $x^0 = \{-2,-3\}^t$ }
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.45]{figuras/q1b_fxpassos_P2.PNG}
-%   \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 1b e $x^0 = \{-2,-3\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Univariante_P0=[-2e-3].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Powell_P0=[-2e-3].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 1b e $x^0 = \{-2,-3\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Steepest Descent_P0=[-2e-3].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Fletcher-Reeves_P0=[-2e-3].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 1b e $x^0 = \{-2,-3\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_BFGS_P0=[-2e-3].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q1.b_Newton Raphson_P0=[-2e-3].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 1b e $x^0 = \{-2,-3\}^t$}
-% \end{figure}
-
-% \section{Aplicação da Implementação}
-% \subsection{Questão 2 (a)}
-% \subsubsection{Enunciado}
-% Determinar os deslocamentos $(u_A, v_A)$ do ponto $A$, que minimizam a Energia Potencial Total $(\Pi)$ do sitema de molas
-% indicado na figura abaixo. Adotar o ponto inicial: $x^0 = \{0.01, -0.10\} ^t$
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=1]{figuras/enunciado_2a.png}
-%   \caption{Sistema 2 molas. Fonte: Questão 2a do Trabalho 1. }
-% \end{figure}
-
-\subsubsection{Formulação}
-A seguinte formulação foi apresentada em sala de aula :
-\vspace{3mm}
-
-$A = (x_A, y_A)$ = Posição inicial do ponto A
-
-\vspace{3mm}
-$A' = (x_A + u_A, y_A + v_A)$ = Posição final do ponto A
-
-\vspace{3mm}
-$\Pi = U - V$ = Energia Potencial total
-
-\vspace{3mm}
-$U = U_{mola1} + U_{mola2}$ = energia interna de deformação
-
-\vspace{3mm}
-$V$ = trabalho das forças externas
-
-\vspace{5mm}
-$U_i = \frac{1}{2}K_i\Delta L_i^2$
-
-\vspace{3mm}
-$L'_1 = \sqrt{(L_1 + u_A)^2 + v_A^2}$ , $L'_2 = \sqrt{(L_2 - u_A)^2 + v_A^2}$ e $W = \frac{1}{2}(\rho_1L_1 + \rho_2L_2)$
-
-\vspace{3mm}
-$V = Wv_A$
-
-\vspace{5mm}
-$\Pi = \frac{1}{2}\frac{EA_1}{L_1}(\sqrt{(L_1 + x_1)^2 + x_2^2} - L_1)^2 +
-        \frac{1}{2}\frac{EA_2}{L_2}(\sqrt{(L_2 - x_1)^2 + x_2^2} - L_2)^2 - 
-        (\frac{\rho_1L_1}{2} + \frac{\rho_2L_2}{2})x_2$
-
-\vspace{3mm}
-Substituindo os valores do enunciado e usando o site Wolfram ALpha para cálculo do gradiente e Hessiana :
-
-\vspace{3mm}
-$\Pi = 450(\sqrt{(30 + x_1)^2 + x_2^2} - 30)^2 +
-        300(\sqrt{(30 - x_1)^2 + x_2^2} - 30)^2 - 
-        360x_2$
-
-\vspace{3mm}
-
- $\overrightarrow{\nabla}\Pi =
-\begin{bmatrix}
-  \frac{900 (x_1 + 30) (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{\sqrt{(x_1 + 30)^2 + x_2^2}} - 
-  \frac{600 (30 - x_1) (\sqrt{(x_1 - 30)^2 + x_2^2} - 30)}{\sqrt{(x_1 - 30)^2 + x_2^2}} \\[5mm]
-  60 (x_2 (\frac{-450}{\sqrt{x_1^2 + 60 x_1 + x_2^2 + 900}} - \frac{300}{\sqrt{x_1^2 - 60 x_1 + x_2^2 + 900}} + 25) - 6)
-\end{bmatrix}$
-
-\vspace{5mm}
-
-$H_{1\text{x}1} = -\frac{600 (30 - x_1)^2 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{((30 - x_1)^2 + x_2^2)^{3/2}} +
-\frac{600 (30 - x_1)^2}{(30 - x_1)^2 + x_2^2} +
-\frac{600 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{\sqrt{(30 - x_1)^2 + x_2^2}} +
-\frac{900 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{\sqrt{(x_1 + 30)^2 + x_2^2}}$
-
-\hspace{3em}
-$-\frac{900 (x_1 + 30)^2 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{((x_1 + 30)^2 + x_2^2)^{3/2}} +
-\frac{900 (x_1 + 30)^2}{(x_1 + 30)^2 + x_2^2}$
-
-\vspace{5mm}
-
-$H_{1\text{x}2} = \frac{600 (30 - x_1) x_2 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{((30 - x_1)^2 + x_2^2)^{3/2}} -
-\frac{900 (x_1 + 30) x_2 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{((x_1 + 30)^2 + x_2^2)^{3/2}} -
-\frac{600 (30 - x_1) x_2}{(30 - x_1)^2 + x_2^2} +
-\frac{900 (x_1 + 30) x_2}{(x_1 + 30)^2 + x_2^2}$
-
-\vspace{5mm}
-
-$H_{2\text{x}1} = \frac{600 (30 - x_1) x_2 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{((30 - x_1)^2 + x_2^2)^{3/2}} -
-\frac{900 (x_1 + 30) x_2 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{((x_1 + 30)^2 + x_2^2)^{3/2}} -
-\frac{600 (30 - x_1) x_2}{(30 - x_1)^2 + x_2^2} +
-\frac{900 (x_1 + 30) x_2}{(x_1 + 30)^2 + x_2^2}$
-
-\vspace{5mm}
-
-$H_{2\text{x}2} = -\frac{600 x_2^2 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{((30 - x_1)^2 + x_2^2)^{3/2}} -
-\frac{900 x_2^2 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{((x_1 + 30)^2 + x_2^2)^{3/2}} +
-\frac{600 x_2^2}{(30 - x_1)^2 + x_2^2} +
-\frac{900 x_2^2}{(x_1 + 30)^2 + x_2^2} +
-\frac{600 (\sqrt{(30 - x_1)^2 + x_2^2} - 30)}{\sqrt{(30 - x_1)^2 + x_2^2}}$
-
-\hspace{3em}
-$+\frac{900 (\sqrt{(x_1 + 30)^2 + x_2^2} - 30)}{\sqrt{(x_1 + 30)^2 + x_2^2}}$
-
-\vspace{5mm}
-Definição da função, gradiente, Hessiana no código principal :
-
-\begin{python}
-  def f(Xn):
-    return 450 *((np.sqrt((30 + Xn[0])**2 + Xn[1]**2) - 30 )**2) + 300 *((np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30)**2) - 360*Xn[1]
-
-  def grad_f(Xn):
-      return np.array([(900*(Xn[0] + 30)*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - (600*(30 - Xn[0])*(np.sqrt((Xn[0] - 30)**2 + Xn[1]**2) - 30))/np.sqrt((Xn[0] - 30)**2 + Xn[1]**2),
-                      60*(Xn[1]*(-450/np.sqrt(Xn[0]**2 + 60*Xn[0] + Xn[1]**2 + 900) - 300/np.sqrt(Xn[0]**2 - 60*Xn[0] + Xn[1]**2 + 900) + 25) - 6)])
-      
-  def hessian_f(Xn):
-      hessian = np.zeros((2,2))
-      hessian[0, 0] = -(600*(30 - Xn[0])**2*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/((30 - Xn[0])**2 + Xn[1]**2)**(3/2) + \
-      (600*(30 - Xn[0])**2)/((30 - Xn[0])**2 + Xn[1]**2) + \
-      (600*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/np.sqrt((30 - Xn[0])**2 + Xn[1]**2) + \
-      (900*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - \
-      (900*(Xn[0] + 30)**2*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/((Xn[0] + 30)**2 + Xn[1]**2)**(3/2) + \
-      (900*(Xn[0] + 30)**2)/((Xn[0] + 30)**2 + Xn[1]**2)
-      
-      hessian[0, 1] = (600*(30 - Xn[0])*Xn[1]*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/((30 - Xn[0])**2 + Xn[1]**2)**(3/2) - \
-      (900*(Xn[0] + 30)*Xn[1]*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/((Xn[0] + 30)**2 + Xn[1]**2)**(3/2) - \
-      (600*(30 - Xn[0])*Xn[1])/((30 - Xn[0])**2 + Xn[1]**2) + \
-      (900*(Xn[0] + 30)*Xn[1])/((Xn[0] + 30)**2 + Xn[1]**2)
-      
-      hessian[1, 0] = (600*(30 - Xn[0])*Xn[1]*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/((30 - Xn[0])**2 + Xn[1]**2)**(3/2) - \
-      (900*(Xn[0] + 30)*Xn[1]*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/((Xn[0] + 30)**2 + Xn[1]**2)**(3/2) - \
-      (600*(30 - Xn[0])*Xn[1])/((30 - Xn[0])**2 + Xn[1]**2) + \
-      (900*(Xn[0] + 30)*Xn[1])/((Xn[0] + 30)**2 + Xn[1]**2)
-      
-      hessian[1, 1] = -(600*Xn[1]**2*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/((30 - Xn[0])**2 + Xn[1]**2)**(3/2) - \
-      (900*Xn[1]**2*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/((Xn[0] + 30)**2 + Xn[1]**2)**(3/2) + \
-      (600*Xn[1]**2)/((30 - Xn[0])**2 + Xn[1]**2) + \
-      (900*Xn[1]**2)/((Xn[0] + 30)**2 + Xn[1]**2) + \
-      (600*(np.sqrt((30 - Xn[0])**2 + Xn[1]**2) - 30))/np.sqrt((30 - Xn[0])**2 + Xn[1]**2) + \
-      (900*(np.sqrt((Xn[0] + 30)**2 + Xn[1]**2) - 30))/np.sqrt((Xn[0] + 30)**2 + Xn[1]**2)
-      
-      return hessian
-
-  func = 3
-\end{python}
-
-\subsubsection{Resultados}
-
-Definição do ponto inicial no código principal:
-\begin{python}
-  P0 = np.array([0.01, -0.1])
-\end{python}
-
-\textbf{Utilizei o seguinte controle numérico para resolução da questão 2(a):}
 \begin{itemize}
-  \item Número máximo de passos (ou iterações): 200
-  \item Tolerância para convergência do gradiente: Sensibilidade com $10^{-5}$, $10^{-4}$ e $10^{-3}$
-  \item Tolerância para convergência da busca unidirecional: $10^{-6}$
-  \item $\Delta\alpha$ do passo constante: $10^{-2}$
+  \item Máximas iterações na OSR : $1000$
+  \item Tolerância OSR: $10^{-6}$
+  \item Tolerância Seção Áurea: $10^{-7}$
+  \item $\Delta \alpha$: $10^{-2}$
+  \item $\epsilon$: $10^{-10}$
+  \item Tolerância OCR: $10^{-6}$
+  \item $r_b^0 = 10$
+  \item $\beta = 0.1$
 \end{itemize}
 
-\vspace{3mm}
-\textbf{Principais resultados obtidos:}
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.8\textwidth]{fig_p1/Barreira_f.pdf}
+  \caption{Curvas de nível de $f(x_1,x_2)$, restrições e otimização realizada. }
+\end{figure}
 
-\begin{table}[H]
-  \begin{center}
-    \begin{tabular}{c|c|c|c}
-      \multicolumn{4}{c}{tol = $10^{-5}$}\\
-      \hline
-      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
-      \hline
-      Univariante       & 200   & 0.07850 & $\{-0.20510911, 7.78899302\}^t$\\
-      Powell            & 200   & 91.21617 & $\{-0.20510878, 7.78899254\}^t$\\
-      Steepest Descent  & 20    & 0.00304 & $\{-0.20510889, 7.78899266\}^t$\\
-      Fletcher-Reeves   & 200   & 0.02659 & $\{-0.20510878, 7.78899218\}^t$\\
-      BFGS              & 200   & 0.03755 & $\{-0.20510893, 7.78899288\}^t$\\
-      Newton-Raphson    & 200   & 0.03705 & $\{-0.2051089, 7.78899288\}^t$\\
-    \end{tabular}
-  \end{center}
-  \caption{Resumo dos resultados obtidos na questão 2a para $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-5}$}
-\end{table}
-
-\begin{table}[H]
-  \begin{center}
-    \begin{tabular}{c|c|c|c}
-      \multicolumn{4}{c}{tol = $10^{-4}$}\\
-      \hline
-      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
-      \hline
-      Univariante       & 200   & 0.05557 & $\{-0.20510911, 7.78899302\}^t$\\
-      Powell            & 9     & 92.83198 & $\{-0.20510884, 7.78899251\}^t$\\
-      Steepest Descent  & 6     & 0.00090 & $\{-0.20510891, 7.78899276\}^t$\\
-      Fletcher-Reeves   & 12    & 0.00123 & $\{-0.20510891, 7.78899332\}^t$\\
-      BFGS              & 4     & 0.00324 & $\{-0.2051089,  7.78899268\}^t$\\
-      Newton-Raphson    & 49    & 0.12737 & $\{-0.20510894, 7.78899296\}^t$\\
-    \end{tabular}
-  \end{center}
-  \caption{Resumo dos resultados obtidos na questão 2a para $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-4}$}
-\end{table}
-
-\begin{table}[H]
-  \begin{center}
-    \begin{tabular}{c|c|c|c}
-      \multicolumn{4}{c}{tol = $10^{-3}$}\\
-      \hline
-      \textbf{Método} & \textbf{\# Passos} & \textbf{Tempo(s)} & \textbf{$P_{min}$}\\
-      \hline
-      Univariante       & 9     & 0.04030 & $\{-0.20510877, 7.78899022\}^t$\\
-      Powell            & 8     & 91.89477 & $\{-0.20510883, 7.78899446\}^t$\\
-      Steepest Descent  & 5     & 0.00073 & $\{-0.20510863, 7.78899279\}^t$\\
-      Fletcher-Reeves   & 10    & 0.00255 & $\{-0.2051088, 7.78899188\}^t$\\
-      BFGS              & 4     & 0.00500 & $\{-0.20510894, 7.78899296\}^t$\\
-      Newton-Raphson    & 3     & 0.00425 & $\{-0.20510893, 7.78899416\}^t$\\
-    \end{tabular}
-  \end{center}
-  \caption{Resumo dos resultados obtidos na questão 2a para $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
-\end{table}
-
-Pelas tabelas apresentadas acima, um aumento da tolerância da convergência do gradiente leva a uma redução drástica
-do número de iterações e, aparentemente, sem grandes perdas de precisão no valor de ponto mínimo obtido. Para a 
-tolerância de $10^{-5}$ apenas o método Steepest Descent convergiu, levando um total de 20 passos, enquanto os 
-demais métodos usaram o máximo especificado de 200 iterações. Para uma tolerância de $10^{-4}$ apenas o método univariante
-não convergiu em menos de 200 passos, enquanto que para uma tolerância de $10^{-3}$ todos os métodos convergiram em até 10
-passos e com resultados satisfatórios.
-
-Em termos de tempo de execução, o método de Powell é o que mais se destaca. Independente da tolerância, o mesmo leva por volta
-de 90 segundos para convergir. Após depuração do código e dos resultados ficou claro que o motivo disso ocorrer é que, 
-para essa função e ponto inicial, o método de Powell, no sexto passo global, terceiro do segundo ciclo, gera uma direção com módulo muito pequeno e que
-que necessita de um $\alpha$(aproximadante 60000) muito grande para alcançar o mínimo. Isso faz com que o algoritmo leve o tempo apresentado.
-Essa talvez seja uma grande indicação de que trabalhar com direções normalizadas na busca unidirecional
-seja mais adequado, evitando esse tipo de problema que pode ocorrer com outros métodos também a depender da combimação 
-dos parâmetros de entrada. Alterar o ponto inicial ajuda a resolver esse problema encontrado no método de Powell.
-
-Para fins de apresentação dos demais resultados, irei utilizar como base o estudo feito com tolerância de $10^{-3}$.
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.4]{figuras/q2a_passos_P1.PNG}
-%   \caption{Número de passos por método OSR. Questão 2a e $x^0 = \{0.01,-0.1\}^t$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.45]{figuras/q2a_fxpassos_P1.PNG}
-%   \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 2a com $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
-% \end{figure}
-
-% Seguem, abaixo, curvas de nível e caminhos obtidos pelos métodos para $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$. 
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Univariante_P0=[0.01e-0.1].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Powell_P0=[0.01e-0.1].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 2a com $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Steepest Descent_P0=[0.01e-0.1].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Fletcher-Reeves_P0=[0.01e-0.1].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 2a com $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_BFGS_P0=[0.01e-0.1].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Newton Raphson_P0=[0.01e-0.1].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 2a com $x^0 = \{0.01,-0.1\}^t$ e tol = $10^{-3}$}
-% \end{figure}
-
-% Abaixo seguem as curvas de nível para um ponto inicial diferente do proposto no enuncado. $x^0 = \{-2,10\}^t$
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Univariante_P0=[-2 10].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Powell_P0=[-2 10].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Univariante e Powell. Questão 2a e $x^0 = \{-2,10\}^t$ e tol = $10^{-3}$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Steepest Descent_P0=[-2 10].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Fletcher-Reeves_P0=[-2 10].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo Steepest Descent e Fletcher-Reeves. Questão 2a e $x^0 = \{-2,10\}^t$ e tol = $10^{-3}$}
-% \end{figure}
-
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_BFGS_P0=[-2 10].pdf}
-%     \includegraphics[width=0.49\textwidth]{figuras/Q2.a_Newton Raphson_P0=[-2 10].pdf}
-%   \end{subfigure}
-%   \caption{Curvas de nível e os pontos obtidos pelo BFGS e Newton-Raphson. Questão 2a e $x^0 = \{-2,10\}^t$ e tol = $10^{-3}$}
-% \end{figure}
-
-\subsection{Questão 2 (b)}
-\subsubsection{Enunciado}
-Desenvolver um estudo de convergência da solução do deslocamento do ponto A, do sistema de molas, para níveis crescentes
-de discretização do modelo (ou seja, considerando o número de molas n = 2,4,6...). A rigidez de cada mola ($k_i$, i =1,...n)
-é obtida como a razão entre o módulo de rigidez axial do material e o seu comprimento. Os valores $W_j$ (com j = 1,...n-1)
-correspondem às cargas nodais equivalentes aos pesos das molas.
-
-\subsubsection{Formulação}
-
-Para a generalização do problema do sistema de molas, foi considerado que sempre existirá um número par de molas.
-
-$n_{nodes} = n_{molas} -1$
-
-Como cada nó possui duas variáveis (Deslocamento horizontal $(u_i)$ e Deslocamento vertical $(v_i)$), o número de dimensões
-será sempre $n_{dimens} = 2n_{nodes}$.
-
-Usando a mesma ideia do equacionamento dos comprimentos finais de cada mola para o sistema com apenas 2 molas, e
-extrapolando para $n_{dimens}$, podemos escrever o seguinte :
-
-\vspace{3mm}
-Seja $Li_m = $ comprimeto inicial da mola m, com m=1,2,...$n_{molas}$
-
-\vspace{3mm}
-Seja $Lf_m = $ comprimeto final da mola m, com m=1,2,...$n_{molas}$
-
-\vspace{3mm}
-Apenas para facilidade do equacionamento e analogia com a formulação para 2 molas, 
-considerei que cada nó livre (total $n_{molas} - 1$ nós livres) terá deslocamentos positivos tanto em $x$ quanto em $y$. Ou seja,
-cada nó, após equilíbrio, estará à direita do seu ponto inicial e abaixo (considerando eixo $y$ positivo para baixo) do nó livre anterior.
-
-\vspace{3mm}
-Então:
-
-\vspace{3mm}
-$Lf_m = \sqrt{(Li_m + u_m - u_{m-1})^2 + (v_m - v_{m-1})^2}$, com $u_0 = v_0 = u_{n_{molas}} = v_{n_{molas}} = 0 $ e m=1,2,...$n_{molas}$
-
-\vspace{3mm}
-$U_m = \frac{1}{2}K_m\Delta L_m^2$, sendo $K_m = \frac{EA_m}{Li_m}$ e $\Delta L_m = Lf_m - Li_m$ = Energia Interna de deformação
-
-\vspace{3mm}
-$W_n = \frac{1}{2}(\rho_n Li_n + \rho_{n+1} Li_{n+1})$, com n=1,2,...$n_{nodes}$
-
-\vspace{3mm}
-$V_n = W_nv_n$ = Trabalho das forças externas
-
-\vspace{3mm}
-Finalmente :
-
-\vspace{3mm}
-$\Pi = \sum_{m=1}^{n_{molas}}{U_m} - \sum_{n=1}^{n_{nodes}}{V_n}$ = Energia Potencial Total
-
-\vspace{3mm}
-Para o cálculo do $\overrightarrow{\nabla} \Pi$, o seguinte raciocínio foi adotado :
-
-A variável $u_n$ aparece apenas nos termos $U_n$ e $U_{n+1}$, enquanto $v_n$ aparece em $U_n$, $U_{n+1}$ e $V_n$.
-
-Dessa forma $\frac{\partial \Pi}{\partial u_n} = \frac{\partial U_n}{\partial u_n} + \frac{\partial U_{n+1}}{\partial u_n}$ e 
-$\frac{\partial \Pi}{\partial v_n} = \frac{\partial U_n}{\partial v_n} + \frac{\partial U_{n+1}}{\partial v_n} -
-\frac{\partial V_n}{\partial v_n} $. Todos esses termos são possíveis de se calcular analiticamente usando as expressões
-apresentadas acima para $Lf_m$, $U_m$ e $V_n$, e com isso conseguimos uma expressão para cálculo do gradiente da função e que
-foi implementada no meu código.
-
-O mesmo raciocínio poderia ser aplicado para cálculo da Hessiana da função, porém, como sua utilidade fica restrita ao
-método de Newton-Raphson, para fins desse trabalho usei um pacote pronto para cálculo diferencial de forma numérica no Python 
-(numdifftools) com resultados bem satisfatórios e coincidentes com todos os cálculos dos métodos
-analíticos de gradiente e Hessiana implementados para as funções da questão 1 e questão 2a.
-
-Na implementação, o parâmetro que controla o número de molas do sistema é o número de dimensões do ponto inicial. Ou seja,
-para um sistema 2 molas, 1 nó livre, é necessário fornecer $x^0$ com 2 dimensões ($x^0 = \{u_1, v_1\}^t$). Para um
-sistema 4 molas, 3 nós livres, é necessar informar $x^0 = \{u_1, v_1, u_2, v_2, u_3, v_3\}^t$, e assim por diante.
 
 \vspace{5mm}
-Definição da função, gradiente, Hessiana no código principal :
-
-\begin{python}
-  def f(Xn):
-    dimens = Xn.size
-    #numero de nos
-    n = int(dimens/2)
-
-    #numero de molas
-    m = n + 1
-
-    #Inicializacao dos vetores com as variaveis do problema
-    Li = np.zeros(m, dtype=float) # comprimentos iniciais das molas
-    EA = np.zeros(m, dtype=float)
-    RHO = np.zeros(m, dtype=float)
-    W = np.zeros(n, dtype=float) # peso em cada no
-    
-    #Atribuicao dos valores do problema
-    #Cada mola mede inicialmente 60/n_molas
-    #molas a esquerda possuem EA = 27000 e rho 8
-    #molas a direita possuem EA = 18000 e rho 16
-    Li = Li + 60/m
-
-    EA[ : int(m/2)] = 27000
-    EA[int(m/2) : ] = 18000
-    RHO[ : int(m/2)] = 8
-    RHO[int(m/2) : ] = 16
-    
-    #Calculo dos pesos atuando em cada no
-    # W[j] = (1/2)*(RHO[j]*Li[j] + RHO[j+1]*Li[j+1])
-    RHO_e = RHO[:m-1]
-    RHO_d = RHO[1:m]
-    Li_e = Li[:m-1]
-    Li_d = Li[1:m]
-    W = (1/2)*(RHO_e*Li_e + RHO_d*Li_d)
-    
-    Lf = np.zeros(m, dtype=float) # comprimentos finais das molas
-    U = np.zeros(m, dtype=float) # energia elastica das molas0.01, -0.1    
-    V = np.zeros(n, dtype=float) # trabalho em cada no (desloc vert)  
-      
-    #array com os deslocamentos horizontais do Xn
-    dx = Xn[0::2].copy()
-    #array com os deslocamentos verticais do Xn
-    dy = Xn[1::2].copy()
-       
-    #Calculo dos comprimentos finais
-    # Lf[0] = np.sqrt( (Li[0] + dx[0] )**2 + dy[0]**2 ) 
-    # Lf[k] = np.sqrt(a**2 + b**2)
-    # Lf[m-1] = np.sqrt((Li[m-1] - dx[n-1])**2 + dy[n-1]**2)
-    dx_d = np.zeros(m, dtype= float)
-    dx_d[1:] = dx.copy()    
-    dx_e = np.zeros(m, dtype=float)
-    dx_e[:m-1] = dx.copy()
-    dy_d = np.zeros(m, dtype= float)
-    dy_d[1:] = dy.copy()
-    dy_e = np.zeros(m, dtype=float)
-    dy_e[:m-1] = dy.copy()
-    
-    a = Li + dx_e - dx_d
-    b = dy_e - dy_d
-    
-    Lf = np.sqrt(a**2 + b**2)
-    
-    #calculo da energia elastica em cada mola
-    U = (1/2)*(EA/Li)*((Lf - Li)**2)
-    
-    #calculo do trabalho em cada no    
-    V = W*dy
-    
-    #Calculo da Energia Total
-    E = np.sum(U) - np.sum(V)
-    
-    return E
-
-  def grad_f(Xn):
-      dimens = Xn.size
-      #numero de nos
-      n = int(dimens/2)
-
-      #numero de molas
-      m = n + 1
-
-      #Inicializacao dos vetores com as variaveis do problema
-      Li = np.zeros(m, dtype=float) # comprimentos iniciais das molas
-      EA = np.zeros(m, dtype=float)
-      RHO = np.zeros(m, dtype=float)
-      W = np.zeros(n, dtype=float) # peso em cada no
-      
-      #Atribuicao dos valores do problema
-      #Cada mola mede inicialmente 60 sobre numero de molas
-      #molas a esquerda possuem EA = 27000 e rho 8
-      #molas a direita possuem EA = 18000 e rho 16
-      Li = Li + 60/m
-
-      EA[ : int(m/2)] = 27000
-      EA[int(m/2) : ] = 18000
-      RHO[ : int(m/2)] = 8
-      RHO[int(m/2) : ] = 16
-      
-      #Calculo dos pesos atuando em cada no
-      # W[j] = (1/2)*(RHO[j]*Li[j] + RHO[j+1]*Li[j+1])
-      RHO_e = RHO[:m-1]
-      RHO_d = RHO[1:m]
-      Li_e = Li[:m-1]
-      Li_d = Li[1:m]
-      W = (1/2)*(RHO_e*Li_e + RHO_d*Li_d)
-
-      Lf = np.zeros(m, dtype=float) # comprimentos finais das molas
-          
-      #array com os deslocamentos horizontais do Xn
-      dx = Xn[0::2].copy()
-      #array com os deslocamentos verticais do Xn
-      dy = Xn[1::2].copy()
-      
-      #Calculo dos comprimentos finais
-      # Lf[0] = np.sqrt( (Li[0] + dx[0] )**2 + dy[0]**2 ) 
-      # Lf[k] = np.sqrt(a**2 + b**2)
-      # Lf[m-1] = np.sqrt((Li[m-1] - dx[n-1])**2 + dy[n-1]**2)
-      dx_d = np.zeros(m, dtype= float)
-      dx_d[1:] = dx.copy()
-      
-      dx_e = np.zeros(m, dtype=float)
-      dx_e[:m-1] = dx.copy()
-      dy_d = np.zeros(m, dtype= float)
-      dy_d[1:] = dy.copy()
-      dy_e = np.zeros(m, dtype=float)
-      dy_e[:m-1] = dy.copy()
-      
-      a = Li + dx_e - dx_d
-      b = dy_e - dy_d
-      
-      Lf = np.sqrt(a**2 + b**2)
-      
-      #calculo gradiente
-      gradx = np.zeros(n, dtype=float)
-      grady = np.zeros(n, dtype=float)
-      Li_e = np.zeros(n, dtype=float)
-      Li_d = np.zeros(n, dtype=float)
-      EA_e = np.zeros(n, dtype=float)
-      EA_d = np.zeros(n, dtype=float)
-      Lf_e = np.zeros(n, dtype=float)
-      Lf_d = np.zeros(n, dtype=float)
-      
-      Li_e = Li[:m-1]
-      Li_d = Li[1:m]
-      EA_e = EA[:m-1]
-      EA_d = EA[1:m]
-      Lf_e = Lf[:m-1]
-      Lf_d = Lf[1:m]
-      
-      dx_d = np.zeros(n, dtype=float)   
-      dx_d[1:] = dx[:m-2]
-      
-      dy_d = np.zeros(n, dtype=float)  
-      dy_d[1:] = dy[:m-2]
-      
-      dx_e = np.zeros(n, dtype=float)
-      dx_e[:m-2] = dx[1:]
-      
-      dy_e = np.zeros(n, dtype=float)
-      dy_e[:m-2] = dy[1:]
-      
-      deriv1 = np.zeros(n, dtype=float)
-      deriv2 = np.zeros(n, dtype=float)
-      deriv3 = np.zeros(n, dtype=float)
-      deriv4 = np.zeros(n, dtype=float)
-      deriv5 = np.zeros(n, dtype=float)
-        
-      deriv1 = (1/2)*((Li_e + dx - dx_d)**2 + (dy - dy_d)**2)**(-1/2)*(2*Li_e + 2*dx - 2*dx_d)        
-      deriv2 = (1/2)*((Li_d + dx_e - dx)**2 + (dy_e - dy)**2)**(-1/2)*(-2*Li_d - 2*dx_e + 2*dx)    
-      deriv3 = (1/2)*((Li_e + dx - dx_d)**2 + (dy - dy_d)**2)**(-1/2)*(2*dy - 2*dy_d)
-      deriv4 = (1/2)*((Li_d + dx_e - dx)**2 + (dy_e - dy)**2)**(-1/2)*(-2*dy_e + 2*dy)
-      deriv5 = W    
-      
-      # dUk/dxk + dU(k+1)/dxk
-      gradx = (1/2)*(EA_e/Li_e)*2*(Lf_e - Li_e)*deriv1 + (1/2)*(EA_d/Li_d)*2*(Lf_d - Li_d)*deriv2
-      
-      #dUk/dyk + dU(k+1)/dyk - dVk/dyk
-      grady = (1/2)*(EA_e/Li_e)*2*(Lf_e - Li_e)*deriv3 + (1/2)*(EA_d/Li_d)*2*(Lf_d - Li_d)*deriv4 - deriv5
-      
-      grad = np.zeros(2*n, dtype=float)
-      grad[0::2] = gradx
-      grad[1::2] = grady
-          
-      return grad
-
-  def hessian_f(Xn):
-      return nd.Hessian(f)(Xn)
-
-  func = 4
-
-\end{python}
-
-
-\subsubsection{Resultados}
-
-Para esse exercício, variei o número de molas no sistema de 2 a 20, e com isso precisei de
-diferentes pontos iniciais para as rodadas dos métodos. Por simplificação, usei os mesmos delocamentos iniciais para 
-todos os nós livres. Valores utilizados : $u_i = -1$ e $v_i = 5$, $\forall i$ com $i=1,2,...n_{nodes}$ 
-
-Exemplo de definição do ponto inicial com a premissa acima para o caso 4 molas:
-
-\begin{python}
-  P0 = np.array([-1, 5, -1, 5, -1, 5])
-\end{python}
-
-\textbf{Utilizei o seguinte controle numérico para resolução da questão 2(b):}
-\begin{itemize}
-  \item Número máximo de passos (ou iterações): 200
-  \item Tolerância para convergência do gradiente: $10^{-3}$
-  \item Tolerância para convergência da busca unidirecional: $10^{-6}$
-  \item $\Delta\alpha$ do passo constante: $10^{-2}$
-\end{itemize}
-
-O gráfico abaixo mostra o número de passos por método e por discretizaçao do número de molas. Nele é possível
-constatar que os métodos Univariante e Steepest Descent já não conseguem convergir para um sistema de 4 molas em diante.
-O método de Powell até converge para 4 molas, mas a partir de 6 molas já não consegue mais convergir. O método Fletcher-Reeves,
-na sensibilidade feita nesse trabalho comvergiu até 10 molas, e no caso com 20 molas não convergiu, apesar de ter chegado
-bem próximo dos resultados dos métodos que convergiram. Os métodos BFGS e
-Newton-Raphson convergiram para todos os casos, com um número relativamente baixo de passos.
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.35]{figuras/q2b_passos.png}
-%   \caption{Número de passos, por método OSR, para diferentes números de molas. Questão 2b.}
-% \end{figure}
-
-As tabelas abaixo resumem o estudo de convergência do valor para o deslocamento final do Ponto $A$, representado pelo
-vetor $\{u_A, v_a\}^t$. Pode-se notar que os métodos que não convergem, apresentam resultados divergentes dos que convergiram,
-como esperado. Também é possível notar a diferença entre posição prevista para o ponto $A$ caso a discretização seja muito
-pequena, 2 molas por exemplo, e caso seja muito alta, 20 molas por exemplo, lembrando sempre de olhar o resultado do BFGS
-e Newton-Raphson para essa comparação, dado que foram os métodos que atingiram convergência para todas as discretizações.
-
 \begin{table}[H]
   \begin{center}
-    \begin{tabular}{c|c|c|c}
-      \multicolumn{4}{c}{Deslocamento do Ponto $A$ (nó central)}\\
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+      \multicolumn{8}{c}{\textbf{Prob. 1 - Barreira - Univariante}}\\
       \hline
-      \textbf{Método} & \textbf{\# 2 molas} & \textbf{4 molas} & \textbf{6 molas} \\
+      \textbf{Iter} & \textbf{$P_{min}$} & \textbf{r} & $\Delta \alpha$ &\textbf{\# Passos} & \textbf{Conv\_OCR} & \textbf{Conv\_OSR} & \textbf{t(s)}\\
       \hline
-      Univariante       & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0867, 7.1702\}^t$ &	$\{-0.1927, 7.1189\}^t$ \\
-      Powell	          & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0863, 7.1700\}^t$ &	$\{-0.3735, 6.8136\}^t$ \\
-      Steepest Descent  & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0860, 7.1676\}^t$ &	$\{-0.0725, 6.9551\}^t$ \\
-      Fletcher-Reeves   & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0863, 7.1700\}^t$ &	$\{-0.0692, 7.0765\}^t$ \\
-      BFGS	            & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0863, 7.1700\}^t$ &	$\{-0.0692, 7.0765\}^t$ \\
-      Newton-Raphson    & $\{-0.2051, 7.7890\}^t$ &	$\{-0.0863, 7.1700\}^t$ &	$\{-0.0692, 7.0765\}^t$
+        1& [0.70794442 1.53149922]& 1e+01& 1e-02 &208& 9.7e+00& 9.3e-07& 0.051    \\
+        2& [0.82820088 1.10979838]& 1e+00& 1e-02 &76& 2.4e+00& 4.2e-07& 0.020\\
+        3& [0.89886443 0.96384102]& 1e-01& 1e-02 &144& 6.4e-01& 8.4e-07& 0.040\\
+        4& [0.92935334 0.91630707]& 1e-02& 1e-02 &1000& 1.9e-01& 5.4e-06& 0.357\\
+        5& [0.94027885 0.90115413]& 1e-03& 1e-02 &1000& 5.9e-02& 1.2e-05& 0.181\\
+        6& [0.94393558 0.89644099]& 1e-04& 1e-03 &1000& 1.8e-02& 1.7e-03& 0.137\\
+        7& [0.94528564 0.89528469]& 1e-05& 1e-03 &1000& 5.8e-03& 8.6e-03& 0.135\\
+        8& [0.94574387 0.89497567]& 1e-06& 1e-04 &1000& 1.8e-03& 1.2e-02& 0.115\\
+        9& [0.94589637 0.89489206]& 1e-07& 1e-04 &1000& 5.8e-04& 1.3e-02& 0.102\\
+        10& [0.94593827 0.89485365]& 1e-08& 1e-05 &1000& 1.8e-04& 1.5e-02& 0.098\\
+        11& [0.94595766 0.89485312]& 1e-09& 1e-05 &1000& 5.8e-05& 8.6e-03& 0.086\\
+        12& [0.94596395 0.89485321]& 1e-10& 1e-06 &1000& 1.8e-05& 7.2e-02& 0.065\\
+        13& [0.94596577 0.89485297]& 1e-11& 1e-06 &1000& 5.7e-06& 1.6e-01& 0.082\\
+        14& [0.94596639 0.89485294]& 1e-12& 1e-07 &1000& 1.9e-06& 3.3e-01& 0.063\\
+        15& [0.94596659 0.89485294]& 1e-13& 1e-07 &1000& 6.5e-07& 1.8e+00& 0.064\\
     \end{tabular}
   \end{center}
-  \caption{Resumo dos resultados obtidos na questão 2b}
+  \caption{Resultados obtidos para o problema 1, método de barreira, univariante para $x^0=\{0,1\}$}
 \end{table}
 
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_Univariante_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_Univariante_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR Univariante. }
+\end{figure}
+
+
+\vspace{5mm}
 \begin{table}[H]
   \begin{center}
-    \begin{tabular}{c|c|c|c}
-      \multicolumn{4}{c}{Deslocamento do Ponto $A$ (nó central)}\\
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+      \multicolumn{8}{c}{\textbf{Prob. 1 - Barreira - Powell}}\\
       \hline
-      \textbf{Método}   & \textbf{8 molas} & \textbf{10 molas} & \textbf{20 molas} \\
+      \textbf{Iter} & \textbf{$P_{min}$} & \textbf{r} & $\Delta \alpha$ &\textbf{\# Passos} & \textbf{Conv\_OCR} & \textbf{Conv\_OSR} & \textbf{t(s)}\\
       \hline
-      Univariante       & $\{-0.4678, 7.1400\}^t$	& $\{-0.6909, 7.2969\}^t$ &	$\{-1.0657, 6.7105\}^t$ \\
-      Powell	          & $\{-0.5929, 7.5628\}^t$	& $\{-0.7793, 6.6867\}^t$ &	$\{-1.0733, 6.7864\}^t$ \\
-      Steepest Descent  & $\{-0.1084, 6.6119\}^t$	& $\{-0.1652, 6.2609\}^t$ &	$\{-0.5561, 5.4032\}^t$ \\
-      Fletcher-Reeves   & $\{-0.0635, 7.0450\}^t$	& $\{-0.0610, 7.0306\}^t$ &	$\{-0.0575, 7.0123\}^t$ \\
-      BFGS	            & $\{-0.0635, 7.0450\}^t$	& $\{-0.0610, 7.0306\}^t$ &	$\{-0.0575, 7.0116\}^t$ \\
-      Newton-Raphson    & $\{-0.0635, 7.0450\}^t$	& $\{-0.0610, 7.0306\}^t$ &	$\{-0.0575, 7.0116\}^t$
+        1& [0.70794439 1.53149919]& 1e+01& 1e-02 &8& 9.7e+00& 5.6e-07& 0.010       \\
+        2& [0.82820086 1.10979833]& 1e+00& 1e-02 &25& 2.4e+00& 8.4e-07& 0.009\\
+        3& [0.89886443 0.963841  ]& 1e-01& 1e-02 &20& 6.4e-01& 2.8e-07& 0.006\\
+        4& [0.92935322 0.91630682]& 1e-02& 1e-02 &9& 1.9e-01& 9.3e-07& 0.002\\
+        5& [0.94027827 0.90115302]& 1e-03& 1e-02 &12& 5.9e-02& 8.0e-07& 0.003\\
+        6& [0.9438872 0.8963501]& 1e-04& 1e-03 &44& 1.8e-02& 4.0e-07& 0.013\\
+        7& [0.9450449  0.89483025]& 1e-05& 1e-03 &1000& 5.8e-03& 5.1e-04& 0.367\\
+        8& [0.94541263 0.89434951]& 1e-06& 1e-04 &54& 1.8e-03& 5.1e-07& 0.007\\
+        9& [0.94552911 0.89419752]& 1e-07& 1e-04 &24& 5.8e-04& 4.1e-07& 0.005\\
+        10& [0.94556594 0.89414941]& 1e-08& 1e-05 &393& 1.8e-04& 4.0e-07& 0.065\\
+        11& [0.94557753 0.89413409]& 1e-09& 1e-05 &1000& 5.8e-05& 4.5e-03& 0.154\\
+        12& [0.94558129 0.89412942]& 1e-10& 1e-06 &30& 1.8e-05& 4.7e-07& 0.002\\
+        13& [0.94558246 0.89412794]& 1e-11& 1e-06 &1000& 5.7e-06& 1.9e-01& 0.140\\
+        14& [0.94558283 0.89412746]& 1e-12& 1e-07 &1000& 1.8e-06& 4.0e-01& 0.111\\
+        15& [0.94558288 0.89412715]& 1e-13& 1e-07 &1000& 5.7e-07& 3.3e-01& 0.119\\
     \end{tabular}
   \end{center}
-  \caption{Resumo dos resultados obtidos na questão 2b}
+  \caption{Resultados obtidos para o problema 1, método de barreira, Powell para $x^0=\{0,1\}$}
 \end{table}
 
-A figura abaixo resume o tempo de execução de cada método para cada discretização do número de molas.
-Importante destacar o tempo maior para os métodos de Powell e Newton-Raphson. O tempo do método de Newton-Raphson 
-acredito que possa ter influência do uso do pacote numdifftools para cálculo da Hessiana, e o tempo para cálculo de sua inversa.
-Porém, o método de Powell sofreu novamente, principalmente no caso 4 molas, com uma direção com módulo pequeno e
-consequente $\alpha$ grande do passo constante, \textbf{reforçando novamente a ideia de se normalizar as direções na busca unidirecional
- para evitar problemas desse tipo.}
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_Powell_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_Powell_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR Powell. }
+\end{figure}
 
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.4]{figuras/q2b_tempo.png}
-%   \caption{Tempo de Execução, por método OSR, para diferentes números de molas. Questão 2b.}
-% \end{figure}
+\vspace{5mm}
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+      \multicolumn{8}{c}{\textbf{Prob. 1 - Barreira - Steepest Descent}}\\
+      \hline
+      \textbf{Iter} & \textbf{$P_{min}$} & \textbf{r} & $\Delta \alpha$ &\textbf{\# Passos} & \textbf{Conv\_OCR} & \textbf{Conv\_OSR} & \textbf{t(s)}\\
+      \hline
+        1& [0.70794438 1.53149917]& 1e+01& 1e-02 &52& 9.7e+00& 4.3e-07& 0.033       \\
+        2& [0.8282009  1.10979841]& 1e+00& 1e-02 &112& 2.4e+00& 3.5e-07& 0.035\\
+        3& [0.89886442 0.96384104]& 1e-01& 1e-02 &1000& 6.4e-01& 6.9e-06& 0.219\\
+        4& [0.92935325 0.91630683]& 1e-02& 1e-02 &1000& 1.9e-01& 1.5e-05& 0.325\\
+        5& [0.94027832 0.90115304]& 1e-03& 1e-02 &1000& 5.9e-02& 6.6e-05& 0.300\\
+        6& [0.94388751 0.89635066]& 1e-04& 1e-03 &1000& 1.8e-02& 9.5e-05& 0.172\\
+        7& [0.94504565 0.8948317 ]& 1e-05& 1e-03 &1000& 5.8e-03& 3.0e-04& 0.145\\
+        8& [0.94549366 0.89450285]& 1e-06& 1e-04 &1000& 1.8e-03& 2.3e-03& 0.160\\
+        9& [0.94563767 0.89440286]& 1e-07& 1e-04 &1000& 5.8e-04& 3.3e-03& 0.193\\
+        10& [0.94568309 0.89437093]& 1e-08& 1e-05 &1000& 1.8e-04& 1.2e-02& 0.374\\
+        11& [0.94569739 0.89436074]& 1e-09& 1e-05 &1000& 5.8e-05& 3.6e-02& 0.307\\
+        12& [0.94570181 0.89435729]& 1e-10& 1e-06 &1000& 1.9e-05& 1.7e-01& 0.150\\
+        13& [0.94570312 0.89435619]& 1e-11& 1e-06 &1000& 5.6e-06& 6.0e-01& 0.098\\
+        14& [0.94570357 0.89435581]& 1e-12& 1e-07 &1000& 1.8e-06& 3.1e-01& 0.062\\
+        15& [0.94570374 0.89435569]& 1e-13& 1e-07 &1000& 7.8e-07& 5.6e+00& 0.063\\
+    \end{tabular}
+  \end{center}
+  \caption{Resultados obtidos para o problema 1, método de barreira, Steepest Descent para $x^0=\{0,1\}$}
+\end{table}
 
-A figura abaixo mostra o comportamento do valor da função a cada iteração dos métodos para o caso
-com 20 molas, evidenciando o quão rápido Flecther-Reeves,
-BFGS e Newton-Raphson se aproximam do mínimo.  
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_Steepest Descent_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_Steepest Descent_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR Steepest Descent. }
+\end{figure}
 
-Um detalhe que também aparece, mas está sutil e pode passar despercebido dada a escala em $y$ utilizada,
-é que o primeiro passo do Newton-Raphson está aumentando consideravelmente o valor da função. Após investigação do resultado,
-notei que esse primeiro passo está usando uma direção com módulo muito grande, da ordem de $5.10^9$ e retornando um 
-$\alpha$ da seção áurea da ordem de $3.10^{-7}$. Como o passo usado é $10^{-2}$, é possível constatar que o $\Delta \alpha$
-absoluto, ao invés de ficar próximo ao ${10^{-2}}$ desejado, atinge valores acima de $1$, dadas as ordens de grandeza dos
-parâmetros. Pode ser que o problema seja o cálculo da Hessiana nesse primeiro passo, apesar de que para os demais passos,
-o Newton-Raphson se comporta adequadamente. \textbf{Esse exemplo é mais um reforço para que seja usado direções normalizadas.}
+\vspace{5mm}
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+      \multicolumn{8}{c}{\textbf{Prob. 1 - Barreira - Newton-Raphson}}\\
+      \hline
+      \textbf{Iter} & \textbf{$P_{min}$} & \textbf{r} & $\Delta \alpha$ &\textbf{\# Passos} & \textbf{Conv\_OCR} & \textbf{Conv\_OSR} & \textbf{t(s)}\\
+      \hline
+        1& [0.7079444 1.5314992]& 1e+01& 1e-02 &4& 9.7e+00& 1.2e-07& 0.014         \\
+        2& [0.8282009  1.10979841]& 1e+00& 1e-02 &6& 2.4e+00& 1.0e-07& 0.011\\
+        3& [0.89886444 0.96384105]& 1e-01& 1e-02 &1000& 6.4e-01& 3.0e-06& 0.395\\
+        4& [0.9293532  0.91630686]& 1e-02& 1e-02 &1000& 1.9e-01& 2.3e-05& 0.344\\
+        5& [0.94027832 0.90115304]& 1e-03& 1e-02 &1000& 5.9e-02& 6.9e-05& 0.389\\
+        6& [0.94388719 0.89635012]& 1e-04& 1e-03 &1000& 1.8e-02& 1.4e-04& 0.295\\
+        7& [0.9450449  0.89483025]& 1e-05& 1e-03 &1000& 5.8e-03& 4.7e-04& 0.327\\
+        8& [0.94541264 0.89434953]& 1e-06& 1e-03 &23& 1.8e-03& 5.0e-07& 0.004\\
+        9& [0.9455291 0.8941975]& 1e-07& 1e-04 &1000& 5.8e-04& 5.7e-05& 0.319\\
+        10& [0.94556593 0.89414939]& 1e-08& 1e-04 &1000& 1.8e-04& 1.8e-04& 0.330\\
+        11& [0.94557761 0.89413424]& 1e-09& 1e-05 &1000& 5.8e-05& 2.1e-05& 0.241\\
+        12& [0.94558128 0.8941294 ]& 1e-10& 1e-05 &1000& 1.8e-05& 3.8e-04& 0.276\\
+        13& [0.94558246 0.89412791]& 1e-11& 1e-06 &1000& 5.8e-06& 1.8e-03& 0.192\\
+        14& [0.94558281 0.8941274 ]& 1e-12& 1e-06 &1000& 1.8e-06& 1.1e-02& 0.173\\
+        15& [0.94558294 0.89412727]& 1e-13& 1e-07 &1000& 5.8e-07& 1.5e-03& 0.149\\
+    \end{tabular}
+  \end{center}
+  \caption{Resultados obtidos para o problema 1, método de barreira, Newton-Raphson para $x^0=\{0,1\}$}
+\end{table}
 
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[scale=0.45]{figuras/q2b_fxpassos_20molas.PNG}
-%   \caption{Gráficos de $f(x_1,x_2)$ versus passo da minimização, por método. Questão 2b com 20 molas}
-% \end{figure}
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_Newton-Raphson_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_Newton-Raphson_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR Newton-Raphson. }
+\end{figure}
 
-% \begin{figure}[H]
-%   \centering
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/q2bUnivGraf.png}
-%     \includegraphics[width=0.49\textwidth]{figuras/q2bPowellGraf.png}
-%   \end{subfigure}
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/q2bSteepDGraf.png}
-%     \includegraphics[width=0.49\textwidth]{figuras/q2bFRGraf.png}
-%   \end{subfigure}
-%   \begin{subfigure}[b]{\textwidth}
-%     \includegraphics[width=0.49\textwidth]{figuras/q2bBFGSGraf.png}
-%     \includegraphics[width=0.49\textwidth]{figuras/q2bNRGraf.png}
-%   \end{subfigure}
-%   \caption{Posição dos nós, por método, para diferentes números de molas}
-% \end{figure}
+\vspace{5mm}
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+      \multicolumn{8}{c}{\textbf{Prob. 1 - Barreira - Fletcher-Reeves}}\\
+      \hline
+      \textbf{Iter} & \textbf{$P_{min}$} & \textbf{r} & $\Delta \alpha$ &\textbf{\# Passos} & \textbf{Conv\_OCR} & \textbf{Conv\_OSR} & \textbf{t(s)}\\
+      \hline
+        1& [0.7083677  1.53228399]& 1e+01& 1e-02 &1000& 9.7e+00& 1.2e-02& 0.272   \\
+        2& [0.82771558 1.10882661]& 1e+00& 1e-02 &1000& 2.4e+00& 1.1e-02& 0.255\\
+        3& [0.89923489 0.96456733]& 1e-01& 1e-02 &1000& 6.4e-01& 7.5e-03& 0.164\\
+        4& [0.92959411 0.9167657 ]& 1e-02& 1e-02 &1000& 1.9e-01& 4.3e-03& 0.174\\
+        5& [0.94042115 0.90142408]& 1e-03& 1e-02 &1000& 5.9e-02& 2.6e-03& 0.192\\
+        6& [0.94385431 0.89628806]& 1e-04& 1e-03 &1000& 1.8e-02& 6.6e-04& 0.157\\
+        7& [0.94502008 0.89478343]& 1e-05& 1e-03 &1000& 5.8e-03& 6.4e-04& 0.199\\
+        8& [0.94541561 0.8943552 ]& 1e-06& 1e-04 &1000& 1.8e-03& 1.5e-03& 0.132\\
+        9& [0.94556948 0.89427382]& 1e-07& 1e-04 &1000& 5.8e-04& 4.4e-03& 0.171\\
+        10& [0.94561808 0.89424809]& 1e-08& 1e-05 &1000& 1.8e-04& 1.9e-02& 0.123\\
+        11& [0.94563354 0.89423997]& 1e-09& 1e-05 &1000& 5.8e-05& 4.8e-02& 0.137\\
+        12& [0.94563835 0.89423743]& 1e-10& 1e-06 &1000& 1.8e-05& 2.3e-01& 0.073\\
+        13& [0.94563992 0.89423665]& 1e-11& 1e-06 &1000& 5.6e-06& 5.8e-01& 0.127\\
+        14& [0.94564043 0.89423638]& 1e-12& 1e-07 &1000& 1.8e-06& 2.2e-01& 0.085\\
+        15& [0.94564061 0.89423629]& 1e-13& 1e-07 &1000& 8.0e-07& 6.4e+00& 0.101\\
+    \end{tabular}
+  \end{center}
+  \caption{Resultados obtidos para o problema 1, método de barreira, Fletcher-Reeves para $x^0=\{0,1\}$}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_Fletcher-Reeves_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_Fletcher-Reeves_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR Fletcher-Reeves }
+\end{figure}
+
+\vspace{5mm}
+\begin{table}[H]
+  \begin{center}
+    \begin{tabular}{c|c|c|c|c|c|c|c}
+      \multicolumn{8}{c}{\textbf{Prob. 1 - Barreira - BFGS}}\\
+      \hline
+      \textbf{Iter} & \textbf{$P_{min}$} & \textbf{r} & $\Delta \alpha$ &\textbf{\# Passos} & \textbf{Conv\_OCR} & \textbf{Conv\_OSR} & \textbf{t(s)}\\
+      \hline
+        1& [0.7079444 1.5314992]& 1e+01& 1e-02 &11& 9.7e+00& 1.4e-07& 0.017           \\
+        2& [0.82820084 1.10979841]& 1e+00& 1e-02 &1000& 2.4e+00& 7.2e-06& 0.368\\
+        3& [0.89886439 0.96384104]& 1e-01& 1e-02 &1000& 6.4e-01& 1.3e-05& 0.346\\
+        4& [0.92935323 0.91630685]& 1e-02& 1e-02 &4& 1.9e-01& 7.5e-07& 0.003\\
+        5& [0.94027829 0.90115306]& 1e-03& 1e-02 &4& 5.9e-02& 3.8e-07& 0.001\\
+        6& [0.94388719 0.89635009]& 1e-04& 1e-02 &1000& 1.8e-02& 7.6e-06& 0.301\\
+        7& [0.94504488 0.89483027]& 1e-05& 1e-03 &1000& 5.8e-03& 1.4e-05& 0.358\\
+        8& [0.94541264 0.89434954]& 1e-06& 1e-04 &1000& 1.8e-03& 3.6e-04& 0.152\\
+        9& [0.94552912 0.89419753]& 1e-07& 1e-04 &1000& 5.8e-04& 3.1e-04& 0.290\\
+        10& [0.94556597 0.89414946]& 1e-08& 1e-04 &1000& 1.8e-04& 1.5e-03& 0.195\\
+        11& [0.94557758 0.89413418]& 1e-09& 1e-05 &1000& 5.8e-05& 3.1e-04& 0.194\\
+        12& [0.94558126 0.89412937]& 1e-10& 1e-05 &1000& 1.8e-05& 3.6e-04& 0.211\\
+        13& [0.94558245 0.89412789]& 1e-11& 1e-06 &1000& 5.8e-06& 3.7e-04& 0.206\\
+        14& [0.94558281 0.8941274 ]& 1e-12& 1e-06 &1000& 1.8e-06& 6.4e-04& 0.190\\
+        15& [0.94558295 0.89412729]& 1e-13& 1e-07 &1000& 5.8e-07& 2.3e-03& 0.151\\
+    \end{tabular}
+  \end{center}
+  \caption{Resultados obtidos para o problema 1, método de barreira, BFGS para $x^0=\{0,1\}$}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{\textwidth}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_BFGS_1.pdf}
+    \includegraphics[width=0.49\textwidth]{fig_p1/Barreira_BFGS_2.pdf}
+  \end{subfigure}
+  \caption{Exemplo com 2 primeiros passos da OCR com método OSR BFGS. }
+\end{figure}
 
 \end{document}
